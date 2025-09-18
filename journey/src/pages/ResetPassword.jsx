@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 function ResetPassword() {
-  const location = useLocation();
   const navigate = useNavigate();
-  const email = location.state?.email || ""; // pega email da tela anterior
+
+  // 🔹 recupera o email do localStorage
+  const email = localStorage.getItem("resetUserEmail") || "";
 
   const [codigo, setCodigo] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
@@ -22,6 +23,7 @@ function ResetPassword() {
       const res = await api.post("/validar-codigo", { email, codigo, novaSenha });
       if (res.data.success) {
         alert("Senha redefinida com sucesso!");
+        localStorage.removeItem("resetUserEmail"); // limpa dado temporário
         navigate("/");
       } else {
         alert(res.data.message || "Erro ao redefinir senha.");

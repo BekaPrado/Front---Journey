@@ -12,7 +12,12 @@ function ForgotPassword() {
       const res = await api.post("/recuperar-senha", { email });
       if (res.data.success) {
         alert("Código de recuperação enviado para seu email.");
-        navigate("/reset-password", { state: { email } }); // passa email para próxima tela
+
+        // 🔹 salva o email do usuário no localStorage
+        localStorage.setItem("resetUserEmail", email);
+
+        // 🔹 navega para a página de redefinição
+        navigate("/reset-password");
       } else {
         alert(res.data.message || "Erro ao enviar código.");
       }
