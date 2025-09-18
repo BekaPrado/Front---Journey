@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 function ForgotPassword() {
@@ -9,11 +9,16 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await api.post("/recuperar-senha", { email });
-      alert("Código enviado para o email!");
-      navigate("/reset-password/1"); // depois você troca para o ID do usuário vindo da API
+      const res = await api.post("/recuperar-senha", { email });
+      if (res.data.success) {
+        alert("Código de recuperação enviado para seu email.");
+        navigate("/reset-password", { state: { email } }); // passa email para próxima tela
+      } else {
+        alert(res.data.message || "Erro ao enviar código.");
+      }
     } catch (err) {
-      alert("Erro: " + err.response?.data?.message);
+      console.error(err);
+      alert("Erro no servidor. Tente novamente.");
     }
   };
 
@@ -21,17 +26,17 @@ function ForgotPassword() {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Recuperar Senha</h2>
-        <p className="subtitle">Digite seu email para receber um código de verificação</p>
+        <p className="subtitle">Digite seu email para receber um código de recuperação.</p>
         <form onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Digite seu email"
+            placeholder="Seu email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            required
           />
-          <button type="submit">Enviar Código</button>
+          <button type="submit">Enviar código</button>
         </form>
-        <Link to="/" className="link">Voltar ao Login</Link>
       </div>
     </div>
   );

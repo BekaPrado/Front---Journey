@@ -6,28 +6,26 @@ function Login() {
   const [form, setForm] = useState({ email: "", senha: "" });
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.get("/usuario");
+      const res = await api.get("/usuario"); // GET lista todos
       const usuario = res.data.usuario.find(
         (u) => u.email === form.email && u.senha === form.senha
       );
-
       if (usuario) {
         alert("Login realizado!");
-        navigate("/dashboard"); // página após login
+        navigate("/dashboard");
       } else {
         alert("Email ou senha incorretos!");
       }
-    } catch {
-  alert("Erro ao logar");
-}
-
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao logar.");
+    }
   };
 
   return (
@@ -35,8 +33,7 @@ function Login() {
       <div className="auth-card">
         <h2>Entrar</h2>
         <p className="subtitle">
-          Não tem conta?{" "}
-          <Link to="/register" className="link">Cadastre-se</Link>
+          Não tem conta? <Link to="/register" className="link">Cadastre-se</Link>
         </p>
         <form onSubmit={handleSubmit}>
           <input name="email" placeholder="Email" onChange={handleChange} />
