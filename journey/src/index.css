@@ -2,7 +2,7 @@
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #ffffff, #fefefe);
+  background: linear-gradient(135deg, #2a005a, #3d0dbd);
   color: #fff;
   min-height: 100vh;
   display: flex;
@@ -21,14 +21,15 @@ body {
 
 /* Card */
 .auth-card {
-  background: #1f003f; /* roxo escuro */
+  background: #1f003f;
   padding: 3rem 2.5rem;
   border-radius: 16px;
-  width: 100%;
+  width: 600px;
+  max-width: 650px; /* antes era 480px */
   text-align: center;
   box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.5);
-  animation: fadeIn 0.5s ease-in-out;
 }
+
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
