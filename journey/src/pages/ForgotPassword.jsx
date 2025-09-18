@@ -9,21 +9,12 @@ function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await api.post("/recuperar-senha", { email });
-      if (res.data.success) {
-        alert("Código de recuperação enviado para seu email.");
-
-        // 🔹 salva o email do usuário no localStorage
-        localStorage.setItem("resetUserEmail", email);
-
-        // 🔹 navega para a página de redefinição
-        navigate("/reset-password");
-      } else {
-        alert(res.data.message || "Erro ao enviar código.");
-      }
+      await api.post("/recuperar-senha", { email });
+      // Salva apenas o email (seguro)
+      localStorage.setItem("recoverEmail", email);
+      navigate("/reset-password");
     } catch (err) {
-      console.error(err);
-      alert("Erro no servidor. Tente novamente.");
+      alert("Erro ao enviar código. Tente novamente.");
     }
   };
 
@@ -31,11 +22,10 @@ function ForgotPassword() {
     <div className="auth-container">
       <div className="auth-card">
         <h2>Recuperar Senha</h2>
-        <p className="subtitle">Digite seu email para receber um código de recuperação.</p>
         <form onSubmit={handleSubmit}>
           <input
             type="email"
-            placeholder="Seu email"
+            placeholder="Digite seu email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

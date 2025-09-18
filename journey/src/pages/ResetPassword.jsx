@@ -3,57 +3,41 @@ import { useNavigate } from "react-router-dom";
 import api from "../services/api";
 
 function ResetPassword() {
-  const navigate = useNavigate();
-
-  // 🔹 recupera o email do localStorage
-  const email = localStorage.getItem("resetUserEmail") || "";
-
   const [codigo, setCodigo] = useState("");
-  const [novaSenha, setNovaSenha] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (novaSenha.length < 6) {
-      alert("A senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
+    const email = localStorage.getItem("recoverEmail");
 
     try {
-      const res = await api.post("/validar-codigo", { email, codigo, novaSenha });
-      if (res.data.success) {
-        alert("Senha redefinida com sucesso!");
-        localStorage.removeItem("resetUserEmail"); // limpa dado temporário
-        navigate("/");
+      const res = await api.post("/validar-codigo", { email, codigo });
+
+      if (res.data && res.data.userId) {
+        // Salva o id do usuário somente após validar o código
+        localStorage.setItem("userId", res.data.userId);
+        navigate("/new-password");
       } else {
-        alert(res.data.message || "Erro ao redefinir senha.");
+        alert("Código inválido ou expirado.");
       }
     } catch (err) {
-      console.error(err);
-      alert("Erro no servidor. Tente novamente.");
+      alert("Erro ao validar código.");
     }
   };
 
   return (
     <div className="auth-container">
       <div className="auth-card">
-        <h2>Redefinir Senha</h2>
+        <h2>Digite o código recebido</h2>
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            placeholder="Código recebido"
+            placeholder="Código"
             value={codigo}
             onChange={(e) => setCodigo(e.target.value)}
             required
           />
-          <input
-            type="password"
-            placeholder="Nova senha"
-            value={novaSenha}
-            onChange={(e) => setNovaSenha(e.target.value)}
-            required
-          />
-          <button type="submit">Alterar senha</button>
+          <button type="submit">Validar Código</button>
         </form>
       </div>
     </div>
