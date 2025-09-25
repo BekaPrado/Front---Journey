@@ -1,49 +1,39 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import api from "../services/api";
+import React, { useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
-function Login() {
-  const [form, setForm] = useState({ email: "", senha: "" });
-  const navigate = useNavigate();
+export default function Login() {
+  const [email, setEmail] = useState('')
+  const [senha, setSenha] = useState('')
+  const [msg, setMsg] = useState(null)
+  const { login } = useAuth()
 
-  const handleChange = (e) =>
-    setForm({ ...form, [e.target.name]: e.target.value });
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await api.get("/usuario"); // GET lista todos
-      const usuario = res.data.usuario.find(
-        (u) => u.email === form.email && u.senha === form.senha
-      );
-      if (usuario) {
-        alert("Login realizado!");
-        navigate("/dashboard");
-      } else {
-        alert("Email ou senha incorretos!");
-      }
-    } catch (err) {
-      console.error(err);
-      alert("Erro ao logar.");
-    }
-  };
+  async function handle(e) {
+    e.preventDefault()
+    if (!email || !senha) return setMsg('Preencha email e senha')
+    login({ email })
+    setMsg('Logado com sucesso ')
+  }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Entrar</h2>
-        <p className="subtitle">
-          Não tem conta? <Link to="/register" className="link">Cadastre-se</Link>
-        </p>
-        <form onSubmit={handleSubmit}>
-          <input name="email" placeholder="Email" onChange={handleChange} />
-          <input type="password" name="senha" placeholder="Senha" onChange={handleChange} />
+    <div className="container">
+      <div className="form-area">
+        <h2>Entre em sua conta.</h2>
+        <p>Não possui conta? <a href="/register">Cadastrar</a></p>
+
+        <form onSubmit={handle}>
+          <input type="email" placeholder="email" value={email} onChange={e => setEmail(e.target.value)} />
+          <input type="password" placeholder="senha" value={senha} onChange={e => setSenha(e.target.value)} />
           <button type="submit">Entrar</button>
         </form>
-        <Link to="/forgot-password" className="link">Esqueceu a senha?</Link>
+
+        <p><a href="/recover">Esqueceu sua senha?</a></p>
+        <p>Já é um profissional? <a href="/register?type=pro">Criar conta como profissional</a></p>
+        {msg && <p className="msg">{msg}</p>}
+      </div>
+
+      <div className="illustration">
+        <img src="/journey.png" alt="ilustração cadastro" />
       </div>
     </div>
-  );
+  )
 }
-
-export default Login;

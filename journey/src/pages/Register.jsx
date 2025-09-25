@@ -1,86 +1,79 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import api from "../services/api";
+import React, { useState } from 'react'
+import { registerUser } from '../api/user'
 
-function Register() {
+export default function Register() {
   const [form, setForm] = useState({
-    nome_completo: "",
-    email: "",
-    senha: "",
-    data_nascimento: "",
-    tipo_usuario: "Estudante"
-  });
-  const navigate = useNavigate();
+    nome_completo: '',
+    email: '',
+    senha: '',
+    data_nascimento: '',
+    tipo_usuario: 'Estudante',
+    linkedin: ''
+  })
+  const [msg, setMsg] = useState(null)
 
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  function change(e) {
+    setForm({ ...form, [e.target.name]: e.target.value })
+  }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // 🔹 Validação de data antes de enviar
-    const regexData = /^\d{4}-\d{2}-\d{2}$/;
-    if (!regexData.test(form.data_nascimento)) {
-      alert("Data de nascimento inválida! Use o formato YYYY-MM-DD.");
-      return;
+  async function submit(e) {
+    e.preventDefault()
+    if (form.tipo_usuario === 'Profissional' && !form.linkedin) {
+      return setMsg('Informe o LinkedIn para validar como profissional')
+    }
+    const payload = {
+      nome_completo: form.nome_completo,
+      email: form.email,
+      senha: form.senha,
+      data_nascimento: form.data_nascimento,
+      tipo_usuario: form.tipo_usuario,
+      descricao: form.tipo_usuario === 'Profissional' ? `linkedin:${form.linkedin}` : ''
     }
 
     try {
-      await api.post("/usuario", form, {
-        headers: { "Content-Type": "application/json" },
-      });
-      alert("Cadastro realizado!");
-      navigate("/");
+      const res = await registerUser(payload)
+
+      if (res?.status && res?.status_code === 201) {
+        setMsg('Usuário cadastrado com sucesso!')
+      } else {
+        setMsg(res?.message || 'Erro ao registrar')
+      }
     } catch (err) {
-      console.error(err);
-      alert("Erro ao cadastrar: " + err.response?.data?.message);
+      console.error('Erro no cadastro:', err)
+      setMsg('Erro ao registrar')
     }
-  };
+  }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Criar Conta</h2>
-        <p className="subtitle">
-          Já tem conta? <Link to="/" className="link">Entrar</Link>
-        </p>
-        <form onSubmit={handleSubmit}>
-          <input
-            name="nome_completo"
-            placeholder="Nome completo"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="password"
-            name="senha"
-            placeholder="Senha"
-            onChange={handleChange}
-            required
-          />
-          <input
-            type="date"
-            name="data_nascimento"
-            onChange={handleChange}
-            required
-          />
-          <select name="tipo_usuario" onChange={handleChange}>
+    <div className="container">
+      <div className="form-area">
+        <h2>Crie sua conta.</h2>
+        <p>Já possui conta? <a href="/login">Login</a></p>
+
+        <form onSubmit={submit}>
+          <input placeholder="nome completo" name="nome_completo" value={form.nome_completo} onChange={change} />
+          <input type="email" placeholder="email" name="email" value={form.email} onChange={change} />
+          <input type="password" placeholder="senha" name="senha" value={form.senha} onChange={change} />
+          <input type="date" name="data_nascimento" value={form.data_nascimento} onChange={change} />
+
+          <select name="tipo_usuario" value={form.tipo_usuario} onChange={change}>
             <option value="Estudante">Estudante</option>
             <option value="Profissional">Profissional</option>
           </select>
+
+          {form.tipo_usuario === 'Profissional' && (
+            <input placeholder="LinkedIn URL" name="linkedin" value={form.linkedin} onChange={change} />
+          )}
+
           <button type="submit">Cadastrar</button>
         </form>
+
+        {msg && <p className="msg">{msg}</p>}
+      </div>
+
+      <div className="illustration">
+        <img src="/journey.png" alt="ilustração cadastro" />
       </div>
     </div>
-  );
+  )
 }
-
-export default Register;

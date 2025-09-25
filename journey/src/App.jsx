@@ -1,22 +1,30 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login";
+// app.jsx
+import React from 'react'
+import { Routes, Route, Link } from 'react-router-dom'
+import Login from './pages/Login'
 import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import NewPassword from "./pages/NewPassword"; // 🔹 criar já já
+import Recover from "./pages/Recover";
+import ValidateCode from "./pages/ValidadeCode";
+import ResetPassword from "./pages/ResetPassword"; // <-- corrigido
+import Home from "./pages/Home";
 
-function App() {
+import ProtectedRoute from './components/ProtectedRoute'
+
+// simples navbar para navegar (substituir pelo seu design)
+export default function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/new-password" element={<NewPassword />} /> {/* 🔹 nova rota */}
-      </Routes>
-    </BrowserRouter>
-  );
-}
+    <div>
 
-export default App;
+      <main style={{padding: 24}}>
+        <Routes>
+          <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>} />
+          <Route path="/login" element={<Login/>} />
+          <Route path="/register" element={<Register/>} />
+          <Route path="/recover" element={<Recover/>} />
+          <Route path="/validate-code" element={<ValidateCode/>} />
+          <Route path="/reset-password/:id" element={<ResetPassword/>} />
+        </Routes>
+      </main>
+    </div>
+  )
+}

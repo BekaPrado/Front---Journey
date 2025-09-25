@@ -1,47 +1,41 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import React, { useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import { updatePassword } from '../api/user'
 
-function ResetPassword() {
-  const [codigo, setCodigo] = useState("");
-  const navigate = useNavigate();
+export default function ResetPassword() {
+  const { id } = useParams()
+  const nav = useNavigate()
+  const [senha, setSenha] = useState('')
+  const [conf, setConf] = useState('')
+  const [msg, setMsg] = useState(null)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    const email = localStorage.getItem("recoverEmail");
-
-    try {
-      const res = await api.post("/validar-codigo", { email, codigo });
-
-      if (res.data && res.data.userId) {
-        // Salva o id do usuário somente após validar o código
-        localStorage.setItem("userId", res.data.userId);
-        navigate("/new-password");
-      } else {
-        alert("Código inválido ou expirado.");
-      }
-    } catch (err) {
-      alert("Erro ao validar código.");
-    }
-  };
+  async function handle(e) {
+    e.preventDefault()
+    if (!senha || senha.length < 6) return setMsg('Senha deve ter pelo menos 6 caracteres')
+    if (senha !== conf) return setMsg('Senhas não conferem')
+    const res = await updatePassword(id, senha)
+    setMsg(res?.message || 'Senha alterada com sucesso')
+    setTimeout(() => nav('/login'), 1500)
+  }
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <h2>Digite o código recebido</h2>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Código"
-            value={codigo}
-            onChange={(e) => setCodigo(e.target.value)}
-            required
-          />
-          <button type="submit">Validar Código</button>
+    <div className="container">
+      <div className="form-area">
+        <h2>Troque sua senha!</h2>
+        <p>Digite a nova senha e confirme abaixo:</p>
+
+        <form onSubmit={handle}>
+          <input type="password" placeholder="nova senha" value={senha} onChange={e => setSenha(e.target.value)} />
+          <input type="password" placeholder="confirme a nova senha" value={conf} onChange={e => setConf(e.target.value)} />
+          <button type="submit">Confirmar</button>
         </form>
+
+        {msg && <p className="msg">{msg}</p>}
+      </div>
+
+      <div className="illustration">
+        <img src="/journey.png" alt="ilustração cadastro" />
       </div>
     </div>
-  );
+  )
 }
-
-export default ResetPassword;

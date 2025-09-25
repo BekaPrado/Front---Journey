@@ -1,103 +1,145 @@
-/* Fundo geral */
-body {
-  margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #2a005a, #3d0dbd);
-  color: #fff;
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
+/* ==========================
+   Reset geral
+   ========================== */
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: "Inter", sans-serif;
+    background: linear-gradient(135deg, #1e0f62, #2e0d8a, #4b11d9);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* ==========================
+     Container principal
+     ========================== */
+  .container {
+    width: 100%;
+    max-width: 960px;
+    min-height: 520px;
+    background: #3d0ea1;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+  /* ==========================
+     Área do formulário
+     ========================== */
+  .container .form-area {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;   /* centraliza verticalmente */
+    align-items: flex-start;   /* alinha à esquerda */
+    padding: 3rem;
+    text-align: left;
+  }
+  
+  .form-area h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.3;
+  }
+  
+  .form-area p {
+    font-size: 0.95rem;
+    margin: 0.5rem 0;
+    color: #ddd;
+  }
+  
+  .form-area a {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  
+  .form-area a:hover {
+    text-decoration: underline;
+  }
+  
+  /* ==========================
+     Inputs
+     ========================== */
+  input, select {
+    width: 100%;
+    padding: 0.9rem 1.2rem;
+    margin: 0.6rem 0;
+    border-radius: 12px;
+    border: none;
+    background: #5a25c9;
+    color: #fff;
+    font-size: 1rem;
+  }
+  
+  input::placeholder {
+    color: #d1c4ff;
+  }
+  
+  input:focus {
+    outline: none;
+    background: #6d36dd;
+    box-shadow: 0 0 0 3px rgba(255,255,255,0.2);
+  }
+  
+  /* ==========================
+     Botão
+     ========================== */
+  button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.9rem;
+    border-radius: 30px;
+    border: none;
+    background: #fff;
+    color: #3d0ea1;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  button:hover {
+    background: #f4f4f4;
+    transform: scale(1.02);
+  }
+  
+  button:active {
+    transform: scale(0.98);
+  }
+  
+  /* ==========================
+     Área da ilustração
+     ========================== */
+  .container .illustration {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+  
+  .container .illustration img {
+    max-width: 140%;
+    height: 500px;
+  }
+  
+  /* ==========================
+     Animação
+     ========================== */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
 
-/* Container central */
-.auth-container {
-  width: 100%;
-  max-width: 480px;
-  padding: 20px;
-  display: flex;
-  justify-content: center;
-}
-
-/* Card */
-.auth-card {
-  background: #1f003f;
-  padding: 3rem 2.5rem;
-  border-radius: 16px;
-  width: 600px;
-  max-width: 650px; /* antes era 480px */
-  text-align: center;
-  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.5);
-}
-
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Títulos */
-.auth-card h2 {
-  margin-bottom: 10px;
-  font-size: 2rem;
-  font-weight: bold;
-  color: #fff;
-}
-
-.subtitle {
-  font-size: 0.95rem;
-  margin-bottom: 25px;
-  color: #cfc7ff;
-}
-
-/* Inputs */
-.auth-card input {
-  width: 100%;
-  padding: 14px;
-  margin: 10px 0;
-  border-radius: 12px;
-  border: none;
-  outline: none;
-  background: #f3f0ff;
-  font-size: 1rem;
-  transition: 0.2s;
-}
-
-.auth-card input:focus {
-  box-shadow: 0 0 0 3px #7a4fff;
-}
-
-/* Botão */
-.auth-card button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 20px;
-  border-radius: 12px;
-  border: none;
-  background: #7a4fff;
-  color: #fff;
-  font-size: 1.1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.auth-card button:hover {
-  background: #9b70ff;
-  transform: translateY(-2px);
-  box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
-}
-
-/* Links */
-.link {
-  display: block;
-  margin-top: 18px;
-  font-size: 0.95rem;
-  color: #cfc7ff;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.link:hover {
-  color: #fff;
-}
+  
