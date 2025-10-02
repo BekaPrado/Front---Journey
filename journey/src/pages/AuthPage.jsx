@@ -21,14 +21,19 @@ export default function AuthPage() {
     if (!emailLogin || !senhaLogin) return setMsg("Preencha email e senha");
 
     try {
-      const res = await fetch("http://localhost:8080/v1/journey/usuario/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailLogin, senha: senhaLogin }),
-      });
+      const res = await fetch(
+        "http://localhost:8080/v1/journey/usuario/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailLogin, senha: senhaLogin }),
+        }
+      );
       const data = await res.json();
       if (![200, 201].includes(res.status)) throw new Error(data.message);
       login(data);
+      localStorage.setItem("userID", data.usuario.id);
+      console.log(localStorage.getItem("userID")); // salva só o ID do usuário
       navigate("/home");
     } catch {
       setMsg("Erro ao efetuar login");
@@ -61,9 +66,7 @@ export default function AuthPage() {
       data_nascimento: form.data_nascimento,
       tipo_usuario: form.tipo_usuario,
       descricao:
-        form.tipo_usuario === "Profissional"
-          ? `linkedin:${form.linkedin}`
-          : "",
+        form.tipo_usuario === "Profissional" ? `linkedin:${form.linkedin}` : "",
     };
     try {
       const res = await registerUser(payload);

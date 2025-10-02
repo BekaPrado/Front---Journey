@@ -25,12 +25,11 @@ export const Container = styled.div`
   flex: 1;
   min-height: 100vh;
   padding: 30px;
-  background-color: #f3f4f6; 
+  background-color: #f3f4f6;
   transition: all 0.3s ease;
-  
-  /* Ajuste para Sidebar colapsada (220px padrão, 80px colapsada) */
-  margin-left: ${({ isCollapsed }) => (isCollapsed ? '80px' : '220px')}; 
-  
+
+  margin-left: ${({ $isCollapsed }) => ($isCollapsed ? "80px" : "250px")};
+
   .homepage.dark & {
     background-color: #1e1e2f;
   }
@@ -41,10 +40,10 @@ export const ProfileHeader = styled.div`
   align-items: center;
   margin-bottom: 40px;
   padding-bottom: 15px;
-  border-bottom: 1px solid rgba(0,0,0,0.1);
-  
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+
   .homepage.dark & {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
 `;
 
@@ -52,7 +51,7 @@ export const ProfileImage = styled.div`
   width: 100px;
   height: 100px;
   border-radius: 50%;
-  background-color: #4b39b8; 
+  background-color: #4b39b8;
   color: white;
   display: flex;
   align-items: center;
@@ -107,9 +106,13 @@ export const Label = styled.label`
   }
 `;
 
-export const Input = styled.input`${FormElementStyle}`;
+export const Input = styled.input`
+  ${FormElementStyle}
+`;
 
-export const Select = styled.select`${FormElementStyle}`;
+export const Select = styled.select`
+  ${FormElementStyle}
+`;
 
 export const Textarea = styled.textarea`
   ${FormElementStyle}
