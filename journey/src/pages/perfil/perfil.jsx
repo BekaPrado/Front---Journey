@@ -51,16 +51,23 @@ const Perfil = () => {
           throw new Error(`Erro HTTP: ${res.status}`);
       }
       const data = await res.json();
-      
-      if (data.usuario) {
-        // Formata a data para yyyy-mm-dd para o input type="date"
-        if (data.usuario.data_nascimento) {
-            data.usuario.data_nascimento = data.usuario.data_nascimento.substring(0, 10);
-        }
+
+      // Se vier objeto direto
+      if (data.id_usuario) {
+        setUserData(data);
+      }
+      // Se vier dentro de "usuario" (objeto)
+      else if (data.usuario && !Array.isArray(data.usuario)) {
         setUserData(data.usuario);
-      } else {
+      }
+      // Se vier lista
+      else if (Array.isArray(data.usuario) && data.usuario.length > 0) {
+        setUserData(data.usuario[0]);
+      }
+      else {
         setError("Usuário não encontrado.");
       }
+      
       
     } catch (err) {
       console.error("Erro ao buscar dados do usuário:", err);
@@ -155,6 +162,17 @@ const Perfil = () => {
               type="text"
               name="nome_completo"
               value={userData.nome_completo || ''}
+              onChange={handleInputChange}
+            />
+          </InputGroup>
+
+          {/* Alterar senha ? */}
+          <InputGroup>
+            <Label>Alterar Senha</Label>
+            <Input
+              type="password"
+              name="senha"
+              value={userData.senha || ''}
               onChange={handleInputChange}
             />
           </InputGroup>
