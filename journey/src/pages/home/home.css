@@ -52,11 +52,18 @@ html, body, #root {
 }
 
 /* ------------------ HEADER (Topo da Página) ------------------ */
+/* Ajuste no cabeçalho para acomodar o novo elemento e alinhamento */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
+}
+/* O .header-right já existe no seu CSS, vamos garantir que o novo elemento se encaixe */
+.header-right { 
+  display:flex; 
+  align-items:center; 
+  gap: 16px; 
 }
 .page-header h1 {
   font-size: 28px;
@@ -65,11 +72,6 @@ html, body, #root {
   margin: 0;
 }
 
-.header-right { 
-  display:flex; 
-  align-items:center; 
-  gap: 16px; 
-}
 
 /* Botões de Ação no Header */
 .theme-btn, .sidebar-toggle-btn {
@@ -101,6 +103,34 @@ html, body, #root {
     display: none; 
 }
 
+/* ------------------ botao do perfil na home ------------------ */
+
+.profile-avatar-circle {
+    /* Estilos para parecer um círculo clicável no canto superior direito */
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #5c46b5; /* Cor primária */
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer; /* Indica que é um botão/link */
+    transition: transform 0.2s, background-color 0.2s;
+    flex-shrink: 0; 
+    border: 2px solid white; /* Borda de destaque */
+}
+
+.profile-avatar-circle:hover {
+    background-color: #6c5dd3;
+    transform: scale(1.05);
+}
+
+/* Ajuste para o Dark Mode */
+.homepage.dark .profile-avatar-circle {
+    background-color: #6c5dd3;
+    border: 2px solid #e4e4e7;
+}
 
 /* ------------------ BIG CARD (Meus Grupos) ------------------ */
 .big-card {

@@ -4,7 +4,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/header/index.jsx"; 
 import "./home.css";
-import { FaPlus, FaFilter, FaMoon, FaSun, FaBars } from 'react-icons/fa';
+// Adicionado FaUserCircle para o avatar
+import { FaPlus, FaFilter, FaMoon, FaSun, FaBars, FaUserCircle } from 'react-icons/fa'; 
 
 export default function Home() {
   const navigate = useNavigate();
@@ -46,7 +47,13 @@ export default function Home() {
       setLoading(false);
     }
   }
+  
+  // NOVA FUNÇÃO: Navega para a página de perfil
+  const goToProfile = () => {
+    navigate('/perfil');
+  };
 
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
   function handleCreateGroup() {
     navigate("/criarGrupo");
   }
@@ -56,69 +63,83 @@ export default function Home() {
 
   return (
     <div className={`homepage ${darkMode ? "dark" : ""}`}>
-      
-      {/* 1. SIDEBAR: Passamos o estado de colapso. */}
       <Sidebar 
         isCollapsed={sidebarCollapsed} 
         setCollapsed={setSidebarCollapsed} 
-      /> 
-
-      {/* 2. MAIN CONTENT (Área de Conteúdo) */}
+      />
+      
       <main className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
         <div className="container-home">
-          
           <header className="page-header">
-             <button className="sidebar-toggle-btn" onClick={() => setSidebarCollapsed(!sidebarCollapsed)}>
+            <button 
+                className="sidebar-toggle-btn" 
+                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+            >
                 <FaBars />
             </button>
             <h1>Bem-vindo ao Journey!</h1>
             
             <div className="header-right">
-              <button className="theme-btn" onClick={() => setDarkMode(!darkMode)}>
-                {darkMode ? <FaSun /> : <FaMoon />}
-              </button>
-              <div className="avatar">U</div>
+                
+                {/* NOVO ELEMENTO: Avatar de Perfil Clicável */}
+                <div 
+                    className="profile-avatar-circle" 
+                    onClick={goToProfile}
+                    aria-label="Ir para Perfil"
+                >
+                    {/* Pode ser substituído por <img src={user.foto} /> */}
+                    <FaUserCircle size={22} /> 
+                </div>
+
+                <button 
+                    className="theme-btn" 
+                    onClick={toggleDarkMode}
+                >
+                    {darkMode ? <FaSun /> : <FaMoon />}
+                </button>
             </div>
           </header>
 
-          <section className="big-card">
-            <div className="big-card-top">
-              <h2>Grupos</h2>
-              <div className="big-card-actions">
-                <button className="btn btn-primary" onClick={handleCreateGroup}>
-                  <FaPlus /> Criar Grupo
-                </button>
-                <button className="btn btn-ghost">
-                  <FaFilter /> Filtros
-                </button>
+          <div className="content-area">
+            <section className="big-card">
+              <div className="big-card-top">
+                <h2>Grupos em Destaque</h2>
+                <div className="big-card-actions">
+                  <button className="btn btn-primary" onClick={handleCreateGroup}>
+                    <FaPlus /> Criar Grupo
+                  </button>
+                  <button className="btn btn-ghost">
+                    <FaFilter /> Filtros
+                  </button>
+                </div>
               </div>
-            </div>
 
-            <div className="big-card-body">
-              {!loading && !error && grupos.length > 0 && (
-                <div className="groups-grid">
-                  {grupos.map((g) => (
-                    <div key={g.id_grupo} className="group-card">
-                      <div className="group-thumb">
-                         <img src={placeholder} alt={g.nome} />
-                      </div>
-                      <div className="group-info">
-                        <div className="group-title">{g.nome}</div>
-                        <div className="group-members">
-                          {g.limite_membros || 0} membros
+              <div className="big-card-body">
+                {!loading && !error && grupos.length > 0 && (
+                  <div className="groups-grid">
+                    {grupos.map((g) => (
+                      <div key={g.id_grupo} className="group-card">
+                        <div className="group-thumb">
+                           <img src={placeholder} alt={g.nome} />
+                        </div>
+                        <div className="group-info">
+                          <div className="group-title">{g.nome}</div>
+                          <div className="group-members">
+                            {g.limite_membros || 0} membros
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-              {loading && <div className="state-msg">Carregando grupos...</div>}
-              {error && (<div className="state-msg error">Erro: {error}</div>)}
-              {!loading && !error && grupos.length === 0 && (
-                <div className="state-msg">Nenhum grupo encontrado.</div>
-              )}
-            </div>
-          </section>
+                    ))}
+                  </div>
+                )}
+                {loading && <div className="state-msg">Carregando grupos...</div>}
+                {error && (<div className="state-msg error">Erro: {error}</div>)}
+                {!loading && !error && grupos.length === 0 && (
+                  <div className="state-msg">Nenhum grupo encontrado.</div>
+                )}
+              </div>
+            </section>
+          </div>
         </div>
       </main>
     </div>

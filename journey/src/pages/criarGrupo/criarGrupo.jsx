@@ -17,21 +17,25 @@ import {
   Select 
 } from "./criarGrupo.js";
 
+// Endpoint de base para a API
 const BASE_URL = "http://localhost:8080/v1/journey";
 
 const CriarGrupo = () => {
   const [nome, setNome] = useState("");
   const [limite_membros, setLimiteMembros] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [id_usuario] = useState(1);
+  
+  // ID do usuário mockado (Mantenha este valor fixo, pois é um dos 6 argumentos)
+  const [id_usuario] = useState(1); 
+  
   const [id_area, setIdArea] = useState("");
   const [areas, setAreas] = useState([]);
   
-  // Dark Mode
+  // Dark Mode é lido do localStorage para persistir entre as páginas
   const [darkMode] = useState(() => localStorage.getItem("darkMode") === "true");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false); 
 
-  // NOVO: Consumo da API para o campo 'Área'
+  // EFEITO: Consumo da API para o campo 'Área'
   useEffect(() => {
     fetchAreas();
   }, []);
@@ -41,17 +45,15 @@ const CriarGrupo = () => {
           const res = await fetch(`${BASE_URL}/area`); 
           
           if (!res.ok) {
-              console.error(`Erro HTTP: ${res.status}`);
               throw new Error(`Erro ao buscar áreas: status ${res.status}`);
           }
           
           const data = await res.json();
           
-          // CRUCIAL: Mapeia a lista que está na chave "Area" do seu retorno
+          // Mapeia a lista que está na chave "Area"
           const areasArray = Array.isArray(data.Area) ? data.Area : []; 
           
           const formattedAreas = areasArray.map(a => ({
-              // CRUCIAL: Mapeia para os nomes de coluna corretos (id_area e area)
               id: a.id_area, 
               nome: a.area  
           }));
@@ -60,24 +62,27 @@ const CriarGrupo = () => {
           
       } catch (err) {
           console.error("Erro ao buscar áreas:", err);
-          // Adiciona uma opção de erro no select para visualização
-          setAreas([{ id: -1, nome: `[ERRO] ${err.message || "Não foi possível carregar as áreas"}` }]);
+          // Opção de erro para o usuário ver que falhou
+          setAreas([{ id: -1, nome: `[ERRO] ${err.message || "Não foi possível carregar as áreas."}` }]);
       }
   };
   
-  // Função handleSubmit (mantida)
+  // FUNÇÃO DE CRIAÇÃO DO GRUPO
   const handleSubmit = async () => {
     if (!nome || !limite_membros || !descricao || !id_area) {
       alert("Preencha todos os campos obrigatórios");
       return;
     }
-
+    
+    // PAYLOAD CORRIGIDO
+    // É crucial enviar 6 campos (nome, limite_membros, descricao, imagem, id_area, id_usuario)
     const payload = {
       nome,
       limite_membros: Number(limite_membros),
       descricao,
-      imagem: null,
-      id_usuario,
+      // CRUCIAL: Sua tabela tbl_grupo tem IMAGEM NOT NULL. Enviar um valor padrão (string).
+      imagem: "default_group_image.png", 
+      id_usuario, // id_usuario mockado (1)
       id_area: Number(id_area),
     };
 
@@ -88,12 +93,24 @@ const CriarGrupo = () => {
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) throw new Error("Erro ao criar grupo");
+      if (!response.ok) {
+          // Tenta ler a mensagem de erro do backend para ser mais específico
+          const errorData = await response.json();
+          throw new Error(errorData.message || "Erro desconhecido ao criar grupo");
+      }
+      
       const data = await response.json();
       alert(data.message || "Grupo criado com sucesso!");
+      
+      // Opcional: Limpar formulário ou navegar para outra página
+      setNome("");
+      setLimiteMembros("");
+      setDescricao("");
+      setIdArea("");
+      
     } catch (error) {
       console.error(error);
-      alert("Erro ao criar grupo");
+      alert(`Erro ao criar grupo: ${error.message || "Verifique o console para mais detalhes."}`);
     }
   };
   
@@ -124,7 +141,6 @@ const CriarGrupo = () => {
             <Select
               value={id_area}
               onChange={(e) => setIdArea(e.target.value)}
-              // Desabilita o Select se houver erro
               disabled={areas.length === 1 && areas[0].id === -1} 
             >
               <option value="">Selecione uma área</option>
@@ -132,7 +148,7 @@ const CriarGrupo = () => {
                 <option 
                   key={area.id} 
                   value={area.id} 
-                  disabled={area.id === -1} // Desabilita opção de erro
+                  disabled={area.id === -1}
                 >
                   {area.nome}
                 </option>
