@@ -1,32 +1,34 @@
-// app.jsx
-import React from 'react'
-import { Routes, Route, Navigate } from 'react-router-dom'
-import Login from './pages/Login'
-import Register from "./pages/Register";
-import Recover from "./pages/Recover";
-import ValidateCode from "./pages/ValidadeCode";
-import ResetPassword from "./pages/ResetPassword"; // <-- corrigido
-import Home from "./pages/Home.jsx";
+// src/App.jsx
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import AuthPage from "./pages/AuthPage"; // 👈 novo
+import Home from "./pages/home/home.jsx";
+import CriarGrupo from './pages/criarGrupo/criarGrupo.jsx'
+import Calendar from './pages/calendary/calendary.jsx'
 
-import ProtectedRoute from './components/ProtectedRoute'
 
-// simples navbar para navegar (substituir pelo seu design)
+import ProtectedRoute from "./components/ProtectedRoute";
+
 export default function App() {
   return (
     <div>
+        <Routes>
+          <Route path="/" element={<Navigate to="/auth" replace />} />
+          <Route path="/auth" element={<AuthPage />} />
+          <Route
+            path="/home"
+            element={
+              <ProtectedRoute>
+                <Home />
+              </ProtectedRoute>
+            }
+          />
+                <Route path='/criarGrupo' element={<CriarGrupo/>}/>
+                      <Route path='/calendary' element={<Calendar/>}/>
 
-      <main style={{padding: 24}}>
-      <Routes>
-  <Route path="/" element={<Navigate to="/login" replace />} />
-  <Route path="/home" element={<ProtectedRoute><Home/></ProtectedRoute>} />
-  <Route path="/login" element={<Login/>} />
-  <Route path="/register" element={<Register/>} />
-  <Route path="/recover" element={<Recover/>} />
-  <Route path="/validate-code" element={<ValidateCode/>} />
-  <Route path="/reset-password/:id" element={<ResetPassword/>} />
-</Routes>
 
-      </main>
+        </Routes>
+    
     </div>
-  )
+  );
 }
