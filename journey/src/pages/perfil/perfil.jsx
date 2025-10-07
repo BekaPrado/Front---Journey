@@ -1,266 +1,288 @@
-// src/pages/perfil/perfil.jsx
-
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Necessário para navegar ao Cancelar
-import Sidebar from "../../components/header/index.jsx"; // Importa a Sidebar
-import {
-  Container,
-  ProfileHeader,
-  ProfileImage,
-  Title,
-  FormGrid,
-  InputGroup,
-  Label,
-  Input,
-  Select,
-  Textarea,
-  ButtonContainer,
-  SaveButton,
-  CancelButton,
-} from "./perfil.js";
-import { FaUserCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import "./perfil.css";
 
-const BASE_URL = "http://localhost:8080/v1/journey/usuario";
-// MOCK ID: Substitua pelo ID real do usuário logado (ex: lido do token JWT ou localStorage)
-const userId = localStorage.getItem("userID");
-console.log(userId);
-
-const Perfil = () => {
+export default function Perfil() {
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [isUpdating, setIsUpdating] = useState(false);
-
-  // Dark Mode e Sidebar (Lê do localStorage)
-  const [darkMode] = useState(
-    () => localStorage.getItem("darkMode") === "true"
-  );
-  // O estado da Sidebar deve ser compartilhado/lido do componente pai ou contexto se existir,
-  // mas usaremos um estado local temporário para a margem
+  const [userData, setUserData] = useState(null);
+  const [saving, setSaving] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [darkMode, setDarkMode] = useState(false);
+  const BASE_USER = "http://localhost:8080/v1/journey/usuario";
 
+  // carrega dados do usuário logado (localStorage)
   useEffect(() => {
-    fetchUserData();
-  }, []);
-
-  // FUNÇÃO PARA BUSCAR DADOS DO USUÁRIO (GET /usuario/:id)
-  const fetchUserData = async () => {
-    setLoading(true);
-    setError(null);
-
-    if (!userId) {
-      setError("Usuário não logado.");
-      setLoading(false);
+    const raw = localStorage.getItem("journey_user");
+    if (!raw) {
+      alert("Usuário não logado!");
+      navigate("/auth");
       return;
     }
 
     try {
-      const res = await fetch(`${BASE_URL}/${userId}`);
-      if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
-
-      const data = await res.json();
-
-      // O backend retorna data.usuario como array
-      if (Array.isArray(data.usuario) && data.usuario.length > 0) {
-        setUserData(data.usuario[0]); // pega o primeiro elemento
-      } else {
-        setError("Usuário não encontrado.");
-      }
+      const parsed = JSON.parse(raw);
+      setUserData(parsed);
     } catch (err) {
-      console.error("Erro ao buscar dados do usuário:", err);
-      setError("Não foi possível carregar o perfil. Verifique o backend.");
-    } finally {
-      setLoading(false);
+      console.error("Erro ao parsear journey_user:", err);
     }
-  };
+  }, [navigate]);
 
-  const handleInputChange = (e) => {
+  function handleChange(e) {
     const { name, value } = e.target;
-    setUserData((prev) => ({ ...prev, [name]: value }));
-  };
+    setUserData((s) => ({ ...s, [name]: value }));
+  }
 
-  // FUNÇÃO PARA ATUALIZAR DADOS DO USUÁRIO (PUT /usuario/:id)
-  const handleSave = async () => {
-    if (isUpdating) return;
-    setIsUpdating(true);
+  function handleImageUpload(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      setUserData((s) => ({ ...s, foto_perfil: ev.target.result }));
+    };
+    reader.readAsDataURL(file);
+  }
 
-    try {
-      // Validação básica dos campos obrigatórios
-      if (
-        !userData.nome_completo ||
-        !userData.email ||
-        !userData.tipo_usuario
-      ) {
-        alert(
-          "Preencha os campos obrigatórios: Nome, Email e Tipo de Usuário."
-        );
+  function handleLogout() {
+    localStorage.removeItem("journey_user");
+    navigate("/auth");
+  }
+
+  function toggleTheme() {
+    setDarkMode((prev) => !prev);
+  }
+
+  async function handleSave() {
+    if (!userData || !userData.id_usuario) {
+      alert("Usuário inválido.");
+      return;
+    }
+
+    if (!userData.nome_completo || !userData.email) {
+      alert("Preencha nome e e-mail.");
+      return;
+    }
+
+    if (userData.senha && userData.senha.length > 0) {
+      if (!userData.senha_confirm || userData.senha !== userData.senha_confirm) {
+        alert("As senhas não conferem.");
         return;
       }
+      if (userData.senha.length < 6) {
+        alert("Senha precisa ter ao menos 6 caracteres.");
+        return;
+      }
+    }
 
-      // Monta o payload (exclui id_usuario, senha e outros campos internos)
+    setSaving(true);
+    try {
       const payload = {
         nome_completo: userData.nome_completo,
         email: userData.email,
+        senha:
+          userData.senha && userData.senha.length > 0
+            ? userData.senha
+            : undefined,
         data_nascimento: userData.data_nascimento || null,
-        foto_perfil: userData.foto_perfil || null,
         descricao: userData.descricao || null,
-        tipo_usuario: userData.tipo_usuario,
+        foto_perfil: userData.foto_perfil || null,
+        tipo_usuario: userData.tipo_usuario || "Estudante",
       };
 
-      const response = await fetch(`${BASE_URL}/${MOCK_USER_ID}`, {
+      Object.keys(payload).forEach((k) => {
+        if (typeof payload[k] === "undefined") delete payload[k];
+      });
+
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("journey_token");
+
+      const resp = await fetch(`${BASE_USER}/${userData.id_usuario}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(payload),
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || `Erro HTTP: ${response.status}`);
+      if (!resp.ok) {
+        const text = await resp.text();
+        console.error("PUT perfil erro:", resp.status, text);
+        throw new Error(`Erro ${resp.status}`);
       }
 
-      const result = await response.json();
+      const resJson = await resp.json();
+      console.log("PUT /usuario/:id =>", resJson);
 
-      alert(`Perfil atualizado com sucesso!`);
-      // O seu controller retorna o objeto atualizado, então atualizamos o estado
-      if (result.usuario) {
-        setUserData(result.usuario);
+      // Atualiza localStorage com segurança
+      try {
+        const raw = localStorage.getItem("journey_user");
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          parsed.nome_completo = userData.nome_completo;
+          parsed.email = userData.email;
+          localStorage.setItem("journey_user", JSON.stringify(parsed));
+        }
+      } catch (err) {
+        console.warn("Falha ao atualizar journey_user:", err);
       }
-    } catch (error) {
-      console.error("Erro ao salvar perfil:", error);
-      alert(`Erro ao salvar perfil: ${error.message || error}`);
+
+      alert("Perfil atualizado com sucesso!");
+      setUserData((s) => ({ ...s, senha: "", senha_confirm: "" }));
+    } catch (err) {
+      console.error("Falha ao salvar perfil:", err);
+      alert("Falha ao salvar perfil. Veja o console para detalhes.");
     } finally {
-      setIsUpdating(false);
+      setSaving(false);
     }
-  };
+  }
 
-  if (loading)
-    return (
-      <Container>
-        <Title>Carregando perfil...</Title>
-      </Container>
-    );
-  if (error)
-    return (
-      <Container>
-        <Title style={{ color: "red" }}>Erro: {error}</Title>
-      </Container>
-    );
+  if (!userData) {
+    return <div className="loading">Carregando...</div>;
+  }
 
   return (
-    <div
-      className={`homepage ${darkMode ? "dark" : ""}`}
-      style={{ display: "flex" }}
-    >
-      <Sidebar
-        isCollapsed={sidebarCollapsed}
-        setCollapsed={setSidebarCollapsed}
-      />
-      <Container isCollapsed={sidebarCollapsed}>
-        <ProfileHeader>
-          <ProfileImage>
-            {/* Exibe a foto do perfil ou um ícone padrão */}
-            {userData.foto_perfil ? (
-              <img src={userData.foto_perfil} alt="Foto de Perfil" />
-            ) : (
-              <FaUserCircle size={60} style={{ opacity: 0.7 }} />
-            )}
-          </ProfileImage>
-          <Title>Edição de Perfil de {userData.nome_completo}</Title>
-        </ProfileHeader>
+    <div className={`perfil-page ${darkMode ? "dark" : ""}`}>
+      <aside className={`sidebar ${sidebarCollapsed ? "collapsed" : ""}`}>
+        <div className="logo-area">
+          <img
+            src={userData.foto_perfil || "/logo.png"}
+            alt="logo"
+            className="logo"
+          />
+          {!sidebarCollapsed && <h2>Journey</h2>}
+        </div>
 
-        <FormGrid>
-          {/* Nome Completo */}
-          <InputGroup>
-            <Label>Nome Completo:</Label>
-            <Input
-              type="text"
-              name="nome_completo"
-              value={userData.nome_completo || ""}
-              onChange={handleInputChange}
-            />
-          </InputGroup>
+        <nav className="nav">
+          <ul>
+            <li onClick={() => navigate("/home")}>
+              <span className="icon">🏠</span>
+              {!sidebarCollapsed && "Home"}
+            </li>
+            <li onClick={() => navigate("/calendary")}>
+              <span className="icon">📅</span>
+              {!sidebarCollapsed && "Calendário"}
+            </li>
+            <li onClick={() => navigate("/criarGrupo")}>
+              <span className="icon">➕</span>
+              {!sidebarCollapsed && "Criar Grupo"}
+            </li>
+            <li onClick={handleLogout}>
+              <span className="icon">🚪</span>
+              {!sidebarCollapsed && "Sair"}
+            </li>
+          </ul>
+        </nav>
 
-          {/* Alterar senha ? */}
-          <InputGroup>
-            <Label>Alterar Senha</Label>
-            <Input
-              type="password"
-              name="senha"
-              value={userData.senha || ""}
-              onChange={handleInputChange}
-            />
-          </InputGroup>
+        <button
+          className="collapse-btn"
+          onClick={() => setSidebarCollapsed((p) => !p)}
+        >
+          {sidebarCollapsed ? "➡️" : "⬅️"}
+        </button>
+      </aside>
 
-          {/* Email */}
-          <InputGroup>
-            <Label>Email:</Label>
-            <Input
-              type="email"
-              name="email"
-              value={userData.email || ""}
-              onChange={handleInputChange}
-            />
-          </InputGroup>
+      <main
+        className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}
+      >
+        <div className="container">
+          <header className="page-header">
+            <h1>Meu Perfil</h1>
+            <div className="header-right">
+              <button className="theme-btn" onClick={toggleTheme}>
+                {darkMode ? "☀️" : "🌙"}
+              </button>
+              <div className="avatar">
+                {userData.nome_completo?.charAt(0).toUpperCase()}
+              </div>
+            </div>
+          </header>
 
-          {/* Data de Nascimento */}
-          <InputGroup>
-            <Label>Data de Nascimento:</Label>
-            <Input
-              type="date"
-              name="data_nascimento"
-              value={userData.data_nascimento || ""}
-              onChange={handleInputChange}
-            />
-          </InputGroup>
+          <div className="perfil-card">
+            <div className="perfil-photo">
+              <img
+                src={userData.foto_perfil || "/default-avatar.png"}
+                alt="foto perfil"
+              />
+              <input type="file" accept="image/*" onChange={handleImageUpload} />
+            </div>
 
-          {/* Tipo de Usuário */}
-          <InputGroup>
-            <Label>Tipo de Usuário:</Label>
-            <Select
-              name="tipo_usuario"
-              value={userData.tipo_usuario || ""}
-              onChange={handleInputChange}
-            >
-              <option value="">Selecione</option>
-              <option value="Profissional">Profissional</option>
-              <option value="Estudante">Estudante</option>
-            </Select>
-          </InputGroup>
+            <div className="perfil-fields">
+              <label>
+                Nome Completo:
+                <input
+                  name="nome_completo"
+                  value={userData.nome_completo || ""}
+                  onChange={handleChange}
+                />
+              </label>
 
-          {/* Foto Perfil (Simulação: URL da imagem) */}
-          <InputGroup style={{ gridColumn: "1 / -1" }}>
-            <Label>URL/Caminho da Foto de Perfil:</Label>
-            <Input
-              type="text"
-              name="foto_perfil"
-              placeholder="Cole a URL da sua foto de perfil aqui"
-              value={userData.foto_perfil || ""}
-              onChange={handleInputChange}
-            />
-          </InputGroup>
+              <label>
+                Email:
+                <input
+                  name="email"
+                  type="email"
+                  value={userData.email || ""}
+                  onChange={handleChange}
+                />
+              </label>
 
-          {/* Descrição - Ocupa as duas colunas */}
-          <InputGroup style={{ gridColumn: "1 / -1" }}>
-            <Label>Descrição / Bio:</Label>
-            <Textarea
-              name="descricao"
-              placeholder="Fale um pouco sobre você..."
-              value={userData.descricao || ""}
-              onChange={handleInputChange}
-            />
-          </InputGroup>
+              <label>
+                Data de Nascimento:
+                <input
+                  name="data_nascimento"
+                  type="date"
+                  value={userData.data_nascimento || ""}
+                  onChange={handleChange}
+                />
+              </label>
 
-          <ButtonContainer>
-            <SaveButton onClick={handleSave} disabled={isUpdating}>
-              {isUpdating ? "Salvando..." : "Salvar Alterações"}
-            </SaveButton>
-            <CancelButton onClick={() => navigate(-1)}>Cancelar</CancelButton>
-          </ButtonContainer>
-        </FormGrid>
-      </Container>
+              <label>
+                Descrição:
+                <textarea
+                  name="descricao"
+                  value={userData.descricao || ""}
+                  onChange={handleChange}
+                />
+              </label>
+
+              <label>
+                Nova Senha:
+                <input
+                  name="senha"
+                  type="password"
+                  placeholder="Nova senha (opcional)"
+                  value={userData.senha || ""}
+                  onChange={handleChange}
+                />
+              </label>
+
+              <label>
+                Confirmar Senha:
+                <input
+                  name="senha_confirm"
+                  type="password"
+                  placeholder="Confirmar nova senha"
+                  value={userData.senha_confirm || ""}
+                  onChange={handleChange}
+                />
+              </label>
+            </div>
+
+            <div className="perfil-actions">
+              <button onClick={() => navigate("/home")} className="btn-ghost">
+                Voltar
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving}
+                className="btn-primary"
+              >
+                {saving ? "Salvando..." : "Salvar Alterações"}
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
     </div>
   );
-};
-
-export default Perfil;
+}

@@ -21,21 +21,34 @@ export default function AuthPage() {
     if (!emailLogin || !senhaLogin) return setMsg("Preencha email e senha");
 
     try {
-      const res = await fetch(
-        "http://localhost:8080/v1/journey/usuario/login",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: emailLogin, senha: senhaLogin }),
-        }
-      );
+      const res = await fetch("http://localhost:8080/v1/journey/usuario/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: emailLogin, senha: senhaLogin }),
+      });
+
       const data = await res.json();
       if (![200, 201].includes(res.status)) throw new Error(data.message);
+
+      // salva login no contexto (se houver)
       login(data);
-      localStorage.setItem("userID", data.usuario.id);
-      console.log(localStorage.getItem("userID")); // salva só o ID do usuário
+
+      // 🔹 CORREÇÃO: salva corretamente o usuário e o token
+      localStorage.setItem(
+        "journey_user",
+        JSON.stringify({
+          id_usuario: data.usuario.id,
+          nome_completo: data.usuario.nome,
+          email: data.usuario.email,
+          tipo_usuario: data.usuario.tipo_usuario,
+        })
+      );
+      localStorage.setItem("journey_token", data.token);
+
+      console.log("Usuário logado:", data.usuario);
       navigate("/home");
-    } catch {
+    } catch (err) {
+      console.error("Erro no login:", err);
       setMsg("Erro ao efetuar login");
     }
   }
@@ -85,7 +98,6 @@ export default function AuthPage() {
     const res = await requestRecoveryCode(emailRec);
     setMsg(res?.message);
     if (/sucesso|enviado/i.test(res?.message)) {
-      // troca para tela de validação
       setEmailVal(emailRec);
       setScreen("validate");
     }
