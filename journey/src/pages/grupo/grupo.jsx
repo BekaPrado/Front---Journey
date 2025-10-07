@@ -1,5 +1,7 @@
-// grupoDetalhes.jsx
+// grupo.jsx
+
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/header/index.jsx";
 import {
   Container,
@@ -14,17 +16,65 @@ import {
   Button,
 } from "./grupo.js";
 
-const GrupoDetalhes = () => {
+const Grupo = () => {
+  const { state: grupo } = useLocation();
+  const navigate = useNavigate();
   const [darkMode] = useState(localStorage.getItem("darkMode") === "true");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [joinMessage, setJoinMessage] = useState("");
 
-  const grupo = {
-    nome: "Direito",
-    membros: 12,
-    descricao: `Grupo de Direito — um espaço criado para mentes que gostam de destrinchar leis, debater justiça e entender o impacto real das decisões jurídicas no dia a dia. Aqui, teoria e prática se encontram: discutimos casos atuais, compartilhamos experiências de estágio, trocamos materiais e exploramos as mudanças no cenário jurídico com olhar crítico. É o ponto de encontro perfeito para quem acredita que o Direito vai muito além dos códigos — é uma ferramenta de transformação social.`,
-    criador: "@username",
-    imagem: "https://cdn-icons-png.flaticon.com/512/2965/2965879.png",
-  };
+  const BASE_URL = "http://localhost:8080/v1/journey/group";
+
+  if (!grupo) {
+    return (
+      <div style={{ padding: 40 }}>
+        <h2>Nenhum grupo selecionado.</h2>
+        <button
+          onClick={() => navigate("/home")}
+          style={{
+            backgroundColor: "#5c46b5",
+            color: "#fff",
+            padding: "10px 16px",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            marginTop: "10px",
+          }}
+        >
+          Voltar para Home
+        </button>
+      </div>
+    );
+  }
+
+  async function handleJoinGroup() {
+    setIsJoining(true);
+    setJoinMessage("");
+
+    try {
+      const response = await fetch(`${BASE_URL}/${grupo.id_grupo}/join`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Se precisar enviar o ID do usuário:
+        // body: JSON.stringify({ user_id: usuario.id }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Erro ao entrar no grupo (HTTP ${response.status})`);
+      }
+
+      const result = await response.json();
+      setJoinMessage("✅ Você entrou no grupo com sucesso!");
+    } catch (error) {
+      console.error("Erro:", error);
+      setJoinMessage("❌ Não foi possível entrar no grupo.");
+    } finally {
+      setIsJoining(false);
+    }
+  }
 
   return (
     <div
@@ -37,32 +87,63 @@ const GrupoDetalhes = () => {
       />
       <Container isCollapsed={sidebarCollapsed}>
         <Header>
-          <Title>Detalhes do Grupo</Title>
+          <Title>{grupo.nome}</Title>
+          <button
+            onClick={() => navigate("/home")}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#5c46b5",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            ← Voltar
+          </button>
         </Header>
 
         <CardWrapper>
           <Card>
             <TopSection>
               <GroupInfo>
-                <img src={grupo.imagem} alt="ícone do grupo" />
+                <img
+                  src={
+                    grupo.imagem ||
+                    "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
+                  }
+                  alt="ícone do grupo"
+                />
                 <div>
                   <h2>{grupo.nome}</h2>
-                  <span>{grupo.membros} membros</span>
+                  <span>{grupo.limite_membros || 0} membros</span>
                 </div>
               </GroupInfo>
 
               <Creator>
                 <div className="avatar" />
-                <span>criador: {grupo.criador}</span>
+                <span>criador: {grupo.criador || "@desconhecido"}</span>
               </Creator>
             </TopSection>
 
             <Description>
-              <strong>Descrição:</strong>
-              {grupo.descricao}
+              <strong>Descrição:</strong>{" "}
+              {grupo.descricao || "Nenhuma descrição disponível."}
             </Description>
 
-            <Button>Entrar</Button>
+            <Button onClick={handleJoinGroup} disabled={isJoining}>
+              {isJoining ? "Entrando..." : "Entrar"}
+            </Button>
+
+            {joinMessage && (
+              <p
+                style={{
+                  marginTop: "15px",
+                  color: joinMessage.startsWith("✅") ? "green" : "red",
+                }}
+              >
+                {joinMessage}
+              </p>
+            )}
           </Card>
         </CardWrapper>
       </Container>
@@ -70,4 +151,4 @@ const GrupoDetalhes = () => {
   );
 };
 
-export default GrupoDetalhes;
+export default Grupo;

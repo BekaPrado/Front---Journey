@@ -4,18 +4,18 @@ import styled from "styled-components";
 
 // 1. SidebarToggle (Posicionado no fundo e com largura ajustada)
 export const SidebarToggle = styled.button`
-  position: absolute;
-  bottom: 25px; 
+  position: relative;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-50%);
 
-  background: #5c46b5; 
+  background: #5c46b5;
   color: white;
   border: none;
-  border-radius: 8px; 
-  width: 50px; 
-  height: 30px; 
-  
+  border-radius: 8px;
+  width: 20px;
+  height: 10px;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,7 +33,7 @@ export const SidebarToggle = styled.button`
 
 // 2. SidebarContainer (Fixo)
 export const SidebarContainer = styled.aside`
-  width: ${({ isCollapsed }) => (isCollapsed ? '80px' : '220px')};
+  width: ${({ isCollapsed }) => (isCollapsed ? "80px" : "220px")};
   background-color: #2c1e92;
   color: #fff;
   display: flex;
@@ -42,19 +42,21 @@ export const SidebarContainer = styled.aside`
   padding: 25px 15px;
   height: 100vh;
   position: fixed; /* CRUCIAL: Fixa a sidebar */
-  top: 0; 
+  top: 0;
   left: 0;
   box-sizing: border-box;
-  flex-shrink: 0; 
-  transition: width 0.3s ease; 
-  z-index: 1000; 
+  flex-shrink: 0;
+  transition: width 0.3s ease;
+  z-index: 1000;
 
   .homepage.dark & {
-    background-color: #1a0f5a; 
+    background-color: #1a0f5a;
   }
 
   /* Garante que o avatar desapareça suavemente quando colapsado */
-  ${({ isCollapsed }) => isCollapsed && `
+  ${({ isCollapsed }) =>
+    isCollapsed &&
+    `
       ${UserAvatar} {
           opacity: 0;
           transition: opacity 0.3s ease;
@@ -71,7 +73,7 @@ export const UserAvatar = styled.div`
   margin-bottom: 20px;
   border: 2px solid rgba(255, 255, 255, 0.18);
   flex-shrink: 0;
-  
+
   img {
     width: 100%;
     height: 100%;
@@ -90,17 +92,20 @@ export const Menu = styled.div`
   margin-bottom: auto; /* Garante que o espaço seja ocupado até o topo do toggle */
 
   .homepage.dark & {
-     background: #2a2040;
+    background: #2a2040;
   }
 
-  ${({ isCollapsed }) => isCollapsed && `
+  ${({ isCollapsed }) =>
+    isCollapsed &&
+    `
     padding: 10px 0;
   `}
 `;
 
 export const MenuItem = styled.div`
   display: flex;
-  justify-content: ${({ isCollapsed }) => (isCollapsed ? 'center' : 'flex-start')};
+  justify-content: ${({ isCollapsed }) =>
+    isCollapsed ? "center" : "flex-start"};
   align-items: center;
   gap: 12px;
   padding: 12px 10px;
@@ -109,19 +114,21 @@ export const MenuItem = styled.div`
   cursor: pointer;
   transition: background 0.2s ease;
   font-weight: 500;
-  
+
   &:hover {
     background: rgba(255, 255, 255, 0.1);
   }
 
   /* Esconde o texto quando colapsado */
-  p, a, span {
-    display: ${({ isCollapsed }) => (isCollapsed ? 'none' : 'block')};
+  p,
+  a,
+  span {
+    display: ${({ isCollapsed }) => (isCollapsed ? "none" : "block")};
     opacity: ${({ isCollapsed }) => (isCollapsed ? 0 : 1)};
     transition: opacity 0.3s ease;
   }
 
   svg {
-      font-size: 20px;
+    font-size: 20px;
   }
 `;

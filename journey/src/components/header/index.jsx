@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.png";
+
 import {
   SidebarContainer,
   UserAvatar,
@@ -20,8 +22,8 @@ import {
 const Sidebar = ({ isCollapsed, setCollapsed }) => {
   const navigate = useNavigate(); // hook dentro do componente
 
-  const goToGroup = () => {
-    navigate("/grupo");
+  const goToCreateGroup = () => {
+    navigate("/criarGrupo");
   };
 
   const goToChats = () => {
@@ -35,16 +37,11 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
   return (
     <SidebarContainer isCollapsed={isCollapsed}>
       <UserAvatar>
-        <img
-          src="https://via.placeholder.com/80"
-          alt="Avatar"
-          width="80"
-          height="80"
-        />
+        <img src={logo} alt="Logo" />;
       </UserAvatar>
 
       <Menu isCollapsed={isCollapsed}>
-        <MenuItem isCollapsed={isCollapsed} onClick={goToGroup}>
+        <MenuItem isCollapsed={isCollapsed} onClick={goToCreateGroup}>
           <FaPlus />
           <span>Criar Grupo</span>
         </MenuItem>
@@ -52,7 +49,7 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <FaUsers />
           <span>Meus Grupos</span>
         </MenuItem>
-        <MenuItem isCollapsed={isCollapsed} onClick={goToGroup}>
+        <MenuItem isCollapsed={isCollapsed} onClick>
           <FaComments />
           <span>Chats</span>
         </MenuItem>

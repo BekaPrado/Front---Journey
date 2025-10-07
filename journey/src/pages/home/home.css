@@ -4,19 +4,22 @@
    RESET & LAYOUT BASE
    ======================================================= */
 /* Garante que o container raiz ocupe a altura total */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   padding: 0;
-  font-family: 'Krona One', sans-serif;
+  font-family: "Krona One", sans-serif;
 }
-* { box-sizing: border-box; }
-
+* {
+  box-sizing: border-box;
+}
 
 .homepage {
   display: flex;
   min-height: 100vh;
-  width: 100vw; 
+  width: 100vw;
   background: #f3f4f6; /* Fundo claro */
   color: #1e1e2f;
   transition: background 0.3s ease, color 0.3s ease;
@@ -25,25 +28,23 @@ html, body, #root {
 /* Modo Escuro - homepage.dark */
 .homepage.dark {
   background: #1e1e2f; /* Fundo Dark Mode conforme a imagem */
-  color: #e4e4e7; 
+  color: #e4e4e7;
 }
-
 
 /* ------------------ MAIN CONTENT (Área Principal) ------------------ */
 .main-content {
-  flex: 1; 
+  flex: 1;
   padding: 30px;
   min-height: 100vh;
   /* COMPENSAÇÃO DA SIDEBAR FIXA (Largura padrão: 220px) */
-  margin-left: 220px; 
-  transition: margin-left 0.3s ease; 
+  margin-left: 220px;
+  transition: margin-left 0.3s ease;
 }
 
 /* Ajusta a margem lateral quando a sidebar está COLAPSADA (80px) */
 .main-content.collapsed {
-    margin-left: 80px; 
+  margin-left: 80px;
 }
-
 
 .container-home {
   max-width: 1200px;
@@ -60,21 +61,21 @@ html, body, #root {
   margin-bottom: 30px;
 }
 /* O .header-right já existe no seu CSS, vamos garantir que o novo elemento se encaixe */
-.header-right { 
-  display:flex; 
-  align-items:center; 
-  gap: 16px; 
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 .page-header h1 {
   font-size: 28px;
   font-weight: 600;
-  color: inherit; 
+  color: inherit;
   margin: 0;
 }
 
-
 /* Botões de Ação no Header */
-.theme-btn, .sidebar-toggle-btn {
+.theme-btn,
+.sidebar-toggle-btn {
   background: transparent;
   border: none;
   cursor: pointer;
@@ -85,51 +86,54 @@ html, body, #root {
 
 /* Ajuste do Avatar (Placeholder roxo e borda) */
 .avatar {
-  width:44px; height:44px;
-  border-radius:50%;
-  background: #5c46b5; 
-  border: 2px solid white; 
-  display:flex; align-items:center; justify-content:center;
-  color:transparent; /* Garante que não apareça texto */
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #5c46b5;
+  border: 2px solid white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: transparent; /* Garante que não apareça texto */
   flex-shrink: 0;
 }
 /* Ajuste de cor do avatar no Dark Mode */
 .homepage.dark .avatar {
-    background: #5c46b5; 
-    border: 2px solid #e4e4e7;
+  background: #5c46b5;
+  border: 2px solid #e4e4e7;
 }
 
 .sidebar-toggle-btn {
-    display: none; 
+  display: none;
 }
 
 /* ------------------ botao do perfil na home ------------------ */
 
 .profile-avatar-circle {
-    /* Estilos para parecer um círculo clicável no canto superior direito */
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-color: #5c46b5; /* Cor primária */
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer; /* Indica que é um botão/link */
-    transition: transform 0.2s, background-color 0.2s;
-    flex-shrink: 0; 
-    border: 2px solid white; /* Borda de destaque */
+  /* Estilos para parecer um círculo clicável no canto superior direito */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #5c46b5; /* Cor primária */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer; /* Indica que é um botão/link */
+  transition: transform 0.2s, background-color 0.2s;
+  flex-shrink: 0;
+  border: 2px solid white; /* Borda de destaque */
 }
 
 .profile-avatar-circle:hover {
-    background-color: #6c5dd3;
-    transform: scale(1.05);
+  background-color: #6c5dd3;
+  transform: scale(1.05);
 }
 
 /* Ajuste para o Dark Mode */
 .homepage.dark .profile-avatar-circle {
-    background-color: #6c5dd3;
-    border: 2px solid #e4e4e7;
+  background-color: #6c5dd3;
+  border: 2px solid #e4e4e7;
 }
 
 /* ------------------ BIG CARD (Meus Grupos) ------------------ */
@@ -138,44 +142,52 @@ html, body, #root {
   color: white;
   border-radius: 12px;
   padding: 25px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  position: relative;
+  align-items: center;
 }
 /* Fundo do card no modo escuro */
 .homepage.dark .big-card {
-    background: #1e1b30; 
+  background: #1e1b30;
 }
 
 .big-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px; 
+  margin-bottom: 25px;
 }
-.big-card-top h2 { margin: 0; font-size: 24px; font-weight: 700; }
+.big-card-top h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
 
-.big-card-actions { 
-  display:flex; 
-  align-items:center; 
+.big-card-actions {
+  display: flex;
+  align-items: center;
   gap: 10px;
 }
 
 /* Botões de Criar/Filtro - Ajustado para o visual da imagem */
 .btn {
-  padding: 10px 18px; 
+  padding: 10px 18px;
   border-radius: 8px;
   border: none;
   cursor: pointer;
   font-weight: 600;
-  transition: transform .15s ease, background .2s ease;
+  transition: transform 0.15s ease, background 0.2s ease;
   font-size: 14px;
-  display: flex; align-items: center; gap: 8px; 
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 .btn-primary {
   background: #5c46b5;
   color: white;
 }
 .btn-ghost {
-  background: white; 
+  background: white;
   color: #5c46b5;
   border: 1px solid #ddd;
 }
@@ -185,52 +197,64 @@ html, body, #root {
   color: white;
 }
 .homepage.dark .btn-ghost {
-  background: #3a3250; 
+  background: #3a3250;
   color: #e4e4e7;
   border: 1px solid #4a4060;
 }
-
 
 /* ------------------ GRUPOS GRID ------------------ */
 .groups-grid {
   display: grid;
   /* Garante 2 colunas com cards maiores */
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); 
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   gap: 20px;
 }
 
 .group-card {
-  display:flex; align-items:center; gap: 18px;
-  padding: 20px; 
-  min-height: 120px; 
-  background: #4b39b8; 
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 20px;
+  min-height: 120px;
+  background: #4b39b8;
   border-radius: 12px;
-  transition: transform .15s ease;
+  transition: transform 0.15s ease;
   cursor: pointer;
 }
 /* Fundo do card no modo escuro */
-.homepage.dark .group-card { 
-    background: #2a2040; 
-    border: 1px solid rgba(255, 255, 255, 0.05);
+.homepage.dark .group-card {
+  background: #2a2040;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .group-thumb {
-  width:70px; height:70px; 
-  border-radius:50%; 
-  background: #5c46b5; 
-  display: flex; align-items: center; justify-content: center;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: #5c46b5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  border: 3px solid rgba(255, 255, 255, 0.5); 
+  border: 3px solid rgba(255, 255, 255, 0.5);
 }
-.group-thumb img { display: none; } 
+.group-thumb img {
+  display: none;
+}
 
-.group-info { 
-    display:flex; 
-    flex-direction: column; 
-    gap: 5px; 
+.group-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
 }
-.group-title { font-weight: 700; font-size: 20px; } 
-.group-members { font-size: 16px; opacity: 0.9; } 
+.group-title {
+  font-weight: 700;
+  font-size: 20px;
+}
+.group-members {
+  font-size: 16px;
+  opacity: 0.9;
+}
 
 /* Mensagens de estado */
 .state-msg {
@@ -239,35 +263,33 @@ html, body, #root {
   opacity: 0.9;
 }
 
-
 /* =======================================================
    RESPONSIVIDADE (MOBILE)
    ======================================================= */
 @media (max-width: 768px) {
-    
-    .main-content {
-        margin-left: 0; 
-        padding: 20px 15px; 
-        width: 100%; 
-    }
-    .page-header h1 {
-        font-size: 22px;
-    }
-    .sidebar-toggle-btn {
-        display: block; 
-        margin-right: 15px;
-    }
-    .groups-grid {
-        grid-template-columns: 1fr; 
-    }
-    .big-card-top {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-        margin-bottom: 20px;
-    }
-    .big-card-actions {
-        width: 100%;
-        justify-content: space-between;
-    }
+  .main-content {
+    margin-left: 0;
+    padding: 20px 15px;
+    width: 100%;
+  }
+  .page-header h1 {
+    font-size: 22px;
+  }
+  .sidebar-toggle-btn {
+    display: block;
+    margin-right: 15px;
+  }
+  .groups-grid {
+    grid-template-columns: 1fr;
+  }
+  .big-card-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  .big-card-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
 }
