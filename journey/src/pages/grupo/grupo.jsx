@@ -1,139 +1,154 @@
-import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+// grupo.jsx
+
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/header/index.jsx";
-import "../../pages/home/home.css";
+import {
+  Container,
+  Header,
+  Title,
+  CardWrapper,
+  Card,
+  TopSection,
+  GroupInfo,
+  Creator,
+  Description,
+  Button,
+} from "./grupo.js";
 
-const BASE_URL = "http://localhost:8080/v1/journey";
-
-export default function Grupo() {
-  const { id } = useParams();
-  const location = useLocation();
+const Grupo = () => {
+  const { state: grupo } = useLocation();
   const navigate = useNavigate();
-  const [grupo, setGrupo] = useState(location.state?.grupo || null);
-  const [membrosCount, setMembrosCount] = useState(0);
-  const [usuario, setUsuario] = useState(null);
-  const [relacao, setRelacao] = useState(null);
+  const [darkMode] = useState(localStorage.getItem("darkMode") === "true");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [isJoining, setIsJoining] = useState(false);
+  const [joinMessage, setJoinMessage] = useState("");
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("journey_user"));
-    setUsuario(user);
+  const BASE_URL = "http://localhost:8080/v1/journey/group";
 
-    if (!grupo) {
-      buscarGrupoPorId(id);
-    } else {
-      buscarContagem(grupo.id_grupo);
-      verificarRelacao(user, grupo);
-    }
-  }, [grupo, id]);
-
-  async function buscarGrupoPorId(groupId) {
-    try {
-      const resp = await fetch(`${BASE_URL}/group/${groupId}`);
-      const data = await resp.json();
-      if (data?.grupo) {
-        setGrupo(data.grupo);
-        buscarContagem(data.grupo.id_grupo);
-        verificarRelacao(usuario, data.grupo);
-      }
-    } catch (error) {
-      console.error("Erro ao buscar grupo:", error);
-    }
-  }
-
-  async function buscarContagem(idGrupo) {
-    try {
-      const resp = await fetch(`${BASE_URL}/group/${idGrupo}/participantes`);
-      const data = await resp.json();
-      if (data?.total !== undefined) setMembrosCount(data.total);
-    } catch (err) {
-      console.error("Erro ao buscar contagem de participantes:", err);
-    }
-  }
-
-  async function verificarRelacao(user, grupo) {
-    if (!user || !grupo) return;
-    try {
-      if (grupo.id_usuario === user.id_usuario) {
-        setRelacao("criador");
-        return;
-      }
-      const resp = await fetch(`${BASE_URL}/usuario-grupo`);
-      const data = await resp.json();
-      const participa = data.usuarios_grupos?.some(
-        (ug) => ug.id_usuario === user.id_usuario && ug.id_grupo === grupo.id_grupo
-      );
-      setRelacao(participa ? "participante" : "nenhum");
-    } catch {
-      setRelacao("nenhum");
-    }
-  }
-
-  async function entrarGrupo() {
-    await fetch(`${BASE_URL}/usuario-grupo`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id_usuario: usuario.id_usuario, id_grupo: grupo.id_grupo }),
-    });
-    setRelacao("participante");
-    buscarContagem(grupo.id_grupo);
-  }
-
-  async function sairGrupo() {
-    const resp = await fetch(`${BASE_URL}/usuario-grupo`);
-    const data = await resp.json();
-    const rel = data.usuarios_grupos.find(
-      (ug) => ug.id_usuario === usuario.id_usuario && ug.id_grupo === grupo.id_grupo
+  if (!grupo) {
+    return (
+      <div style={{ padding: 40 }}>
+        <h2>Nenhum grupo selecionado.</h2>
+        <button
+          onClick={() => navigate("/home")}
+          style={{
+            backgroundColor: "#5c46b5",
+            color: "#fff",
+            padding: "10px 16px",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+            marginTop: "10px",
+          }}
+        >
+          Voltar para Home
+        </button>
+      </div>
     );
-    if (rel) {
-      await fetch(`${BASE_URL}/usuario-grupo/${rel.id_usuario_grupo}`, { method: "DELETE" });
-      setRelacao("nenhum");
-      buscarContagem(grupo.id_grupo);
-    }
   }
 
-  async function excluirGrupo() {
-    await fetch(`${BASE_URL}/group/${grupo.id_grupo}`, { method: "DELETE" });
-    navigate(-1);
-  }
+  async function handleJoinGroup() {
+    setIsJoining(true);
+    setJoinMessage("");
 
-  function renderBotao() {
-    if (relacao === "criador") {
-      return (
-        <div className="group-actions">
-          <button className="btn btn-primary" onClick={() => navigate(`/criarGrupo`, { state: { grupo } })}>
-            Editar grupo
-          </button>
-          <button className="btn btn-danger" onClick={excluirGrupo}>Excluir grupo</button>
-        </div>
-      );
-    }
-    if (relacao === "participante") {
-      return <button className="btn btn-danger" onClick={sairGrupo}>Sair do grupo</button>;
-    }
-    return <button className="btn btn-primary" onClick={entrarGrupo}>Entrar no grupo</button>;
-  }
+    try {
+      const response = await fetch(`${BASE_URL}/${grupo.id_grupo}/join`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        // Se precisar enviar o ID do usuário:
+        // body: JSON.stringify({ user_id: usuario.id }),
+      });
 
-  if (!grupo) return <p>Carregando grupo...</p>;
+      if (!response.ok) {
+        throw new Error(`Erro ao entrar no grupo (HTTP ${response.status})`);
+      }
+
+      const result = await response.json();
+      setJoinMessage("✅ Você entrou no grupo com sucesso!");
+    } catch (error) {
+      console.error("Erro:", error);
+      setJoinMessage("❌ Não foi possível entrar no grupo.");
+    } finally {
+      setIsJoining(false);
+    }
+  }
 
   return (
-    <div className="homepage" style={{ display: "flex" }}>
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
-      <main className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <div className="container-home">
-          <header className="page-header">
-            <h1 className="home-title">{grupo.nome}</h1>
-            <button className="btn btn-outline" onClick={() => navigate(-1)}>← Voltar</button>
-          </header>
+    <div
+      className={`homepage ${darkMode ? "dark" : ""}`}
+      style={{ display: "flex" }}
+    >
+      <Sidebar
+        isCollapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+      />
+      <Container isCollapsed={sidebarCollapsed}>
+        <Header>
+          <Title>{grupo.nome}</Title>
+          <button
+            onClick={() => navigate("/home")}
+            style={{
+              background: "transparent",
+              border: "none",
+              color: "#5c46b5",
+              fontWeight: "bold",
+              cursor: "pointer",
+            }}
+          >
+            ← Voltar
+          </button>
+        </Header>
 
-          <section className="big-card">
-            <img src={grupo.imagem} alt={grupo.nome} className="group-img" />
-            <p>{grupo.descricao}</p>
-            <p><strong>Membros:</strong> {membrosCount}</p>
-            <div style={{ marginTop: "20px" }}>{renderBotao()}</div>
-          </section>
-        </div>
-      </main>
+        <CardWrapper>
+          <Card>
+            <TopSection>
+              <GroupInfo>
+                <img
+                  src={
+                    grupo.imagem ||
+                    "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
+                  }
+                  alt="ícone do grupo"
+                />
+                <div>
+                  <h2>{grupo.nome}</h2>
+                  <span>{grupo.limite_membros || 0} membros</span>
+                </div>
+              </GroupInfo>
+
+              <Creator>
+                <div className="avatar" />
+                <span>criador: {grupo.criador || "@desconhecido"}</span>
+              </Creator>
+            </TopSection>
+
+            <Description>
+              <strong>Descrição:</strong>{" "}
+              {grupo.descricao || "Nenhuma descrição disponível."}
+            </Description>
+
+            <Button onClick={handleJoinGroup} disabled={isJoining}>
+              {isJoining ? "Entrando..." : "Entrar"}
+            </Button>
+
+            {joinMessage && (
+              <p
+                style={{
+                  marginTop: "15px",
+                  color: joinMessage.startsWith("✅") ? "green" : "red",
+                }}
+              >
+                {joinMessage}
+              </p>
+            )}
+          </Card>
+        </CardWrapper>
+      </Container>
     </div>
   );
-}
+};
+
+export default Grupo;
