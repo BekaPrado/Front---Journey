@@ -1,295 +1,264 @@
-/* home.css */
-
-/* =======================================================
-   RESET & LAYOUT BASE
-   ======================================================= */
-/* Garante que o container raiz ocupe a altura total */
-html,
-body,
-#root {
+/* ======== BASE E LAYOUT ======== */
+html, body, #root {
   height: 100%;
   margin: 0;
-  padding: 0;
-  font-family: "Krona One", sans-serif;
-}
-* {
-  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 .homepage {
   display: flex;
   min-height: 100vh;
   width: 100vw;
-  background: #f3f4f6; /* Fundo claro */
+  background: #f8f9ff;
   color: #1e1e2f;
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Modo Escuro - homepage.dark */
 .homepage.dark {
-  background: #1e1e2f; /* Fundo Dark Mode conforme a imagem */
-  color: #e4e4e7;
+  background: #1e1e2f;
+  color: #f1f5f9;
 }
 
-/* ------------------ MAIN CONTENT (Área Principal) ------------------ */
+/* ======== CONTEÚDO PRINCIPAL ======== */
 .main-content {
   flex: 1;
-  padding: 30px;
-  min-height: 100vh;
-  /* COMPENSAÇÃO DA SIDEBAR FIXA (Largura padrão: 220px) */
+  padding: 40px 60px;
   margin-left: 220px;
   transition: margin-left 0.3s ease;
 }
 
-/* Ajusta a margem lateral quando a sidebar está COLAPSADA (80px) */
 .main-content.collapsed {
   margin-left: 80px;
 }
 
 .container-home {
   max-width: 1200px;
-  width: 100%;
   margin: 0 auto;
 }
 
-/* ------------------ HEADER (Topo da Página) ------------------ */
-/* Ajuste no cabeçalho para acomodar o novo elemento e alinhamento */
+/* ======== CABEÇALHO ======== */
 .page-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
 }
-/* O .header-right já existe no seu CSS, vamos garantir que o novo elemento se encaixe */
-.header-right {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-.page-header h1 {
-  font-size: 28px;
-  font-weight: 600;
-  color: inherit;
+
+.home-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #3a1376;
   margin: 0;
 }
 
-/* Botões de Ação no Header */
-.theme-btn,
-.sidebar-toggle-btn {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  font-size: 24px; /* Aumenta o tamanho dos ícones do header */
-  color: inherit;
-  transition: color 0.2s ease;
+.homepage.dark .home-title {
+  color: #fff;
 }
 
-/* Ajuste do Avatar (Placeholder roxo e borda) */
-.avatar {
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.theme-btn {
   width: 44px;
   height: 44px;
-  border-radius: 50%;
-  background: #5c46b5;
-  border: 2px solid white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: transparent; /* Garante que não apareça texto */
-  flex-shrink: 0;
-}
-/* Ajuste de cor do avatar no Dark Mode */
-.homepage.dark .avatar {
-  background: #5c46b5;
-  border: 2px solid #e4e4e7;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #6c3aff, #3a1376);
+  border: none;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
 }
 
-.sidebar-toggle-btn {
-  display: none;
+.homepage.dark .theme-btn {
+  background: #374151;
+  color: #f1f5f9;
 }
 
-/* ------------------ botao do perfil na home ------------------ */
 
+/* Botão de perfil */
 .profile-avatar-circle {
-  /* Estilos para parecer um círculo clicável no canto superior direito */
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  background-color: #5c46b5; /* Cor primária */
-  color: white;
+  background-color: #5c46b5;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer; /* Indica que é um botão/link */
-  transition: transform 0.2s, background-color 0.2s;
-  flex-shrink: 0;
-  border: 2px solid white; /* Borda de destaque */
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease;
 }
 
 .profile-avatar-circle:hover {
-  background-color: #6c5dd3;
-  transform: scale(1.05);
+  background-color: #6e56d8;
 }
 
-/* Ajuste para o Dark Mode */
 .homepage.dark .profile-avatar-circle {
-  background-color: #6c5dd3;
-  border: 2px solid #e4e4e7;
+  background-color: #7c3aed;
 }
 
-/* ------------------ BIG CARD (Meus Grupos) ------------------ */
+
+.profile-avatar-circle {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: #5c46b5;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  font-size: 22px;
+  overflow: hidden; /* garante que a imagem fique dentro do círculo */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease;
+}
+
+.profile-avatar-circle:hover {
+  background-color: #6e56d8;
+}
+
+.profile-avatar-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+
+
+.homepage.dark .profile-avatar-circle {
+  background-color: #7c3aed;
+}
+
+/* ======== CARDS DE GRUPOS ======== */
 .big-card {
   background: #3b2da0;
   color: white;
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  position: relative;
-  align-items: center;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
-/* Fundo do card no modo escuro */
+
 .homepage.dark .big-card {
-  background: #1e1b30;
+  background: #27263b;
 }
 
 .big-card-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 25px;
+  margin-bottom: 30px;
 }
+
 .big-card-top h2 {
-  margin: 0;
   font-size: 24px;
+  margin: 0;
   font-weight: 700;
 }
 
-.big-card-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-/* Botões de Criar/Filtro - Ajustado para o visual da imagem */
-.btn {
-  padding: 10px 18px;
+.big-card-actions .btn {
+  padding: 10px 20px;
   border-radius: 8px;
+  font-weight: 600;
   border: none;
   cursor: pointer;
-  font-weight: 600;
-  transition: transform 0.15s ease, background 0.2s ease;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-.btn-primary {
-  background: #5c46b5;
-  color: white;
-}
-.btn-ghost {
-  background: white;
-  color: #5c46b5;
-  border: 1px solid #ddd;
-}
-/* Dark Mode - Botões */
-.homepage.dark .btn-primary {
-  background: #5c46b5;
-  color: white;
-}
-.homepage.dark .btn-ghost {
-  background: #3a3250;
-  color: #e4e4e7;
-  border: 1px solid #4a4060;
 }
 
-/* ------------------ GRUPOS GRID ------------------ */
+.btn-primary {
+  background: #fff;
+  color: #3a1376;
+}
+
+.btn-primary:hover {
+  background: #f2f2ff;
+}
+
 .groups-grid {
   display: grid;
-  /* Garante 2 colunas com cards maiores */
-  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 30px;
 }
 
 .group-card {
+  background: #4b39b8;
+  border-radius: 20px;
+  padding: 28px;
   display: flex;
   align-items: center;
-  gap: 18px;
-  padding: 20px;
-  min-height: 120px;
-  background: #4b39b8;
-  border-radius: 12px;
-  transition: transform 0.15s ease;
+  gap: 25px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
-/* Fundo do card no modo escuro */
+
+.group-card:hover {
+  background: #5b48c5;
+  transform: translateY(-3px);
+}
+
 .homepage.dark .group-card {
   background: #2a2040;
   border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .group-thumb {
-  width: 70px;
-  height: 70px;
+  width: 90px;
+  height: 90px;
   border-radius: 50%;
-  background: #5c46b5;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
   flex-shrink: 0;
   border: 3px solid rgba(255, 255, 255, 0.5);
 }
+
 .group-thumb img {
-  display: none;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .group-info {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
+
 .group-title {
-  font-weight: 700;
   font-size: 20px;
+  font-weight: 700;
 }
+
 .group-members {
   font-size: 16px;
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-/* Mensagens de estado */
-.state-msg {
-  text-align: center;
-  padding: 40px 0;
-  opacity: 0.9;
-}
 
-/* =======================================================
-   RESPONSIVIDADE (MOBILE)
-   ======================================================= */
+/* ======== RESPONSIVIDADE ======== */
 @media (max-width: 768px) {
   .main-content {
     margin-left: 0;
-    padding: 20px 15px;
-    width: 100%;
+    padding: 20px;
   }
-  .page-header h1 {
-    font-size: 22px;
+
+  .home-title {
+    font-size: 26px;
+    text-align: left;
   }
-  .sidebar-toggle-btn {
-    display: block;
-    margin-right: 15px;
-  }
+
   .groups-grid {
     grid-template-columns: 1fr;
   }
-  .big-card-top {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  .big-card-actions {
-    width: 100%;
-    justify-content: space-between;
+
+  .big-card {
+    padding: 20px;
   }
 }
