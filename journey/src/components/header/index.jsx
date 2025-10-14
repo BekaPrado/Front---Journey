@@ -18,6 +18,7 @@ import {
   FaAngleLeft,
   FaAngleRight,
   FaHome,
+  FaCalendar,
 } from "react-icons/fa";
 
 const Sidebar = ({ isCollapsed, setCollapsed }) => {
@@ -40,6 +41,11 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <span>Meus Grupos</span>
         </MenuItem>
 
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/calendary")}>
+          <FaCalendar />
+          <span>Calendario</span>
+        </MenuItem>
+
         <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/criarGrupo")}>
           <FaPlus />
           <span>Criar Grupo</span>
@@ -55,6 +61,8 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <span>E-Books</span>
         </MenuItem>
       </Menu>
+
+      
 
       <SidebarToggle
         isCollapsed={isCollapsed}

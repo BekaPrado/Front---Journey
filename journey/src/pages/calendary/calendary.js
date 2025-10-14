@@ -167,21 +167,21 @@ export const GotoToday = styled.div`
 `;
 
 export const TodayDate = styled.div`
-  width: 70%;
-  height: 50px;
+  width: 50%;
+  height: 70px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
   justify-content: space-between;
   padding: 0 40px;
-  padding-left: 70px;
+  padding-left: 20px;
   margin-top: 50px;
   margin-bottom: 20px;
   text-transform: capitalize;
 
   .event-day {
-    font-size: 2rem;
+    font-size: 2r;
     font-weight: 500;
   }
 
@@ -200,35 +200,35 @@ export const Events = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  padding-left: 4px;
+  padding-left: 10px;
 
   .event {
     position: relative;
-    width: 95%;
+    width: 80%;
     min-height: 70px;
     display: flex;
     flex-direction: column;
     gap: 5px;
     padding: 0 20px;
-    padding-left: 50px;
+    padding-left: 20px;
     color: #fff;
     background: linear-gradient(90deg, #3f4458, transparent);
     cursor: pointer;
 
     .title {
-      height: 20px;
+      height: 40px;
       display: flex;
       align-items: center;
     }
 
     .event-title {
-      font-size: 1rem;
-      font-weight: 400;
+      font-size: 1.5rem;
+      font-weight: 200;
       margin-left: 20px;
     }
 
     .event-time {
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       font-weight: 400;
       color: #878895;
       margin-left: 10px;
@@ -238,11 +238,11 @@ export const Events = styled.div`
 
 export const AddEventWrapper = styled.div`
   position: absolute;
-  bottom: 100px;
+  bottom: 150px;
   left: 50%;
   width: 90%;
   max-height: 0;
-  overflow: hidden;
+  overflow:auto;
   border-radius: 5px;
   background-color: #fff;
   transform: translateX(-50%);
@@ -261,7 +261,7 @@ export const AddEventHeader = styled.div`
   justify-content: space-between;
   padding: 0 30px;
   color: #373c4f;
-  border-bottom: 1px solid #f5f5f5;
+
 
   .close {
     font-size: 1.5rem;
@@ -281,7 +281,7 @@ export const AddEventBody = styled.div`
     width: 100%;
     height: 40px;
     border: none;
-    border-bottom: 1px solid #f5f5f5;
+    border-bottom: 1px solidrgb(255, 79, 79);
     padding: 0 10px;
     font-size: 1rem;
     color:rgb(170, 176, 201);
@@ -318,8 +318,7 @@ export const AddEventFooter = styled.div`
     padding: 5px 10px;
 
     &:hover {
-      background-color: transparent;
-      color: #b38add;
+      color:rgb(127, 0, 253);
       border: 1px solid #b38add;
     }
   }
