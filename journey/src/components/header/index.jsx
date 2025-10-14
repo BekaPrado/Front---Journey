@@ -17,43 +17,40 @@ import {
   FaBook,
   FaAngleLeft,
   FaAngleRight,
+  FaHome,
 } from "react-icons/fa";
 
 const Sidebar = ({ isCollapsed, setCollapsed }) => {
-  const navigate = useNavigate(); // hook dentro do componente
-
-  const goToCreateGroup = () => {
-    navigate("/criarGrupo");
-  };
-
-  const goToChats = () => {
-    navigate("/chats"); // aqui a navegação pros chats
-  };
-
-  const goToMyGroups = () => {
-    navigate("/grupo"); // opcional, substituindo o <a>
-  };
+  const navigate = useNavigate();
 
   return (
     <SidebarContainer isCollapsed={isCollapsed}>
       <UserAvatar>
-        <img src={logo} alt="Logo" />;
+        <img src={logo} alt="Logo" />
       </UserAvatar>
 
       <Menu isCollapsed={isCollapsed}>
-        <MenuItem isCollapsed={isCollapsed} onClick={goToCreateGroup}>
-          <FaPlus />
-          <span>Criar Grupo</span>
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/home")}>
+          <FaHome />
+          <span>Home</span>
         </MenuItem>
-        <MenuItem isCollapsed={isCollapsed} onClick={goToMyGroups}>
+
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/meus-grupos")}>
           <FaUsers />
           <span>Meus Grupos</span>
         </MenuItem>
-        <MenuItem isCollapsed={isCollapsed} onClick>
+
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/criarGrupo")}>
+          <FaPlus />
+          <span>Criar Grupo</span>
+        </MenuItem>
+
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/chats")}>
           <FaComments />
           <span>Chats</span>
         </MenuItem>
-        <MenuItem isCollapsed={isCollapsed}>
+
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/ebooks")}>
           <FaBook />
           <span>E-Books</span>
         </MenuItem>

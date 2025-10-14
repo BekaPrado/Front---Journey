@@ -1,33 +1,37 @@
 // src/App.jsx
-
 import React from "react";
-// Não precisa importar BrowserRouter se ele estiver no seu index.js/main.jsx
 import { Routes, Route, Navigate } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import Home from "./pages/home/home.jsx";
 import CriarGrupo from "./pages/criarGrupo/criarGrupo.jsx";
 import Calendar from "./pages/calendary/calendary.jsx";
-import Perfil from "./pages/perfil/perfil.jsx"; // Não esqueça de importar
+import Perfil from "./pages/perfil/perfil.jsx";
 import Grupo from "./pages/grupo/grupo.jsx";
+import MeusGrupos from "./pages/meusGrupos/MeusGrupos.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
-import { AuthProvider } from "./context/AuthContext"; // 👈 IMPORTANTE
+import { AuthProvider } from "./context/AuthContext";
+import { SidebarProvider } from './context/SidebarContext'; // Importar o Provedor
+import { ThemeProvider } from "./context/ThemeContext"; // ⬅️ importa o novo contexto
+
+// IMPORT DO CSS GLOBAL DE LAYOUT (substitua o index.css atual por esse que te envio abaixo)
+import "./index.css";
 
 export default function App() {
   return (
-    // Removendo o <div>, pois ele não é necessário
     <AuthProvider>
-      {" "}
-      {/* 👈 INSERIMOS O PROVEDOR AQUI */}
+      <ThemeProvider>
       <Routes>
         <Route path="/" element={<Navigate to="/auth" replace />} />
         <Route path="/auth" element={<AuthPage />} />
 
-        {/* ROTAS PROTEGIDAS - TODAS precisam ser envolvidas */}
+        {/* ROTAS PROTEGIDAS - ENVOLVIDAS COM O SidebarProvider */}
         <Route
           path="/home"
           element={
             <ProtectedRoute>
-              <Home />
+              <SidebarProvider>
+                <Home />
+              </SidebarProvider>
             </ProtectedRoute>
           }
         />
@@ -35,7 +39,9 @@ export default function App() {
           path="/criarGrupo"
           element={
             <ProtectedRoute>
-              <CriarGrupo />
+              <SidebarProvider>
+                <CriarGrupo />
+              </SidebarProvider>
             </ProtectedRoute>
           }
         />
@@ -43,7 +49,9 @@ export default function App() {
           path="/calendary"
           element={
             <ProtectedRoute>
-              <Calendar />
+              <SidebarProvider>
+                <Calendar />
+              </SidebarProvider>
             </ProtectedRoute>
           }
         />
@@ -51,7 +59,9 @@ export default function App() {
           path="/perfil"
           element={
             <ProtectedRoute>
-              <Perfil />
+              <SidebarProvider>
+                <Perfil />
+              </SidebarProvider>
             </ProtectedRoute>
           }
         />
@@ -59,12 +69,24 @@ export default function App() {
           path="/grupo"
           element={
             <ProtectedRoute>
-              <Grupo />
+              <SidebarProvider>
+                <Grupo />
+              </SidebarProvider>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/meus-grupos"
+          element={
+            <ProtectedRoute>
+              <SidebarProvider>
+                <MeusGrupos />
+              </SidebarProvider>
             </ProtectedRoute>
           }
         />
       </Routes>
+      </ThemeProvider>
     </AuthProvider>
-    // Fim da remoção do <div>
   );
 }

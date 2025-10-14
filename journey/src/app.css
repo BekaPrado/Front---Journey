@@ -1,0 +1,25 @@
+/* src/App.css */
+
+/* Garante proporções e centralização entre sidebar e conteúdo */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  background-color: #f8f9fc;
+}
+
+/* As páginas com sidebar (home, perfil, grupos, etc.) já ajustam margens via CSS próprio */
+.page-container {
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+
+/* Ajustes de responsividade */
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+}
