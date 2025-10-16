@@ -1,5 +1,5 @@
 // src/api/recovery.js
-const BASE = import.meta.env.VITE_API_URL || "http://localhost:8080/v1/journey";
+const BASE = import.meta.env.VITE_API_URL || "http://localhost:3030/v1/journey";
 
 /**
  * pede envio de código para o email

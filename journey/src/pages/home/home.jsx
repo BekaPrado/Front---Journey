@@ -17,11 +17,12 @@ export default function Home() {
     () => localStorage.getItem("darkMode") === "true"
   );
 
-  const BASE_URL = "http://localhost:8080/v1/journey";
+  const BASE_URL = "http://localhost:3030/v1/journey";
   const placeholder = "https://cdn-icons-png.flaticon.com/512/2965/2965879.png";
 
   // Pegamos o usuário também do localStorage (fallback quando o context não estiver pronto)
-  const usuarioLocal = user ?? JSON.parse(localStorage.getItem("journey_user") || "null");
+  const usuarioLocal =
+    user ?? JSON.parse(localStorage.getItem("journey_user") || "null");
 
   useEffect(() => {
     localStorage.setItem("darkMode", darkMode);
@@ -40,7 +41,9 @@ export default function Home() {
       const withParticipants = await Promise.all(
         lista.map(async (g) => {
           try {
-            const r = await fetch(`${BASE_URL}/group/${g.id_grupo}/participantes`);
+            const r = await fetch(
+              `${BASE_URL}/group/${g.id_grupo}/participantes`
+            );
             if (!r.ok) return { ...g, participantes: 0 };
             const d = await r.json();
             return { ...g, participantes: d.total ?? 0 };
@@ -85,7 +88,10 @@ export default function Home() {
 
   return (
     <div className={`homepage ${darkMode ? "dark" : ""}`}>
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+      <Sidebar
+        isCollapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+      />
 
       <main className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
         <div className="container-home">
@@ -101,13 +107,21 @@ export default function Home() {
                 style={{ width: 52, height: 52 }}
               >
                 {userImage ? (
-                  <img src={userImage} alt="Perfil" className="profile-avatar-img" />
+                  <img
+                    src={userImage}
+                    alt="Perfil"
+                    className="profile-avatar-img"
+                  />
                 ) : (
                   <FaUserCircle size={26} />
                 )}
               </button>
 
-              <button className="theme-btn" onClick={toggleDarkMode} aria-label="Alternar tema">
+              <button
+                className="theme-btn"
+                onClick={toggleDarkMode}
+                aria-label="Alternar tema"
+              >
                 {darkMode ? <FaSun /> : <FaMoon />}
               </button>
             </div>
@@ -137,7 +151,9 @@ export default function Home() {
                       </div>
                       <div className="group-info">
                         <div className="group-title">{g.nome}</div>
-                        <div className="group-members">{g.participantes ?? 0} membros</div>
+                        <div className="group-members">
+                          {g.participantes ?? 0} membros
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -146,7 +162,9 @@ export default function Home() {
 
               {loading && <div className="state-msg">Carregando grupos...</div>}
               {error && <div className="state-msg error">Erro: {error}</div>}
-              {!loading && !error && grupos.length === 0 && <div className="state-msg">Nenhum grupo encontrado.</div>}
+              {!loading && !error && grupos.length === 0 && (
+                <div className="state-msg">Nenhum grupo encontrado.</div>
+              )}
             </div>
           </section>
         </div>

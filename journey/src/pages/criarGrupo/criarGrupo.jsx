@@ -23,16 +23,17 @@ import {
   Select,
   CardContent,
   InputColumn,
-  InputGroup
+  InputGroup,
 } from "./criarGrupo.js";
 import { uploadImageToAzure } from "../uploadImageToAzure";
 
-const BASE_URL = "http://localhost:8080/v1/journey";
+const BASE_URL = "http://localhost:3030/v1/journey";
 
 const CriarGrupo = () => {
   const navigate = useNavigate();
   const { user } = useAuth(); // usa o contexto (normalizado pelo AuthContext)
-  const usuarioLocal = user ?? JSON.parse(localStorage.getItem("journey_user") || "null");
+  const usuarioLocal =
+    user ?? JSON.parse(localStorage.getItem("journey_user") || "null");
 
   const [nome, setNome] = useState("");
   const [limite_membros, setLimiteMembros] = useState("");
@@ -50,9 +51,12 @@ const CriarGrupo = () => {
   // SUAS CONSTANTES DO AZURE (mantive como estava)
   const AZURE_STORAGE_ACCOUNT = "journey2025";
   const AZURE_CONTAINER_NAME = "journey";
-  const AZURE_SAS_TOKEN = "sp=racwl&st=2025-10-07T12:06:43Z&se=2025-12-20T20:21:43Z&sv=2024-11-04&sr=c&sig=olO%2FAQVZv1dP2I68WhoQ3D%2BcUpAaq7H3CepabScHisg%3D";
+  const AZURE_SAS_TOKEN =
+    "sp=racwl&st=2025-10-07T12:06:43Z&se=2025-12-20T20:21:43Z&sv=2024-11-04&sr=c&sig=olO%2FAQVZv1dP2I68WhoQ3D%2BcUpAaq7H3CepabScHisg%3D";
 
-  const [darkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  const [darkMode] = useState(
+    () => localStorage.getItem("darkMode") === "true"
+  );
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
@@ -68,7 +72,9 @@ const CriarGrupo = () => {
       setAreas(areasArray.map((a) => ({ id: a.id_area, nome: a.area })));
     } catch (err) {
       console.error("Erro ao buscar áreas:", err);
-      setAreas([{ id: -1, nome: `[ERRO] ${err.message || "Falha ao carregar."}` }]);
+      setAreas([
+        { id: -1, nome: `[ERRO] ${err.message || "Falha ao carregar."}` },
+      ]);
     }
   };
 
@@ -125,7 +131,10 @@ const CriarGrupo = () => {
       try {
         imageUrl = await uploadImageToAzure(uploadParams);
       } catch (upErr) {
-        console.warn("Falha no upload para Azure, continuando com URL padrão:", upErr);
+        console.warn(
+          "Falha no upload para Azure, continuando com URL padrão:",
+          upErr
+        );
         // você pode escolher abortar aqui em vez de seguir com fallback
         // throw upErr;
       }
@@ -195,8 +204,14 @@ const CriarGrupo = () => {
   };
 
   return (
-    <div className={`homepage ${darkMode ? "dark" : ""}`} style={{ display: "flex" }}>
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+    <div
+      className={`homepage ${darkMode ? "dark" : ""}`}
+      style={{ display: "flex" }}
+    >
+      <Sidebar
+        isCollapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+      />
       <Container isCollapsed={sidebarCollapsed}>
         <Header theme={{ darkMode }}>
           <Title>Crie seu Grupo no Journey!</Title>
@@ -216,7 +231,10 @@ const CriarGrupo = () => {
                 </Label>
 
                 {imagePreviewUrl ? (
-                  <PreviewImage src={imagePreviewUrl} alt="Pré-visualização do Grupo" />
+                  <PreviewImage
+                    src={imagePreviewUrl}
+                    alt="Pré-visualização do Grupo"
+                  />
                 ) : (
                   <UploadPlaceholder>
                     <FaImage size={35} style={{ marginBottom: 10 }} />
@@ -231,8 +249,12 @@ const CriarGrupo = () => {
                   accept="image/*"
                   disabled={isCreating}
                 />
-                <FileInputButton htmlFor="group-image-upload" disabled={isCreating}>
-                  <FaImage /> {imagePreviewUrl ? "Alterar Imagem" : "Escolher Imagem"}
+                <FileInputButton
+                  htmlFor="group-image-upload"
+                  disabled={isCreating}
+                >
+                  <FaImage />{" "}
+                  {imagePreviewUrl ? "Alterar Imagem" : "Escolher Imagem"}
                 </FileInputButton>
               </ImagePreviewContainer>
 
@@ -252,11 +274,17 @@ const CriarGrupo = () => {
                     <Select
                       value={id_area}
                       onChange={(e) => setIdArea(e.target.value)}
-                      disabled={isCreating || (areas.length === 1 && areas[0].id === -1)}
+                      disabled={
+                        isCreating || (areas.length === 1 && areas[0].id === -1)
+                      }
                     >
                       <option value="">Selecione uma área</option>
                       {areas.map((area) => (
-                        <option key={area.id} value={area.id} disabled={area.id === -1}>
+                        <option
+                          key={area.id}
+                          value={area.id}
+                          disabled={area.id === -1}
+                        >
                           {area.nome}
                         </option>
                       ))}

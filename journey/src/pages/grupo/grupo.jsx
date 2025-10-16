@@ -5,7 +5,7 @@ import Sidebar from "../../components/header/index.jsx";
 import { useAuth } from "../../context/AuthContext";
 import "./grupo.css";
 
-const API_URL = "http://localhost:8080/v1/journey";
+const API_URL = "http://localhost:3030/v1/journey";
 
 export default function Grupo() {
   const { user } = useAuth();
@@ -13,7 +13,9 @@ export default function Grupo() {
   const navigate = useNavigate();
 
   // modo escuro (lê o valor salvo pelo Home)
-  const [darkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  const [darkMode] = useState(
+    () => localStorage.getItem("darkMode") === "true"
+  );
 
   // estado da sidebar (mantém comportamento atual)
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -38,7 +40,9 @@ export default function Grupo() {
 
       // status (criador / participante / nenhum)
       try {
-        const resp = await fetch(`${API_URL}/group/${grupo.id_grupo}/status?userId=${user?.id_usuario}`);
+        const resp = await fetch(
+          `${API_URL}/group/${grupo.id_grupo}/status?userId=${user?.id_usuario}`
+        );
         if (resp.ok) {
           const data = await resp.json();
           setRelation(data.relation || "nenhum");
@@ -52,7 +56,9 @@ export default function Grupo() {
 
       // participantes
       try {
-        const r2 = await fetch(`${API_URL}/group/${grupo.id_grupo}/participantes`);
+        const r2 = await fetch(
+          `${API_URL}/group/${grupo.id_grupo}/participantes`
+        );
         if (r2.ok) {
           const d2 = await r2.json();
           setParticipantes(d2.total ?? 0);
@@ -70,7 +76,8 @@ export default function Grupo() {
   }, [grupo, user]);
 
   async function handleParticipar() {
-    if (!user || !grupo?.id_grupo) return alert("Você precisa estar logado para participar.");
+    if (!user || !grupo?.id_grupo)
+      return alert("Você precisa estar logado para participar.");
 
     try {
       const resp = await fetch(`${API_URL}/group/${grupo.id_grupo}/join`, {
@@ -79,12 +86,22 @@ export default function Grupo() {
         body: JSON.stringify({ id_usuario: user.id_usuario }),
       });
       const data = await resp.json();
+
       if (resp.ok && data.status) {
+        // Atualiza relação e participantes
         setRelation("participante");
         setParticipantes((p) => p + 1);
-        // notifica outras páginas para refetch
         window.dispatchEvent(new Event("groupsUpdated"));
         alert("Você entrou no grupo!");
+
+        // Salva o id do grupo no localStorage
+        localStorage.setItem(
+          "group_id",
+          JSON.stringify({ id_grupo: grupo.id_grupo })
+        );
+        console.log(localStorage.getItem("group_id"));
+        // Navega para a página de calendário
+        navigate("/calendary");
       } else {
         alert(data.message || "Não foi possível entrar no grupo.");
       }
@@ -95,7 +112,8 @@ export default function Grupo() {
   }
 
   async function handleSair() {
-    if (!user || !grupo?.id_grupo) return alert("Você precisa estar logado para sair.");
+    if (!user || !grupo?.id_grupo)
+      return alert("Você precisa estar logado para sair.");
 
     try {
       const resp = await fetch(`${API_URL}/group/${grupo.id_grupo}/leave`, {
@@ -117,44 +135,73 @@ export default function Grupo() {
       alert("Erro ao sair do grupo.");
     }
   }
+  const salvarGrupo = async () => {
+    localStorage.setItem(
+      "group_id",
+      JSON.stringify({
+        id_grupo: grupo.id_grupo,
+      })
+    );
+  };
 
   return (
     <div className={`homepage ${darkMode ? "dark" : ""}`}>
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+      <Sidebar
+        isCollapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+      />
 
       <main className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
         <div className="grupo-container">
-          <button className="btn-voltar" onClick={() => navigate(-1)}>← Voltar</button>
+          <button className="btn-voltar" onClick={() => navigate(-1)}>
+            ← Voltar
+          </button>
 
           {!grupo ? (
             <>
               <p>Grupo não encontrado. Volte e selecione um grupo.</p>
-              <button className="btn-acao" onClick={() => navigate(-1)}>Voltar</button>
+              <button className="btn-acao" onClick={() => navigate(-1)}>
+                Voltar
+              </button>
             </>
           ) : (
             <>
               <h1 className="grupo-title">{grupo.nome}</h1>
-              <img src={grupo.imagem || placeholder} alt={grupo.nome} className="grupo-banner" />
+              <img
+                src={grupo.imagem || placeholder}
+                alt={grupo.nome}
+                className="grupo-banner"
+              />
               <p className="grupo-desc">{grupo.descricao}</p>
 
               <div className="grupo-metas" style={{ marginBottom: 16 }}>
-                <div className="meta-pill"><strong>{participantes}</strong> membros</div>
-                <div className="meta-pill">Limite: {grupo.limite_membros ?? "—"}</div>
+                <div className="meta-pill">
+                  <strong>{participantes}</strong> membros
+                </div>
+                <div className="meta-pill">
+                  Limite: {grupo.limite_membros ?? "—"}
+                </div>
               </div>
 
               {relation === "carregando" && <p>Verificando status...</p>}
 
               {relation === "nenhum" && (
-                <button className="btn-join" onClick={handleParticipar}>Participar do Grupo</button>
+                <button className="btn-join" onClick={handleParticipar}>
+                  Participar do Grupo
+                </button>
               )}
 
               {relation === "participante" && (
-                <button className="btn-leave" onClick={handleSair}>Sair do Grupo</button>
+                <button className="btn-leave" onClick={handleSair}>
+                  Sair do Grupo
+                </button>
               )}
 
               {relation === "criador" && (
                 <div style={{ marginTop: 12 }}>
-                  <span className="criador-msg">Você é o criador deste grupo.</span>
+                  <span className="criador-msg">
+                    Você é o criador deste grupo.
+                  </span>
                 </div>
               )}
             </>
@@ -164,4 +211,3 @@ export default function Grupo() {
     </div>
   );
 }
-  

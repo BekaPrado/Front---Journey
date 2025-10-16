@@ -21,11 +21,14 @@ export default function AuthPage() {
     if (!emailLogin || !senhaLogin) return setMsg("Preencha email e senha");
 
     try {
-      const res = await fetch("http://localhost:8080/v1/journey/usuario/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: emailLogin, senha: senhaLogin }),
-      });
+      const res = await fetch(
+        "http://127.0.0.1:3030/v1/journey/usuario/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: emailLogin, senha: senhaLogin }),
+        }
+      );
 
       const data = await res.json();
       if (![200, 201].includes(res.status)) throw new Error(data.message);

@@ -1,5 +1,5 @@
 // src/api/user.js
-const BASE_URL = "http://localhost:8080/v1/journey";
+const BASE_URL = "http://localhost:3030/v1/journey";
 
 export async function registerUser(dados) {
   const res = await fetch(`${BASE_URL}/usuario`, {
