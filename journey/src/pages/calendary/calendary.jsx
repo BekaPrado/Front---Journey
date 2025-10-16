@@ -21,39 +21,45 @@ import { FaAngleLeft, FaAngleRight, FaPlus, FaTimes, FaCircle } from "react-icon
 
 const Calendar = () => {
   const months = [
-    "January","February","March","April","May","June",
-    "July","August","September","October","November","December"
+    "Janeiro","Fevereiro","Março","Abril","Maio","Junho",
+    "Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"
   ];
 
   const [today, setToday] = useState(new Date());
   const [activeDay, setActiveDay] = useState(today.getDate());
   const [month, setMonth] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
-  const [eventsArr, setEventsArr] = useState(() => {
-    const saved = localStorage.getItem("events");
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [eventsArr, setEventsArr] = useState([]);
 
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [eventName, setEventName] = useState("");
   const [eventFrom, setEventFrom] = useState("");
   const [eventTo, setEventTo] = useState("");
+  const [eventDescription, setEventDesc] = useState("");
 
-  // Salva no localStorage sempre que muda
+  // ====== Buscar eventos da API ======
   useEffect(() => {
-    localStorage.setItem("events", JSON.stringify(eventsArr));
-  }, [eventsArr]);
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/v1/journey/calendario");
+        if (!res.ok) throw new Error("Erro ao buscar eventos");
+        const data = await res.json();
+        console.log("Resposta da API:", data);
 
-  // Dias do calendário
-  const getDaysInMonth = (month, year) => {
-    return new Date(year, month + 1, 0).getDate();
-  };
+        const events = Array.isArray(data) ? data : data.data || [];
+        setEventsArr(events);
+      } catch (error) {
+        console.error("Falha ao carregar eventos:", error);
+        setEventsArr([]);
+      }
+    };
+    fetchEvents();
+  }, []);
 
-  const getFirstDayOfMonth = (month, year) => {
-    return new Date(year, month, 1).getDay();
-  };
+  // ====== Navegação ======
+  const getDaysInMonth = (month, year) => new Date(year, month + 1, 0).getDate();
+  const getFirstDayOfMonth = (month, year) => new Date(year, month, 1).getDay();
 
-//seta proximo mes
   const nextMonth = () => {
     setMonth(prev => {
       if (prev === 11) {
@@ -64,7 +70,6 @@ const Calendar = () => {
     });
   };
 
-  //seta voltar um mes 
   const prevMonth = () => {
     setMonth(prev => {
       if (prev === 0) {
@@ -75,7 +80,6 @@ const Calendar = () => {
     });
   };
 
-  //clique do dia 
   const gotoToday = () => {
     const current = new Date();
     setToday(current);
@@ -84,56 +88,83 @@ const Calendar = () => {
     setActiveDay(current.getDate());
   };
 
-//adicionar evento no calendario 
-  const addEvent = () => {
-    if (!eventName || !eventFrom || !eventTo) return;
+  // ====== Adicionar evento (POST na API) ======
+  const addEvent = async () => {
+    if (!eventName || !eventFrom || !eventTo || !eventDescription) {
+      alert("Preencha todos os campos antes de adicionar o evento!");
+      return;
+    }
+
+    const startDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(activeDay).padStart(2, "0")}T${eventFrom}:00`;
+    const endDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(activeDay).padStart(2, "0")}T${eventTo}:00`;
 
     const newEvent = {
-      day: activeDay,
-      month,
-      year,
-      title: eventName,
-      from: eventFrom,
-      to: eventTo,
+      titulo: eventName,
+      descricao: eventDescription,
+      data_inicio: startDate,
+      data_fim: endDate,
     };
 
-    setEventsArr(prev => [...prev, newEvent]);
-    setEventName("");
-    setEventFrom("");
-    setEventTo("");
-    setShowAddEvent(false);
+    console.log("Enviando evento:", newEvent);
+
+    try {
+      const res = await fetch("http://localhost:8080/v1/journey/calendario", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newEvent),
+      });
+
+      const responseText = await res.text();
+      console.log("Resposta do servidor:", responseText);
+
+      if (!res.ok) throw new Error(`Erro HTTP: ${res.status}`);
+
+      const created = JSON.parse(responseText);
+      setEventsArr(prev => [...prev, created]);
+      setEventName("");
+      setEventFrom("");
+      setEventTo("");
+      setEventDesc("");
+      setShowAddEvent(false);
+    } catch (error) {
+      console.error("Falha ao adicionar evento:", error);
+      alert("Erro ao adicionar evento. Verifique os campos e tente novamente.");
+    }
   };
 
-  //deletar evento no calendario
-  const deleteEvent = (eventToDelete) => {
-    setEventsArr(prev =>
-      prev.filter(ev =>
-        !(
-          ev.day === activeDay &&
-          ev.month === month &&
-          ev.year === year &&
-          ev.title === eventToDelete.title &&
-          ev.from === eventToDelete.from &&
-          ev.to === eventToDelete.to
-        )
-      )
+  // ====== Deletar evento ======
+  const deleteEvent = async (eventToDelete) => {
+    try {
+      await fetch(`http://localhost:8080/v1/journey/calendario/${eventToDelete.id}`, {
+        method: "DELETE",
+      });
+      setEventsArr(prev => prev.filter(ev => ev.id !== eventToDelete.id));
+    } catch (error) {
+      console.error("Erro ao deletar evento:", error);
+    }
+  };
+
+  // ====== Filtro dos eventos do dia ======
+  const eventsForActiveDay = eventsArr.filter(ev => {
+    const eventDate = new Date(ev.data_inicio);
+    return (
+      eventDate.getDate() === activeDay &&
+      eventDate.getMonth() === month &&
+      eventDate.getFullYear() === year
     );
-  };
+  });
 
-  const eventsForActiveDay = eventsArr.filter(
-    ev => ev.day === activeDay && ev.month === month && ev.year === year
-  );
-
-  // Renderização de dias
+  // ====== Renderização dos dias ======
   const renderDays = () => {
     const daysInMonth = getDaysInMonth(month, year);
     const firstDay = getFirstDayOfMonth(month, year);
-
-    const prevMonthDays = getDaysInMonth(month === 0 ? 11 : month - 1, month === 0 ? year - 1 : year);
+    const prevMonthDays = getDaysInMonth(
+      month === 0 ? 11 : month - 1,
+      month === 0 ? year - 1 : year
+    );
 
     const daysArray = [];
 
-    // Dias anteriores
     for (let i = firstDay; i > 0; i--) {
       daysArray.push(
         <div key={`prev-${i}`} className="day prev-date">
@@ -142,7 +173,6 @@ const Calendar = () => {
       );
     }
 
-    // Dias do mês
     for (let i = 1; i <= daysInMonth; i++) {
       const isToday =
         i === today.getDate() &&
@@ -151,9 +181,14 @@ const Calendar = () => {
 
       const isActive = i === activeDay;
 
-      const hasEvent = eventsArr.some(
-        ev => ev.day === i && ev.month === month && ev.year === year
-      );
+      const hasEvent = eventsArr.some(ev => {
+        const evDate = new Date(ev.data_inicio);
+        return (
+          evDate.getDate() === i &&
+          evDate.getMonth() === month &&
+          evDate.getFullYear() === year
+        );
+      });
 
       daysArray.push(
         <div
@@ -169,10 +204,8 @@ const Calendar = () => {
 
     return daysArray;
   };
+
   return (
-
-
-    
     <Container>
       <Left>
         <CalendarWrapper>
@@ -190,7 +223,7 @@ const Calendar = () => {
           <Days>{renderDays()}</Days>
 
           <GotoToday>
-            <button className="today-btn" onClick={gotoToday}>Today</button>
+            <button className="today-btn" onClick={gotoToday}>Hoje</button>
           </GotoToday>
         </CalendarWrapper>
       </Left>
@@ -209,14 +242,13 @@ const Calendar = () => {
               <div key={idx} className="event">
                 <div className="title">
                   <FaCircle size={8} />
-                  <span className="event-title">{ev.title}</span>
+                  <span className="event-title">{ev.titulo}</span>
                 </div>
-                <div className="event-time">{ev.from} - {ev.to}</div>
-                
-                <deleteEvent>
-                <button className="delete" onClick={() => deleteEvent(ev)}>Delete</button>
-                </deleteEvent>
-              
+                <div className="event-time">
+                  {new Date(ev.data_inicio).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })} -
+                  {new Date(ev.data_fim).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                </div>
+                <button className="delete" onClick={() => deleteEvent(ev)}>Excluir</button>
               </div>
             ))
           ) : (
@@ -238,15 +270,21 @@ const Calendar = () => {
             />
             <input
               type="time"
-              placeholder="Hora do Evento"
+              placeholder="Início"
               value={eventFrom}
               onChange={e => setEventFrom(e.target.value)}
             />
             <input
-              type="url"
-              placeholder="Link"
+              type="time"
+              placeholder="Fim"
               value={eventTo}
               onChange={e => setEventTo(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Descrição"
+              value={eventDescription}
+              onChange={e => setEventDesc(e.target.value)}
             />
           </AddEventBody>
           <AddEventFooter>
