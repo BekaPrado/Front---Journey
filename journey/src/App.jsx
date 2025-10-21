@@ -12,6 +12,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { AuthProvider } from "./context/AuthContext";
 import { SidebarProvider } from './context/SidebarContext'; // Importar o Provedor
 import { ThemeProvider } from "./context/ThemeContext"; // ⬅️ importa o novo contexto
+import GrupoHome from "./pages/grupo/GrupoHome.jsx";
+import Chat from "./pages/grupo/chat/Chat.jsx"; // 🆕 Import do Chat
 
 // IMPORT DO CSS GLOBAL DE LAYOUT (substitua o index.css atual por esse que te envio abaixo)
 import "./index.css";
@@ -65,6 +67,16 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+         <Route
+            path="/grupo/chat"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <Chat />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
         <Route
           path="/grupo"
           element={
@@ -85,6 +97,16 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+  path="/grupo-home"
+  element={
+    <ProtectedRoute>
+      <SidebarProvider>
+        <GrupoHome />
+      </SidebarProvider>
+    </ProtectedRoute>
+  }
+/>
       </Routes>
       </ThemeProvider>
     </AuthProvider>

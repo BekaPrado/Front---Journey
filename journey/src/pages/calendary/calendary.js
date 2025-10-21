@@ -1,354 +1,353 @@
 import styled from "styled-components";
 
+// ===== Container principal =====
 export const Container = styled.div`
   position: relative;
   width: 1200px;
   min-height: 850px;
-  margin: 0 auto;
-  padding: 5px;
-  color: #fff;
+  margin: 30px auto;
   display: flex;
-  border-radius: 10px;
-  background-color: #373c4f;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #2c2f48, #3e4160);
+  color: #fff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
 `;
 
+// ===== Colunas =====
 export const Left = styled.div`
   width: 60%;
-  padding: 20px;
+  padding: 30px;
 `;
 
 export const Right = styled.div`
-  position: relative;
   width: 40%;
   min-height: 100%;
-  padding: 20px 0;
+  padding: 30px;
+  background: #2e314d;
+  border-radius: 0 20px 20px 0;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
 `;
 
+// ===== Calendário =====
 export const CalendarWrapper = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  color: #878895;
-  border-radius: 5px;
-  background-color: #fff;
+  background: #3b3f5c;
+  border-radius: 15px;
+  padding: 25px;
+  color: #dcdce6;
 `;
 
+// ===== Mês =====
 export const Month = styled.div`
-  width: 80%;
-  height: 150px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 70px;
-  font-size: 1.2rem;
-  font-weight: 500;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  font-weight: 700;
   text-transform: capitalize;
 
-  .prev,
-  .next {
+  .prev, .next {
     cursor: pointer;
+    transition: all 0.3s ease;
     &:hover {
-      color: #b38add;
+      transform: scale(1.2);
+      color: #ff94c2;
     }
+  }
+
+  .date {
+    font-size: 1.8rem;
+    text-align: center;
+    color: #fff;
   }
 `;
 
+// ===== Dias da semana =====
 export const Weekdays = styled.div`
-  width: 100%;
-  height: 100px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 20px;
-  font-size: 1rem;
-  font-weight: 500;
-  text-transform: capitalize;
+  margin-bottom: 15px;
+  font-weight: 600;
+  color: #c2c2d0;
 
   div {
     width: 14.28%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    text-align: center;
   }
 `;
 
+// ===== Dias =====
 export const Days = styled.div`
   display: grid;
-  grid-template-columns: repeat(7, 1fr); /* 7 colunas fixas */
-  gap: 5px;
-  padding: 5px 20px;
-  font-size: 1rem;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
 
   .day {
     position: relative;
-    width: 80px;
-    height: 70px;
+    width: 100%;
+    height: 75px;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-radius: 15px;
     cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateY(-2px);
+    }
 
     &.today {
-      background:rgba(204, 185, 223, 0.25);
+      background: #ff94c2;
       color: #fff;
-      border-radius: 15%;
+      font-weight: 700;
+      box-shadow: 0 0 10px rgba(255, 148, 194, 0.7);
     }
 
     &.active {
-      border: 2px solid #b38add;
-      border-radius: 10%;
+      border: 2px solid #ffd700;
+      color: #ffd700;
     }
 
     .event-indicator {
       position: absolute;
       bottom: 8px;
-      width: 6px;
-      height: 6px;
-      color: #b38add;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ffd700;
+    }
+
+    &.prev-date, &.next-date {
+      color: #8a8a9f;
+      font-weight: 400;
     }
   }
 `;
 
-
+// ===== Botão Hoje =====
 export const GotoToday = styled.div`
-  width: 100%;
-  height: 50px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 5px;
-  padding: 0 20px;
-  margin-bottom: 20px;
-  color: #b38add;
-
-  .goto {
-    display: flex;
-    align-items: center;
-    border-radius: 5px;
-    overflow: hidden;
-    border: 1px solid #b38add;
-
-    input {
-      width: 100%;
-      height: 30px;
-      outline: none;
-      border: none;
-      padding: 0 20px;
-      color: #b38add;
-    }
-
-    button {
-      border: none;
-      border-left: 1px solid #b38add;
-      background: transparent;
-      padding: 5px 10px;
-      cursor: pointer;
-    }
-  }
+  justify-content: flex-end;
+  margin-top: 20px;
 
   .today-btn {
-    padding: 5px 10px;
-    border: 1px solid #b38add;
-    border-radius: 5px;
-    background-color: transparent;
+    padding: 8px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #ffd700;
+    color: #2e314d;
+    font-weight: 700;
     cursor: pointer;
-    color: #b38add;
+    transition: all 0.3s ease;
 
     &:hover {
-      color: #fff;
-      background-color: #b38add;
+      background: #fff;
+      color: #ffb700;
     }
   }
 `;
 
+// ===== Data do dia =====
 export const TodayDate = styled.div`
-  width: 50%;
-  height: 70px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  padding-left: 20px;
-  margin-top: 50px;
   margin-bottom: 20px;
   text-transform: capitalize;
 
   .event-day {
-    font-size: 2r;
-    font-weight: 500;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 5px;
+    color: #ffd700;
   }
 
   .event-date {
-    font-size: 1rem;
-    font-weight: 400;
-    color: #878895;
+    font-size: 1.2rem;
+    color: #c2c2d0;
   }
 `;
 
+// ===== Eventos =====
 export const Events = styled.div`
-  width: 100%;
-  height: 100%;
-  max-height: 600px;
-  overflow-x: hidden;
-  overflow-y: auto;
+  max-height: 550px;
+  overflow: hidden;
+  padding-right: 10px;
   display: flex;
   flex-direction: column;
-  padding-left: 10px;
+  gap: 15px;
 
   .event {
-    position: relative;
-    width: 80%;
-    min-height: 70px;
+    background: linear-gradient(120deg, #5a5e7f, #3b3f5c);
+    padding: 15px 20px;
+    border-radius: 15px;
+    transition: all 0.3s ease;
     display: flex;
     flex-direction: column;
     gap: 5px;
-    padding: 0 20px;
-    padding-left: 20px;
-    color: #fff;
-    background: linear-gradient(90deg, #3f4458, transparent);
-    cursor: pointer;
+
+    &:hover {
+      transform: translateX(5px);
+      box-shadow: 0 5px 20px rgba(255, 148, 194, 0.4);
+    }
 
     .title {
-      height: 40px;
       display: flex;
       align-items: center;
+      gap: 12px;
     }
 
     .event-title {
-      font-size: 1.5rem;
-      font-weight: 200;
-      margin-left: 20px;
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
     }
 
     .event-time {
-      font-size: 0.9rem;
-      font-weight: 400;
-      color: #878895;
-      margin-left: 10px;
+      font-size: 0.95rem;
+      color: #dcdce6;
     }
+
+    .delete {
+      align-self: flex-end;
+      padding: 5px 12px;
+      border: none;
+      border-radius: 10px;
+      background: #ff6b6b;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: #ff4c4c;
+      }
+    }
+  }
+
+  .no-event {
+    text-align: center;
+    font-style: italic;
+    color: #8a8a9f;
   }
 `;
 
+// ===== Modal de adicionar evento =====
 export const AddEventWrapper = styled.div`
   position: absolute;
-  bottom: 150px;
+  bottom: 100px;
   left: 50%;
   width: 90%;
   max-height: 0;
-  overflow:auto;
-  border-radius: 5px;
-  background-color: #fff;
+  overflow: auto;
+  background: #3b3f5c;
+  border-radius: 20px;
+  color: #fff;
   transform: translateX(-50%);
-  transition: max-height 0.5s ease;
+  transition: all 0.5s ease;
 
   &.active {
-    max-height: 300px;
+    max-height: 380px;
+    padding: 20px;
   }
 `;
 
 export const AddEventHeader = styled.div`
-  width: 100px;
-  height: 60px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 30px;
-  color: #373c4f;
-
+  align-items: center;
+  font-weight: 700;
 
   .close {
     font-size: 1.5rem;
     cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #ff94c2;
+    }
   }
 `;
 
 export const AddEventBody = styled.div`
-  width: 100%;
-  height: 100%;
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding: 20px;
+  gap: 15px;
+  margin-top: 15px;
 
   input {
-    width: 100%;
-    height: 40px;
+    padding: 12px 15px;
+    border-radius: 12px;
     border: none;
-    border-bottom: 1px solidrgb(255, 79, 79);
-    padding: 0 10px;
+    outline: none;
     font-size: 1rem;
-    color:rgb(170, 176, 201);
+    background: #2e314d;
+    color: #fff;
+    transition: all 0.3s ease;
 
     &::placeholder {
-      color: #a5a5a5;
+      color: #a5a5c2;
     }
 
     &:focus {
-      border-bottom: 1px solid #b38add;
-      &::placeholder {
-        color: #b38add;
-      }
+      background: #3b3f5c;
+      border: 2px solid #ffd700;
+      color: #fff;
     }
   }
 `;
 
 export const AddEventFooter = styled.div`
   display: flex;
-  align-items: center;
   justify-content: center;
-  padding: 20px;
+  margin-top: 20px;
 
   .add-event-btn {
-    height: 40px;
-    font-size: 1rem;
-    font-weight: 500;
-    outline: none;
+    padding: 12px 25px;
     border: none;
-    color: #fff;
-    background-color: #b38add;
-    border-radius: 5px;
+    border-radius: 12px;
+    background: #ffd700;
+    color: #2e314d;
+    font-weight: 700;
     cursor: pointer;
-    padding: 5px 10px;
+    transition: all 0.3s ease;
 
     &:hover {
-      color:rgb(127, 0, 253);
-      border: 1px solid #b38add;
+      background: #fff;
+      color: #ffb700;
     }
   }
 `;
 
-export const AddEventButton = styled.button`
-  position: absolute;
-  bottom: 30px;
-  right: 30px;
-  width: 40px;
-  height: 40px;
+// ===== Botão flutuante de adicionar evento =====
+export const AddEventCardButton = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1rem;
-  color: #878895;
-  border: 2px solid #878895;
-  opacity: 0.5;
+  font-size: 1.3rem;
+  color: #fff;
+  border: none;
   border-radius: 50%;
-  background-color: transparent;
+  background: #ff94c2;
+  box-shadow: 0 6px 15px rgba(255, 148, 194, 0.5);
   cursor: pointer;
+  transition: all 0.3s ease;
 
   &:hover {
-    opacity: 1;
+    transform: scale(0.8);
+    background: #ffd6f0;
+    color: #333;
+  }
+
+  svg {
+    width: 22px;
+    height: 22px;
   }
 `;
 
-export const deleteEvent = styled.button`
-
-`
 
 
 

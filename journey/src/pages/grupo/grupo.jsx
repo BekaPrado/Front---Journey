@@ -37,15 +37,27 @@ export default function Grupo() {
   useEffect(() => {
     async function loadStatusAndCount() {
       if (!grupo?.id_grupo) return;
-
-      // status (criador / participante / nenhum)
+  
       try {
+        // 🔹 Verifica status do usuário no grupo
         const resp = await fetch(
           `${API_URL}/group/${grupo.id_grupo}/status?userId=${user?.id_usuario}`
         );
+  
         if (resp.ok) {
           const data = await resp.json();
-          setRelation(data.relation || "nenhum");
+          const relationType = data.relation || "nenhum";
+          setRelation(relationType);
+  
+          // ✅ Se o usuário já participa ou é criador, vai direto pra tela do grupo
+          if (relationType === "participante" || relationType === "criador") {
+            localStorage.setItem(
+              "group_id",
+              JSON.stringify({ id_grupo: grupo.id_grupo })
+            );
+            navigate("/grupo-home", { replace: true });
+            return;
+          }
         } else {
           setRelation("nenhum");
         }
@@ -53,12 +65,10 @@ export default function Grupo() {
         console.error("Erro ao buscar status do grupo:", err);
         setRelation("nenhum");
       }
-
-      // participantes
+  
+      // 🔹 Participantes
       try {
-        const r2 = await fetch(
-          `${API_URL}/group/${grupo.id_grupo}/participantes`
-        );
+        const r2 = await fetch(`${API_URL}/group/${grupo.id_grupo}/participantes`);
         if (r2.ok) {
           const d2 = await r2.json();
           setParticipantes(d2.total ?? 0);
@@ -70,10 +80,10 @@ export default function Grupo() {
         setParticipantes(0);
       }
     }
-
+  
     loadStatusAndCount();
-    // também re-check quando user muda (login/logout)
-  }, [grupo, user]);
+  }, [grupo, user, navigate]);
+  
 
   async function handleParticipar() {
     if (!user || !grupo?.id_grupo)
@@ -101,7 +111,7 @@ export default function Grupo() {
         );
         console.log(localStorage.getItem("group_id"));
         // Navega para a página de calendário
-        navigate("/calendary");
+        navigate("/grupo-home");
       } else {
         alert(data.message || "Não foi possível entrar no grupo.");
       }

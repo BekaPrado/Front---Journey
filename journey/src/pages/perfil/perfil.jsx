@@ -16,7 +16,7 @@ const Perfil = () => {
 
   const usuarioLocal = JSON.parse(localStorage.getItem("journey_user"));
   const token = localStorage.getItem("journey_token");
-  const API_BASE = "http://localhost:8080/v1/journey";
+  const API_BASE = "http://localhost:3030/v1/journey";
 
   const azureConfig = {
     storageAccount: "journey2025",

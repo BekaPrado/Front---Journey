@@ -5,7 +5,7 @@ import "./meusGrupos.css";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 
-const BASE_URL = "http://localhost:8080/v1/journey";
+const BASE_URL = "http://localhost:3030/v1/journey";
 
 export default function MeusGrupos() {
   const { user } = useAuth();
