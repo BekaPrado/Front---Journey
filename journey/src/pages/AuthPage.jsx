@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { registerUser, updatePassword } from "../api/user";
 import { requestRecoveryCode, validateCode } from "../api/recovery";
+import logo from "../assets/logo.png";
 
 export default function AuthPage() {
   const navigate = useNavigate();
@@ -141,11 +142,10 @@ export default function AuthPage() {
       <div className="form-area">
         {screen === "login" && (
           <>
-            <h2>Entre em sua conta</h2>
-            <p>
-              Não possui conta?{" "}
-              <button onClick={() => setScreen("register")}>Cadastrar</button>
-            </p>
+            <div style={{width:'100%',maxWidth:460,marginBottom:10,display:'flex',justifyContent:'flex-start'}}>
+              <img src={logo} alt="Logo" style={{height:70,objectFit:'contain'}} />
+            </div>
+            <h2>Bem Vindo ao Journey!</h2>
             <form onSubmit={handleLogin}>
               <input
                 type="email"
@@ -159,12 +159,18 @@ export default function AuthPage() {
                 value={senhaLogin}
                 onChange={(e) => setSenhaLogin(e.target.value)}
               />
+              <div className="helper-row">
+                <label>
+                  <input type="checkbox" style={{accentColor:'#6C4AE2'}} />
+                  Remember
+                </label>
+                <button type="button" className="forgot" onClick={()=>setScreen('recover')}>Forgot Password?</button>
+              </div>
               <button type="submit">Entrar</button>
             </form>
             <p>
-              <button onClick={() => setScreen("recover")}>
-                Esqueceu sua senha?
-              </button>
+              Não possui conta? {" "}
+              <button className="link-btn" onClick={() => setScreen("register")}>Cadastrar</button>
             </p>
           </>
         )}

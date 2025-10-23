@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import io from "socket.io-client";
-import Sidebar from "../../../components/header/index.jsx";
+import DashboardLayout from "../../../components/layouts/DashboardLayout.jsx";
 import { useAuth } from "../../../context/AuthContext.jsx";
 import "../grupoBase.css";
 import "./chat.css";
@@ -20,7 +20,15 @@ export default function Chat() {
   const [mensagem, setMensagem] = useState("");
   const [idChatRoom, setIdChatRoom] = useState(null);
   const chatEndRef = useRef(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // layout agora é controlado pelo DashboardLayout
+
+  // Lista lateral (mock) apenas para UI
+  const contatosMock = [
+    { id: 1, nome: "Julianne", preview: "Me liga...", hora: "21:57", avatar: "https://i.pravatar.cc/100?img=5" },
+    { id: 2, nome: "Alex Clark", preview: "Não esqueça da reunião.", hora: "08:45", avatar: "https://i.pravatar.cc/100?img=6" },
+    { id: 3, nome: "Sarah", preview: "Que bom!", hora: "07:10", avatar: "https://i.pravatar.cc/100?img=7" },
+    { id: 4, nome: "Helen", preview: "Obrigada :)", hora: "Ontem", avatar: "https://i.pravatar.cc/100?img=8" },
+  ];
 
   // ------------------------------
   // Carrega o grupo ou sala privada
@@ -66,9 +74,9 @@ export default function Chat() {
     try {
       const res = await fetch(`${API_URL}/group/chat-room/${id_grupo}`);
       const data = await res.json();
-
-      if (data?.grupo?.chat_rooms?.length > 0) {
-        const sala = data.grupo.chat_rooms[0];
+      console.log(data)
+      if (data?.grupo?.chat_room) {
+  const sala = data.grupo.chat_room;
         setIdChatRoom(sala.id_chat_room);
 
         socket.emit("join_room", sala.id_chat_room);
@@ -149,11 +157,32 @@ export default function Chat() {
   // Renderização
   // ------------------------------
   return (
-    <div className="grupo-page">
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+    <DashboardLayout>
+      <div className="chat-layout">
+        {/* Sidebar esquerda */}
+        <aside className="chat-sidebar">
+          <div className="chat-sidebar-header">
+            <h3>Mensagens</h3>
+            <input className="chat-search" placeholder="Buscar" />
+          </div>
+          <div className="chat-contacts">
+            {contatosMock.map((c) => (
+              <div key={c.id} className="contact-item">
+                <img src={c.avatar} alt={c.nome} />
+                <div className="meta">
+                  <div className="top">
+                    <span className="name">{c.nome}</span>
+                    <span className="time">{c.hora}</span>
+                  </div>
+                  <div className="preview">{c.preview}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </aside>
 
-      <main className={`main-area ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <div className="chat-wrapper">
+        {/* Conversa (direita) */}
+        <section className="chat-wrapper">
           <div className="chat-header">
             <button className="btn-voltar" onClick={() => navigate("/grupo-home")}>
               ← Voltar
@@ -199,8 +228,8 @@ export default function Chat() {
               Enviar
             </button>
           </form>
-        </div>
-      </main>
-    </div>
+        </section>
+      </div>
+    </DashboardLayout>
   );
 }

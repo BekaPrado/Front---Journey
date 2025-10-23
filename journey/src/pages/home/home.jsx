@@ -1,7 +1,7 @@
 // src/pages/home/home.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../../components/header/index.jsx";
+import DashboardLayout from "../../components/layouts/DashboardLayout.jsx";
 import "./home.css";
 import { FaPlus, FaMoon, FaSun, FaUserCircle } from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
@@ -13,7 +13,6 @@ export default function Home() {
   const [grupos, setGrupos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { theme, toggle: toggleTheme } = useTheme();
 
   const BASE_URL = "http://localhost:3030/v1/journey";
@@ -105,16 +104,9 @@ export default function Home() {
   ];
 
   return (
-    <div className={`homepage ${theme === "dark" ? "dark" : ""}`}>
-      <Sidebar
-        isCollapsed={sidebarCollapsed}
-        setCollapsed={setSidebarCollapsed}
-      />
-
-      <main className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
-        <div className="container-home">
+    <DashboardLayout showRight>
           <header className="page-header">
-            <h1 className="home-title">Meus Grupos</h1>
+            <h1 className="home-title">Bem Vindo!logo</h1>
 
             <div className="header-right">
               <button
@@ -177,7 +169,7 @@ export default function Home() {
                           <div className="group-info">
                             <div className="group-title">{g.nome}</div>
                             <div className="group-desc">{g.descricao || "Explore conteúdo, eventos e conversas deste grupo."}</div>
-                            <div className="group-meta">Criado por <span>{g.criador || g.nome_criador || "Administrador"}</span></div>
+                            <div className="group-meta">Criado por <span>{g.criador || g.nome_criador }</span></div>
                           </div>
                           <button className="group-card-cta" aria-label="Abrir grupo" onClick={(e)=>{e.stopPropagation();navigate('/grupo',{state:g});}}>→</button>
                         </div>
@@ -193,55 +185,7 @@ export default function Home() {
                 </div>
               </section>
             </section>
-
-            <aside className="right-col">
-              <div className="panel calendar">
-                <div className="panel-header">
-                  <span>{monthNames[month]} {year}</span>
-                  <div className="navs">
-                    <span>‹</span>
-                    <span>›</span>
-                  </div>
-                </div>
-                <div className="calendar-grid">
-                  {["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"].map((d) => (
-                    <div key={d} className="calendar-weekday">{d}</div>
-                  ))}
-                  {daysGrid.map((d, i) => {
-                    const isToday = d === now.getDate();
-                    return (
-                      <div key={i} className={`calendar-day ${isToday ? "today" : ""}`}>
-                        {d || ""}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
-              <div className="panel online">
-                <div className="panel-header">
-                  <span>Online agora</span>
-                  <a className="seeall">Ver todos</a>
-                </div>
-                <div className="online-list">
-                  {(grupos.slice(0,4)).map((g) => (
-                    <div key={g.id_grupo} className="online-item">
-                      <div className="avatar">
-                        <img src={g.imagem || placeholder} alt={g.nome} />
-                      </div>
-                      <div className="meta">
-                        <div className="name">{g.nome}</div>
-                        <div className="sub">{g.participantes ?? 0} membros</div>
-                      </div>
-                      <div className="status" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </aside>
           </div>
-        </div>
-      </main>
-    </div>
+    </DashboardLayout>
   );
 }

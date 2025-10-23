@@ -1,7 +1,7 @@
 // src/pages/grupo/GrupoHome.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Sidebar from "../../components/header/index.jsx";
+import DashboardLayout from "../../components/layouts/DashboardLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import "./grupoBase.css";
 import "./grupoHome.css";
@@ -15,7 +15,7 @@ export default function GrupoHome() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { theme } = useTheme();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  // layout via DashboardLayout
 
   useEffect(() => {
     const grupoSalvo = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -32,9 +32,7 @@ export default function GrupoHome() {
 
   return (
     <div className={`grupo-page ${theme === "dark" ? "dark" : ""}`}>
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
-
-      <main className={`main-area ${sidebarCollapsed ? "collapsed" : ""}`}>
+      <DashboardLayout>
         <div className="grupo-home-container">
           {/* Cabeçalho */}
           <div className="grupo-header">
@@ -88,7 +86,7 @@ export default function GrupoHome() {
             </div>
           </div>
         </div>
-      </main>
+      </DashboardLayout>
     </div>
   );
 }

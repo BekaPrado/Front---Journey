@@ -1,0 +1,102 @@
+/* src/style/dashboard.css */
+
+/* Layout geral do dashboard (conteúdo central + barra direita) */
+.dashboard-wrap {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px; /* coluna direita um pouco menor */
+  gap: 20px;
+  padding: 24px 32px; /* menos respiro */
+  width: calc(100% - 220px); /* ocupa toda a largura disponível, descontando a sidebar */
+  margin-left: 220px; /* acompanha largura da sidebar aberta */
+}
+
+.dashboard-wrap.collapsed {
+  width: calc(100% - 80px);
+  margin-left: 80px; /* sidebar recolhida */
+}
+
+/* Força o main-content a não adicionar espaçamentos extras aqui */
+.main-content.no-extra-margin {
+  padding: 0;
+  margin: 0;
+}
+
+/* Coluna direita fixa visualmente como no mock */
+.dashboard-right { position: relative; }
+
+/* SidebarRight (igual ao mock) */
+.sidebar-right { display: flex; flex-direction: column; gap: 16px; }
+
+/* Perfil topo (nome + id à esquerda e avatar à direita) */
+.profile-section-right {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 12px;
+  background: var(--card-bg);
+  color: var(--text-base);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 12px 14px;
+  box-shadow: var(--shadow-subtle);
+}
+.user-info-right .name { font-weight: 800; }
+.user-info-right .id { font-size: 12px; color: var(--text-muted); }
+.avatar-right {
+  width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+  object-fit: cover;
+}
+
+/* Calendário compacto (Nov 2020) */
+.calendar-section {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: var(--shadow-subtle);
+}
+.static-calendar .cal-header{
+  display:flex; align-items:center; justify-content:space-between; font-weight:800;
+}
+.static-calendar .cal-nav button{
+  width:28px; height:28px; display:grid; place-items:center; border:none; cursor:pointer;
+  background: rgba(107,70,193,0.06); color: var(--text-base); border-radius:8px;
+}
+
+.cal-days-grid{
+  margin-top: 12px;
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 8px; text-align:center;
+}
+.cal-day { font-size: 12px; color: var(--text-muted); }
+.cal-date{
+  height: 34px; display:grid; place-items:center; border-radius: 10px;
+  background: rgba(107,70,193,0.06); color: var(--text-base);
+}
+.homepage.dark .cal-date { background:#231E40; }
+.cal-date.active{ outline: 2px solid var(--primary); background: rgba(107,70,193,0.12); font-weight:800; }
+.cal-date.highlight{ background: linear-gradient(180deg, rgba(167,139,250,0.18), rgba(167,139,250,0.10)); }
+
+/* Online Users */
+.online-users-section{
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 16px; padding: 12px; box-shadow: var(--shadow-subtle);
+}
+.online-users-section .header{ display:flex; align-items:center; justify-content:space-between; }
+.online-users-section .header h4{ margin:0; font-weight:800; }
+.online-users-section .see-all{ color: var(--primary); font-weight:700; cursor:pointer; font-size:13px; }
+
+.online-user-item{
+  display:grid; grid-template-columns: 1fr auto; align-items:center; gap:10px; padding:10px 2px;
+}
+.online-user-item .info{ display:grid; grid-template-columns: auto 1fr; gap:10px; align-items:center; }
+.avatar-right-user{ width:36px; height:36px; border-radius:50%; object-fit:cover; }
+.online-user-item .name{ font-weight:700; }
+.online-user-item .id{ font-size:12px; color: var(--text-muted); }
+.status-dot{ width:10px; height:10px; border-radius:50%; background:#36d399; }
+
+/* Responsivo */
+@media (max-width: 900px){
+  .dashboard-wrap{ grid-template-columns: 1fr; width: 100%; margin-left: 0 !important; padding: 16px; }
+  .dashboard-right{ order: -1; }
+}

@@ -55,16 +55,16 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <span>Criar Grupo</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/chats")}>
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/grupo/chat")}>
           <FaComments />
           <span>Chats</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/ebooks")}>
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/home")}>
           <FaBook />
           <span>E-Books</span>
         </MenuItem>
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/ebooks")}>
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/home")}>
           <FaCartPlus />
           <span>Seu Carrinho</span>
         </MenuItem>
