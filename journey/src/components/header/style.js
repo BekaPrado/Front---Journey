@@ -68,10 +68,8 @@ export const SidebarContainer = styled.aside`
 export const UserAvatar = styled.div`
   width: 80px;
   height: 80px;
-  border-radius: 50%;
   overflow: hidden;
   margin-bottom: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.18);
   flex-shrink: 0;
 
   img {
@@ -92,7 +90,7 @@ export const Menu = styled.div`
   margin-bottom: auto; /* Garante que o espaço seja ocupado até o topo do toggle */
 
   .homepage.dark & {
-    background: #2a2040;
+    background: linear-gradient(180deg, #2a2040 0%, #1a0f5a 100%);
   }
 
   ${({ isCollapsed }) =>

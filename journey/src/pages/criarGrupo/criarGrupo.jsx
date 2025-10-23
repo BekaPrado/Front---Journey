@@ -26,6 +26,7 @@ import {
   InputGroup,
 } from "./criarGrupo.js";
 import { uploadImageToAzure } from "../uploadImageToAzure";
+import { useTheme } from "../../context/ThemeContext";
 
 const BASE_URL = "http://localhost:3030/v1/journey";
 
@@ -54,9 +55,7 @@ const CriarGrupo = () => {
   const AZURE_SAS_TOKEN =
     "sp=racwl&st=2025-10-07T12:06:43Z&se=2025-12-20T20:21:43Z&sv=2024-11-04&sr=c&sig=olO%2FAQVZv1dP2I68WhoQ3D%2BcUpAaq7H3CepabScHisg%3D";
 
-  const [darkMode] = useState(
-    () => localStorage.getItem("darkMode") === "true"
-  );
+  const { theme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
@@ -205,7 +204,7 @@ const CriarGrupo = () => {
 
   return (
     <div
-      className={`homepage ${darkMode ? "dark" : ""}`}
+      className={`homepage ${theme === "dark" ? "dark" : ""}`}
       style={{ display: "flex" }}
     >
       <Sidebar
@@ -213,7 +212,7 @@ const CriarGrupo = () => {
         setCollapsed={setSidebarCollapsed}
       />
       <Container isCollapsed={sidebarCollapsed}>
-        <Header theme={{ darkMode }}>
+        <Header>
           <Title>Crie seu Grupo no Journey!</Title>
         </Header>
 

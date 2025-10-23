@@ -26,6 +26,7 @@ import {
   FaCircle
 } from "react-icons/fa";
 import "./calendary.js";
+import { useTheme } from "../../context/ThemeContext";
 
 const Calendar = () => {
   const months = [
@@ -35,19 +36,7 @@ const Calendar = () => {
 
   // ===== Sidebar e tema =====
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [darkMode, setDarkMode] = useState(
-    () => localStorage.getItem("darkMode") === "true"
-  );
-
-  useEffect(() => {
-    localStorage.setItem("darkMode", darkMode);
-  }, [darkMode]);
-
-  const toggleDarkMode = () => {
-    const next = !darkMode;
-    setDarkMode(next);
-    localStorage.setItem("darkMode", next);
-  };
+  const { theme } = useTheme();
 
   // ===== Estados do calendário =====
   const [today, setToday] = useState(new Date());
@@ -236,7 +225,7 @@ const Calendar = () => {
   };
 
   return (
-    <div className={`calendar-page ${darkMode ? "dark" : ""}`}>
+    <div className={`calendar-page ${theme === "dark" ? "dark" : ""}`}>
       {/* Sidebar fixa à esquerda */}
       <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
 

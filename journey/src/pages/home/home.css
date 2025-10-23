@@ -4,29 +4,29 @@
 :root {
     --panel-radius: 16px;
     --card-radius: 12px;
-    --primary: #6B46C1; /* Roxo Sutil (Principal) */
-    --primary-2: #805AD5; /* Gradiente / Destaque */
+    --primary: #6C4AE2; /* Roxo vivo (principal) */
+    --primary-2: #A78BFA; /* Lavanda para hover/gradiente */
     --danger: #E53E3E; /* Vermelho padrão para sair */
 }
 
 /* MODO CLARO */
 .homepage:not(.dark) {
-    --bg-body: #F7F8FA; /* Fundo principal */
-    --card-bg: #FFFFFF; /* Fundo de painéis e cards */
-    --text-base: #1A202C; /* Texto principal escuro */
-    --text-muted: #6B7280; /* Texto secundário cinza */
-    --border-color: rgba(0, 0, 0, 0.08);
-    --shadow-subtle: 0 4px 12px rgba(0,0,0,0.06);
+    --bg-body: #F5F7FB; /* Fundo ligeiramente azulado como no mock */
+    --card-bg: #FFFFFF; /* Cards brancos */
+    --text-base: #141827; /* Texto escuro */
+    --text-muted: #6B7280; /* Texto secundário */
+    --border-color: rgba(20, 24, 39, 0.08);
+    --shadow-subtle: 0 10px 30px rgba(17, 17, 26, 0.06);
 }
 
 /* MODO ESCURO */
 .homepage.dark {
-    --primary: #D3BCFD; /* Lavanda mais vibrante */
-    --primary-2: #C4B5FD; 
-    --bg-body: #0A0A17; /* Fundo Ultra-Escuro */
-    --card-bg: #1B1735; /* Fundo de painéis e cards (Roxo Escuro Quase Preto) */
-    --text-base: #F3F4F6; /* Texto principal claro */
-    --text-muted: #D1D5DB; /* Texto secundário claro */
+    --primary: #C4B5FD; /* Lavanda clara */
+    --primary-2: #A78BFA;
+    --bg-body: #0E0B1E; /* Roxo-anel escuro */
+    --card-bg: #1A1631; /* Painéis escuros roxos */
+    --text-base: #F5F7FB; /* Texto claro */
+    --text-muted: #C9CBE2; /* Secundário claro */
     --border-color: rgba(255, 255, 255, 0.08);
     --shadow-subtle: none;
 }
@@ -65,9 +65,19 @@ html, body, #root {
 }
 
 .container-home {
-  max-width: 1200px;
+  max-width: 1620px;
   margin: 0 auto;
 }
+
+/* Layout duas colunas (principal + painel direito) */
+.content-two-col {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) 340px;
+  gap: 28px;
+}
+
+.left-col { display: flex; flex-direction: column; gap: 22px; }
+.right-col { display: flex; flex-direction: column; gap: 22px; }
 
 /* CABEÇALHO */
 .page-header {
@@ -138,6 +148,23 @@ html, body, #root {
   height: 100%;
   object-fit: cover;
   border-radius: 50%;
+}
+
+/* Barra de filtros */
+.filters-bar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.filter-chip {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-base);
+  padding: 10px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  box-shadow: var(--shadow-subtle);
 }
 
 
@@ -250,6 +277,85 @@ html, body, #root {
   color: var(--text-muted);
 }
 
+/* Versão moderna dos cards com gradiente e CTA */
+.groups-grid.modern { grid-template-columns: 1fr; gap: 20px; }
+
+.group-card.modern {
+  display: grid;
+  grid-template-columns: 120px 1fr auto;
+  align-items: center;
+  gap: 22px;
+  padding: 26px 28px;
+  border-radius: 22px;
+  border: 1px solid var(--border-color);
+  background: linear-gradient(180deg, rgba(255,255,255,0.95), rgba(245,247,251,0.95));
+  box-shadow: 0 10px 26px rgba(17, 17, 26, 0.06);
+}
+.homepage.dark .group-card.modern {
+  background: linear-gradient(180deg, rgba(26,22,49,0.98), rgba(26,22,49,0.98));
+  box-shadow: none;
+}
+
+.group-card.modern .illustration { position: relative; width: 120px; height: 80px; }
+.group-card.modern .illustration .bubble {
+  position: absolute; inset: 0; border-radius: 16px;
+  background: radial-gradient(circle at 10% 30%, rgba(167,139,250,0.35), transparent 55%),
+              radial-gradient(circle at 80% 70%, rgba(108,74,226,0.25), transparent 60%);
+  filter: blur(0.5px);
+}
+.group-card.modern .illustration img { position: relative; width: 100%; height: 100%; object-fit: contain; }
+
+.group-card.modern .group-info { padding-right: 14px; }
+.group-card.modern .group-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+.group-card.modern .group-desc { font-size: 14px; color: var(--text-muted); margin-bottom: 10px; }
+.group-card.modern .group-meta { font-size: 13px; color: var(--text-muted); }
+.group-card.modern .group-meta span { color: var(--primary); font-weight: 700; }
+
+.group-card.modern .group-card-cta {
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center; font-weight: 900;
+  color: #fff; background: var(--primary);
+  border: none; cursor: pointer;
+  box-shadow: 0 10px 20px rgba(107, 70, 193, 0.25);
+}
+.group-card.modern:hover { transform: translateY(-3px); }
+
+/* Painéis da coluna direita */
+.panel {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: var(--panel-radius);
+  box-shadow: var(--shadow-subtle);
+  padding: 18px;
+}
+.panel .panel-header { display: flex; align-items: center; justify-content: space-between; font-weight: 800; }
+.panel .seeall { color: var(--primary); font-weight: 700; cursor: pointer; }
+
+/* Calendário simples */
+.calendar .navs { display: flex; gap: 10px; opacity: 0.6; }
+.calendar-grid {
+  margin-top: 14px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+}
+.calendar-weekday { font-size: 12px; color: var(--text-muted); text-align: center; }
+.calendar-day {
+  height: 36px; border-radius: 10px; display: grid; place-items: center;
+  background: rgba(107,70,193,0.06); color: var(--text-base);
+}
+.homepage.dark .calendar-day { background: #231E40; }
+.calendar-day.today { outline: 2px solid var(--primary); background: rgba(107,70,193,0.12); }
+
+/* Lista Online */
+.online-list { display: flex; flex-direction: column; gap: 12px; margin-top: 10px; }
+.online-item { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; }
+.online-item .avatar { width: 42px; height: 42px; border-radius: 50%; overflow: hidden; border: 2px solid rgba(107,70,193,0.4); }
+.online-item .avatar img { width: 100%; height: 100%; object-fit: cover; }
+.online-item .meta .name { font-weight: 700; }
+.online-item .meta .sub { font-size: 12px; color: var(--text-muted); }
+.online-item .status { width: 10px; height: 10px; border-radius: 50%; background: #36d399; }
+
 
 /* ===================================== */
 /* 4. RESPONSIVIDADE (SIDEBAR FECHADA) */
@@ -275,6 +381,8 @@ html, body, #root {
   .groups-grid {
     grid-template-columns: 1fr;
   }
+  .content-two-col { grid-template-columns: 1fr; }
+  .right-col { order: -1; }
   
   .big-card {
     padding: 20px;

@@ -54,7 +54,7 @@ export const Month = styled.div`
     transition: all 0.3s ease;
     &:hover {
       transform: scale(1.2);
-      color: #ff94c2;
+      color: #765cdd;
     }
   }
 
@@ -103,15 +103,15 @@ export const Days = styled.div`
     }
 
     &.today {
-      background: #ff94c2;
+      background:hsl(252, 65.50%, 61.40%);
       color: #fff;
       font-weight: 700;
-      box-shadow: 0 0 10px rgba(255, 148, 194, 0.7);
+      box-shadow: 0 0 10px hsl(252, 65.50%, 61.40%);
     }
 
     &.active {
-      border: 2px solid #ffd700;
-      color: #ffd700;
+      border: 2px solid #fff;
+      color: #fff;
     }
 
     .event-indicator {
@@ -120,7 +120,7 @@ export const Days = styled.div`
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #ffd700;
+      background: #765cdd;
     }
 
     &.prev-date, &.next-date {
@@ -140,15 +140,15 @@ export const GotoToday = styled.div`
     padding: 8px 18px;
     border: none;
     border-radius: 10px;
-    background: #ffd700;
-    color: #2e314d;
+    background: #765cdd;
+    color: #fff;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover {
       background: #fff;
-      color: #ffb700;
+      color: #765cdd;
     }
   }
 `;
@@ -162,7 +162,7 @@ export const TodayDate = styled.div`
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 5px;
-    color: #ffd700;
+    color:rgb(149, 129, 226);
   }
 
   .event-date {
@@ -216,14 +216,14 @@ export const Events = styled.div`
       padding: 5px 12px;
       border: none;
       border-radius: 10px;
-      background: #ff6b6b;
+      background: #765cdd;
       color: #fff;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s ease;
 
       &:hover {
-        background: #ff4c4c;
+        background: #341E9B; //botao excluir
       }
     }
   }
@@ -267,7 +267,7 @@ export const AddEventHeader = styled.div`
     transition: all 0.3s ease;
 
     &:hover {
-      color: #ff94c2;
+      color: #765cdd;
     }
   }
 `;
@@ -293,8 +293,8 @@ export const AddEventBody = styled.div`
     }
 
     &:focus {
-      background: #3b3f5c;
-      border: 2px solid #ffd700;
+      background: #765cdd;
+      border: 2px solid #765cdd;
       color: #fff;
     }
   }
@@ -309,15 +309,15 @@ export const AddEventFooter = styled.div`
     padding: 12px 25px;
     border: none;
     border-radius: 12px;
-    background: #ffd700;
-    color: #2e314d;
+    background:rgb(228, 228, 228);
+    color: #765cdd;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
 
     &:hover {
       background: #fff;
-      color: #ffb700;
+      color: #4228AF;
     }
   }
 `;
@@ -331,15 +331,14 @@ export const AddEventCardButton = styled.button`
   color: #fff;
   border: none;
   border-radius: 50%;
-  background: #ff94c2;
-  box-shadow: 0 6px 15px rgba(255, 148, 194, 0.5);
+  background: #765cdd;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
     transform: scale(0.8);
-    background: #ffd6f0;
-    color: #333;
+    background: #765cdd;
+    color: #fff;
   }
 
   svg {
@@ -347,6 +346,7 @@ export const AddEventCardButton = styled.button`
     height: 22px;
   }
 `;
+
 
 
 

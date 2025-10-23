@@ -5,6 +5,7 @@ import Sidebar from "../../components/header/index.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
 import "./grupoBase.css";
 import "./grupoHome.css";
+import { useTheme } from "../../context/ThemeContext";
 
 const STORAGE_KEY = "journey_grupo_atual";
 
@@ -13,7 +14,7 @@ export default function GrupoHome() {
   const [carregando, setCarregando] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [darkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  const { theme } = useTheme();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
@@ -30,7 +31,7 @@ export default function GrupoHome() {
   if (!grupo) return null;
 
   return (
-    <div className={`grupo-page ${darkMode ? "dark" : ""}`}>
+    <div className={`grupo-page ${theme === "dark" ? "dark" : ""}`}>
       <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
 
       <main className={`main-area ${sidebarCollapsed ? "collapsed" : ""}`}>

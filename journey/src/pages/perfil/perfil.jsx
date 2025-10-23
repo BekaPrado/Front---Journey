@@ -3,6 +3,7 @@ import Sidebar from "../../components/header/index.jsx";
 import { uploadImageToAzure } from "../../pages/uploadImageToAzure.js";
 import { FaUserCircle, FaImage, FaSun, FaMoon, FaArrowLeft } from "react-icons/fa";
 import "./perfil.css";
+import { useTheme } from "../../context/ThemeContext";
 
 const Perfil = () => {
   const [isCollapsed, setCollapsed] = useState(false);
@@ -12,7 +13,7 @@ const Perfil = () => {
   const [avatarFile, setAvatarFile] = useState(null);
   const [imagePreviewUrl, setImagePreviewUrl] = useState("");
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(localStorage.getItem("darkMode") === "true");
+  const { theme, toggle } = useTheme();
 
   const usuarioLocal = JSON.parse(localStorage.getItem("journey_user"));
   const token = localStorage.getItem("journey_token");
@@ -102,11 +103,7 @@ const Perfil = () => {
     setIsEditing(false);
   };
 
-  const toggleTheme = () => {
-    const newTheme = !darkMode;
-    setDarkMode(newTheme);
-    localStorage.setItem("darkMode", newTheme);
-  };
+  const toggleTheme = () => toggle();
 
   const handleBack = () => {
     window.history.back();
@@ -117,7 +114,7 @@ const Perfil = () => {
   }
 
   return (
-    <div className={`homepage ${darkMode ? "dark" : ""}`} style={{ display: "flex" }}>
+    <div className={`homepage ${theme === "dark" ? "dark" : ""}`} style={{ display: "flex" }}>
       <Sidebar isCollapsed={isCollapsed} setCollapsed={setCollapsed} />
 
       <main className="perfil-wrapper" style={{ marginLeft: isCollapsed ? "80px" : "220px" }}>
@@ -128,7 +125,7 @@ const Perfil = () => {
               <FaArrowLeft />
             </button>
             <button className="theme-toggle" onClick={toggleTheme}>
-              {darkMode ? <FaSun /> : <FaMoon />}
+              {theme === "dark" ? <FaSun /> : <FaMoon />}
             </button>
             
           </div>

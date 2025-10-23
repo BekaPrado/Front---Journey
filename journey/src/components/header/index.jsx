@@ -19,6 +19,10 @@ import {
   FaAngleRight,
   FaHome,
   FaCalendar,
+  FaCar,
+  FaCarBattery,
+  FaCarAlt,
+  FaCartPlus,
 } from "react-icons/fa";
 
 const Sidebar = ({ isCollapsed, setCollapsed }) => {
@@ -59,6 +63,10 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
         <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/ebooks")}>
           <FaBook />
           <span>E-Books</span>
+        </MenuItem>
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/ebooks")}>
+          <FaCartPlus />
+          <span>Seu Carrinho</span>
         </MenuItem>
       </Menu>
 

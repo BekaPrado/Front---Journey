@@ -19,10 +19,13 @@ body {
 
 /* Quando o layout for de tela cheia (telas internas com sidebar) */
 body.fullscreen-layout {
-  display: block; /* remove o centralizar */
+  display: block;
   align-items: unset;
   justify-content: unset;
   padding: 0;
+  /* Usa a paleta do tema para as telas internas com sidebar */
+  background: var(--bg-body);
+  color: var(--text-base);
 }
 
   
