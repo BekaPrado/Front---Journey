@@ -1,80 +1,93 @@
+// src/pages/grupo/GrupoHome.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
+import Sidebar from "../../components/header/index.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
+import "./grupoBase.css";
+import "./grupoHome.css";
 
-const API_URL = "http://localhost:3030/v1/journey";
+const STORAGE_KEY = "journey_grupo_atual";
 
 export default function GrupoHome() {
   const [grupo, setGrupo] = useState(null);
   const [carregando, setCarregando] = useState(true);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [darkMode] = useState(() => localStorage.getItem("darkMode") === "true");
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
   useEffect(() => {
-    const carregarGrupo = async () => {
-      try {
-        const grupoSalvo = JSON.parse(localStorage.getItem("grupo_atual"));
-
-        if (!grupoSalvo?.id_grupo) {
-          console.warn("⚠️ Nenhum grupo encontrado no localStorage");
-          setGrupo(null);
-          setCarregando(false);
-          return;
-        }
-
-        // 🔹 Buscar grupo atualizado do back-end (caso tenha mudado algo)
-        const resp = await fetch(`${API_URL}/group/${grupoSalvo.id_grupo}`);
-        const data = await resp.json();
-
-        if (data?.grupo) {
-          setGrupo(data.grupo);
-          console.log("✅ Grupo carregado:", data.grupo);
-        } else {
-          console.warn("Nenhum grupo encontrado no servidor para o ID:", grupoSalvo.id_grupo);
-          setGrupo(grupoSalvo); // mantém o salvo localmente
-        }
-      } catch (error) {
-        console.error("Erro ao carregar grupo:", error);
-        setGrupo(null);
-      } finally {
-        setCarregando(false);
-      }
-    };
-
-    carregarGrupo();
-  }, []);
+    const grupoSalvo = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!grupoSalvo) {
+      navigate("/home", { replace: true });
+      return;
+    }
+    setGrupo(grupoSalvo);
+    setCarregando(false);
+  }, [navigate]);
 
   if (carregando) return <p>Carregando...</p>;
-  if (!grupo) return <p>Grupo não encontrado.</p>;
+  if (!grupo) return null;
 
   return (
-    <div className="grupo-home-container">
-      <header className="grupo-header">
-        <button className="btn-voltar" onClick={() => navigate("/grupos")}>
-          ←
-        </button>
-        <h1>{grupo.nome}</h1>
-      </header>
+    <div className={`grupo-page ${darkMode ? "dark" : ""}`}>
+      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
 
-      <div className="grupo-content">
-        <img
-          src={grupo.imagem || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-          alt={grupo.nome}
-          className="grupo-imagem"
-        />
+      <main className={`main-area ${sidebarCollapsed ? "collapsed" : ""}`}>
+        <div className="grupo-home-container">
+          {/* Cabeçalho */}
+          <div className="grupo-header">
+            <div className="header-info">
+              <h1>{grupo.nome}</h1>
+              <p className="descricao">{grupo.descricao}</p>
+            </div>
+            <div className="header-buttons">
+              <button className="btn-voltar" onClick={() => navigate("/home")}>
+                ← Voltar
+              </button>
+              <button className="btn btn-primary" onClick={() => navigate("/grupo/chat")}>
+                💬 Ir para o Chat
+              </button>
+            </div>
+          </div>
 
-        <div className="grupo-info">
-          <p><strong>Descrição:</strong> {grupo.descricao}</p>
-          <p><strong>Limite de membros:</strong> {grupo.limite_membros}</p>
+          {/* Conteúdo principal */}
+          <div className="grupo-content">
+            <div className="grupo-image">
+              <img
+                src={grupo.imagem || "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"}
+                alt={grupo.nome}
+              />
+            </div>
 
-          <button
-            className="btn-join"
-            onClick={() => navigate("/grupo/chat", { state: { grupo } })}
-          >
-            Ir para o Chat
-          </button>
+            <div className="grupo-info">
+              <h3>Sobre o grupo</h3>
+              <p>
+                Este grupo foi criado para promover o aprendizado colaborativo entre os membros.
+                Aqui você pode participar de conversas, trocar materiais e acompanhar eventos.
+              </p>
+
+              <div className="info-stats">
+                <div>
+                  <strong>Criador:</strong> {user?.nome_completo || "Admin"}
+                </div>
+                <div>
+                  <strong>ID do Grupo:</strong> {grupo.id_grupo}
+                </div>
+              </div>
+
+              <div className="action-area">
+                <button
+                  className="btn btn-primary"
+                  onClick={() => navigate("/grupo/chat")}
+                >
+                  Entrar no Chat
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

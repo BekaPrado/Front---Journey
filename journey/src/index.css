@@ -10,16 +10,19 @@
     box-sizing: border-box;
   }
   
-  body {
+body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #1e0f62, #2e0d8a, #4b11d9);
   color: #fff;
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* Adiciona um padding para rolagem em telas menores */
-  padding: 1rem; 
+}
+
+/* Quando o layout for de tela cheia (telas internas com sidebar) */
+body.fullscreen-layout {
+  display: block; /* remove o centralizar */
+  align-items: unset;
+  justify-content: unset;
+  padding: 0;
 }
 
   
@@ -232,3 +235,5 @@ button[type="submit"]:active {
         display: none;
     }
 }
+
+
