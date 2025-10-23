@@ -16,64 +16,63 @@ import {
   AddEventHeader,
   AddEventBody,
   AddEventFooter,
-  AddEventCardButton
+  AddEventCardButton,
 } from "./calendary.js";
 import {
   FaAngleLeft,
   FaAngleRight,
   FaPlus,
   FaTimes,
-  FaCircle
+  FaCircle,
 } from "react-icons/fa";
-import "./calendary.js";
 import { useTheme } from "../../context/ThemeContext";
+import "./calendary.js";
+
+const API_BASE = "http://localhost:3030/v1/journey";
 
 const Calendar = () => {
   const months = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
   ];
 
-  // ===== Sidebar e tema =====
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { theme } = useTheme();
 
-  // ===== Estados do calendário =====
   const [today, setToday] = useState(new Date());
   const [activeDay, setActiveDay] = useState(today.getDate());
   const [month, setMonth] = useState(today.getMonth());
   const [year, setYear] = useState(today.getFullYear());
   const [eventsArr, setEventsArr] = useState([]);
 
-  // ===== Modal evento =====
   const [showAddEvent, setShowAddEvent] = useState(false);
   const [eventName, setEventName] = useState("");
   const [eventLink, setEventLink] = useState("");
   const [eventFrom, setEventFrom] = useState("");
   const [eventDescription, setEventDesc] = useState("");
 
-  // ===== Funções de navegação =====
+  // ===== Funções do calendário =====
   const getDaysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
   const getFirstDayOfMonth = (m, y) => new Date(y, m, 1).getDay();
 
-  const nextMonth = () => {
-    if (month === 11) {
-      setMonth(0);
-      setYear(prev => prev + 1);
-    } else {
-      setMonth(prev => prev + 1);
-    }
-  };
-
-  const prevMonth = () => {
-    if (month === 0) {
-      setMonth(11);
-      setYear(prev => prev - 1);
-    } else {
-      setMonth(prev => prev - 1);
-    }
-  };
-
+  const nextMonth = () =>
+    month === 11
+      ? (setMonth(0), setYear((prev) => prev + 1))
+      : setMonth((prev) => prev + 1);
+  const prevMonth = () =>
+    month === 0
+      ? (setMonth(11), setYear((prev) => prev - 1))
+      : setMonth((prev) => prev - 1);
   const gotoToday = () => {
     const current = new Date();
     setToday(current);
@@ -82,38 +81,65 @@ const Calendar = () => {
     setActiveDay(current.getDate());
   };
 
-  // ===== Buscar eventos da API =====
+  // ===== Buscar eventos =====
   const fetchEvents = async () => {
     try {
-      const res = await fetch("http://localhost:8080/v1/journey/calendario");
+      const res = await fetch(`${API_BASE}/calendario`);
       if (!res.ok) throw new Error("Erro ao buscar eventos");
       const data = await res.json();
       const events = Array.isArray(data.Calendario) ? data.Calendario : [];
-      setEventsArr(events);
+
+      const usuarioLocal = JSON.parse(localStorage.getItem("journey_user"));
+
+      // Adiciona nome do usuário em cada evento
+      const eventsWithUser = await Promise.all(
+        events.map(async (ev) => {
+          try {
+            const userRes = await fetch(`${API_BASE}/usuario/${ev.id_usuario}`);
+            const userData = await userRes.json();
+            ev.nome_usuario =
+              userData.usuario?.[0]?.nome_completo ||
+              (ev.id_usuario === usuarioLocal?.id_usuario
+                ? usuarioLocal?.nome_completo
+                : "Usuário desconhecido");
+          } catch {
+            ev.nome_usuario =
+              ev.id_usuario === usuarioLocal?.id_usuario
+                ? usuarioLocal?.nome_completo
+                : "Usuário desconhecido";
+          }
+          return ev;
+        })
+      );
+
+      setEventsArr(eventsWithUser);
     } catch (error) {
       console.error("Falha ao carregar eventos:", error);
       setEventsArr([]);
     }
   };
 
-  useEffect(() => { fetchEvents(); }, []);
+  useEffect(() => {
+    fetchEvents();
+  }, []);
 
   // ===== Adicionar evento =====
   const addEvent = async () => {
     const groupData = localStorage.getItem("group_id");
+    const userData = localStorage.getItem("journey_user");
     let id_grupo = NaN;
+    let id_usuario = NaN;
 
-    if (groupData) {
-      try {
-        id_grupo = JSON.parse(groupData).id_grupo;
-      } catch (err) {
-        console.error("Erro ao parsear localStorage:", err);
-      }
+    try {
+      if (groupData) id_grupo = JSON.parse(groupData)?.id_grupo;
+      if (userData) id_usuario = JSON.parse(userData)?.id_usuario;
+    } catch (err) {
+      console.error("Erro ao parsear localStorage:", err);
     }
 
-    if (!id_grupo || isNaN(id_grupo))
-      return alert("ID do grupo inválido! valor atual: " + groupData);
-
+    if (!id_grupo || isNaN(id_grupo)) return alert("ID do grupo inválido!");
+    if (!id_usuario || isNaN(id_usuario))
+      return alert("ID do usuário inválido! Faça login novamente.");
     if (!eventName || eventName.length > 100)
       return alert("Preencha um nome válido!");
     if (!eventFrom) return alert("Preencha um horário de início válido!");
@@ -130,11 +156,12 @@ const Calendar = () => {
       descricao: eventDescription,
       data_evento: startDate,
       link: eventLink,
-      id_grupo: id_grupo,
+      id_grupo,
+      id_usuario,
     };
 
     try {
-      const res = await fetch("http://localhost:8080/v1/journey/calendario", {
+      const res = await fetch(`${API_BASE}/calendario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(newEvent),
@@ -159,9 +186,11 @@ const Calendar = () => {
     const id = Number(eventToDelete.id_calendario);
     if (!id) return alert("ID do evento inválido!");
     try {
-      const res = await fetch(`http://localhost:8080/v1/journey/calendario/${id}`, { method: "DELETE" });
+      const res = await fetch(`${API_BASE}/calendario/${id}`, {
+        method: "DELETE",
+      });
       if (!res.ok) throw new Error(`Erro ao deletar evento: ${res.status}`);
-      setEventsArr(prev => prev.filter(ev => ev.id_calendario !== id));
+      setEventsArr((prev) => prev.filter((ev) => ev.id_calendario !== id));
     } catch (error) {
       console.error("Erro ao deletar evento:", error);
       alert("Falha ao deletar o evento.");
@@ -169,12 +198,12 @@ const Calendar = () => {
   };
 
   // ===== Eventos do dia =====
-  const eventsForActiveDay = eventsArr.filter(ev => {
-    const eventDate = new Date(ev.data_evento);
+  const eventsForActiveDay = eventsArr.filter((ev) => {
+    const evDate = new Date(ev.data_evento);
     return (
-      eventDate.getDate() === activeDay &&
-      eventDate.getMonth() === month &&
-      eventDate.getFullYear() === year
+      evDate.getDate() === activeDay &&
+      evDate.getMonth() === month &&
+      evDate.getFullYear() === year
     );
   });
 
@@ -188,13 +217,12 @@ const Calendar = () => {
     );
     const daysArray = [];
 
-    for (let i = firstDay; i > 0; i--) {
+    for (let i = firstDay; i > 0; i--)
       daysArray.push(
         <div key={`prev-${i}`} className="day prev-date">
           {prevMonthDays - i + 1}
         </div>
       );
-    }
 
     for (let i = 1; i <= daysInMonth; i++) {
       const isToday =
@@ -202,7 +230,7 @@ const Calendar = () => {
         month === today.getMonth() &&
         year === today.getFullYear();
       const isActive = i === activeDay;
-      const hasEvent = eventsArr.some(ev => {
+      const hasEvent = eventsArr.some((ev) => {
         const evDate = new Date(ev.data_evento);
         return (
           evDate.getDate() === i &&
@@ -210,11 +238,12 @@ const Calendar = () => {
           evDate.getFullYear() === year
         );
       });
-
       daysArray.push(
         <div
           key={i}
-          className={`day ${isToday ? "today" : ""} ${isActive ? "active" : ""}`}
+          className={`day ${isToday ? "today" : ""} ${
+            isActive ? "active" : ""
+          }`}
           onClick={() => setActiveDay(i)}
         >
           {i} {hasEvent && <FaCircle className="event-indicator" size={8} />}
@@ -226,25 +255,33 @@ const Calendar = () => {
 
   return (
     <div className={`calendar-page ${theme === "dark" ? "dark" : ""}`}>
-      {/* Sidebar fixa à esquerda */}
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
-
-      {/* Conteúdo principal */}
+      <Sidebar
+        isCollapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+      />
       <main className={`main-content ${sidebarCollapsed ? "collapsed" : ""}`}>
         <Container>
           <Left>
             <CalendarWrapper>
               <Month>
                 <FaAngleLeft className="prev" onClick={prevMonth} />
-                <div className="date">{months[month]} {year}</div>
+                <div className="date">
+                  {months[month]} {year}
+                </div>
                 <FaAngleRight className="next" onClick={nextMonth} />
               </Month>
               <Weekdays>
-                {["Dom.","Seg.","Ter.","Qua.","Qui.","Sex.","Sab."].map((d,i)=><div key={i}>{d}</div>)}
+                {["Dom.", "Seg.", "Ter.", "Qua.", "Qui.", "Sex.", "Sab."].map(
+                  (d, i) => (
+                    <div key={i}>{d}</div>
+                  )
+                )}
               </Weekdays>
               <Days>{renderDays()}</Days>
               <GotoToday>
-                <button className="today-btn" onClick={gotoToday}>Hoje</button>
+                <button className="today-btn" onClick={gotoToday}>
+                  Hoje
+                </button>
               </GotoToday>
             </CalendarWrapper>
           </Left>
@@ -252,9 +289,13 @@ const Calendar = () => {
           <Right>
             <TodayDate>
               <div className="event-day">
-                {new Date(year, month, activeDay).toLocaleDateString("pt-br", { weekday: "long" })}
+                {new Date(year, month, activeDay).toLocaleDateString("pt-br", {
+                  weekday: "long",
+                })}
               </div>
-              <div className="event-date">{activeDay} {months[month]} {year}</div>
+              <div className="event-date">
+                {activeDay} {months[month]} {year}
+              </div>
             </TodayDate>
 
             <Events>
@@ -266,15 +307,22 @@ const Calendar = () => {
                       <span className="event-title">{ev.nome_evento}</span>
                     </div>
                     <div className="event-time">
-                      {new Date(ev.data_evento).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                      {new Date(ev.data_evento).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
                     </div>
-                    <button className="delete" onClick={() => deleteEvent(ev)}>Excluir</button>
+                    <div className="event-user">
+                      Criado por: {ev.nome_usuario || "Usuário desconhecido"}
+                    </div>
+                    <button className="delete" onClick={() => deleteEvent(ev)}>
+                      Excluir
+                    </button>
                   </div>
                 ))
               ) : (
                 <div className="no-event">Sem eventos</div>
               )}
-
               <AddEventCardButton onClick={() => setShowAddEvent(true)}>
                 <FaPlus />
               </AddEventCardButton>
@@ -283,16 +331,41 @@ const Calendar = () => {
             <AddEventWrapper className={showAddEvent ? "active" : ""}>
               <AddEventHeader>
                 <div className="title">Adicionar Evento</div>
-                <FaTimes className="close" onClick={() => setShowAddEvent(false)} />
+                <FaTimes
+                  className="close"
+                  onClick={() => setShowAddEvent(false)}
+                />
               </AddEventHeader>
               <AddEventBody>
-                <input type="text" placeholder="Nome do Evento" value={eventName} onChange={e => setEventName(e.target.value)} />
-                <input type="time" placeholder="Horário de Início" value={eventFrom} onChange={e => setEventFrom(e.target.value)} />
-                <input type="url" placeholder="Link" value={eventLink} onChange={e => setEventLink(e.target.value)} />
-                <input type="text" placeholder="Descrição" value={eventDescription} onChange={e => setEventDesc(e.target.value)} />
+                <input
+                  type="text"
+                  placeholder="Nome do Evento"
+                  value={eventName}
+                  onChange={(e) => setEventName(e.target.value)}
+                />
+                <input
+                  type="time"
+                  placeholder="Horário de Início"
+                  value={eventFrom}
+                  onChange={(e) => setEventFrom(e.target.value)}
+                />
+                <input
+                  type="url"
+                  placeholder="Link"
+                  value={eventLink}
+                  onChange={(e) => setEventLink(e.target.value)}
+                />
+                <input
+                  type="text"
+                  placeholder="Descrição"
+                  value={eventDescription}
+                  onChange={(e) => setEventDesc(e.target.value)}
+                />
               </AddEventBody>
               <AddEventFooter>
-                <button className="add-event-btn" onClick={addEvent}>Adicionar Evento</button>
+                <button className="add-event-btn" onClick={addEvent}>
+                  Adicionar Evento
+                </button>
               </AddEventFooter>
             </AddEventWrapper>
           </Right>

@@ -49,7 +49,8 @@ export const Month = styled.div`
   font-weight: 700;
   text-transform: capitalize;
 
-  .prev, .next {
+  .prev,
+  .next {
     cursor: pointer;
     transition: all 0.3s ease;
     &:hover {
@@ -103,10 +104,10 @@ export const Days = styled.div`
     }
 
     &.today {
-      background:hsl(252, 65.50%, 61.40%);
+      background: hsl(252, 65.5%, 61.4%);
       color: #fff;
       font-weight: 700;
-      box-shadow: 0 0 10px hsl(252, 65.50%, 61.40%);
+      box-shadow: 0 0 10px hsl(252, 65.5%, 61.4%);
     }
 
     &.active {
@@ -123,7 +124,8 @@ export const Days = styled.div`
       background: #765cdd;
     }
 
-    &.prev-date, &.next-date {
+    &.prev-date,
+    &.next-date {
       color: #8a8a9f;
       font-weight: 400;
     }
@@ -162,7 +164,7 @@ export const TodayDate = styled.div`
     font-size: 2rem;
     font-weight: 700;
     margin-bottom: 5px;
-    color:rgb(149, 129, 226);
+    color: rgb(149, 129, 226);
   }
 
   .event-date {
@@ -223,8 +225,15 @@ export const Events = styled.div`
       transition: all 0.3s ease;
 
       &:hover {
-        background: #341E9B; //botao excluir
+        background: #341e9b; //botao excluir
       }
+    }
+
+    .event-user {
+      font-size: 0.85rem;
+      color: #666;
+      margin-top: 4px;
+      font-style: italic;
     }
   }
 
@@ -309,7 +318,7 @@ export const AddEventFooter = styled.div`
     padding: 12px 25px;
     border: none;
     border-radius: 12px;
-    background:rgb(228, 228, 228);
+    background: rgb(228, 228, 228);
     color: #765cdd;
     font-weight: 700;
     cursor: pointer;
@@ -317,7 +326,7 @@ export const AddEventFooter = styled.div`
 
     &:hover {
       background: #fff;
-      color: #4228AF;
+      color: #4228af;
     }
   }
 `;
@@ -346,8 +355,3 @@ export const AddEventCardButton = styled.button`
     height: 22px;
   }
 `;
-
-
-
-
-
