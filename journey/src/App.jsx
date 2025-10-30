@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
+import Landing from "./pages/Landing.jsx";
 import Home from "./pages/home/home.jsx";
 import CriarGrupo from "./pages/criarGrupo/criarGrupo.jsx";
 import Calendar from "./pages/calendary/calendary.jsx";
@@ -22,7 +23,7 @@ function LayoutController() {
 
   useEffect(() => {
     const body = document.body;
-    if (location.pathname === "/auth") {
+    if (location.pathname === "/auth" || location.pathname === "/") {
       body.classList.remove("fullscreen-layout");
     } else {
       body.classList.add("fullscreen-layout");
@@ -38,7 +39,7 @@ export default function App() {
       <ThemeProvider>
         <LayoutController />
         <Routes>
-          <Route path="/" element={<Navigate to="/auth" replace />} />
+          <Route path="/" element={<Landing />} />
           <Route path="/auth" element={<AuthPage />} />
 
           {/* ROTAS PROTEGIDAS */}

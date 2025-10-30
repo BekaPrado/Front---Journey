@@ -21,12 +21,12 @@
 
 /* MODO ESCURO */
 .homepage.dark {
-    --primary: #C4B5FD; /* Lavanda clara */
-    --primary-2: #A78BFA;
-    --bg-body: #0E0B1E; /* Roxo-anel escuro */
-    --card-bg: #1A1631; /* Painéis escuros roxos */
-    --text-base: #F5F7FB; /* Texto claro */
-    --text-muted: #C9CBE2; /* Secundário claro */
+    --primary: #6b7280; /* cinza médio para destaques */
+    --primary-2: #9ca3af; /* cinza claro para hover */
+    --bg-body: #0f0f10; /* fundo quase preto */
+    --card-bg: #151515; /* cartões em preto suave */
+    --text-base: #e5e7eb; /* texto claro em cinza-100 */
+    --text-muted: #9ca3af; /* texto secundário em cinza-400 */
     --border-color: rgba(255, 255, 255, 0.08);
     --shadow-subtle: none;
 }
@@ -248,12 +248,12 @@ html, body, #root {
 }
 
 .homepage.dark .group-card {
-  background: #231E40;
+  background: #1f1f22;
   border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .homepage.dark .group-card:hover {
-  background: #2C264F;
+  background: #262629;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
@@ -292,7 +292,7 @@ html, body, #root {
   box-shadow: 0 18px 40px rgba(17, 17, 26, 0.10); /* sombra mais suave e ampla */
 }
 .homepage.dark .group-card.modern {
-  background: linear-gradient(180deg, rgba(26,22,49,0.98), rgba(26,22,49,0.98));
+  background: linear-gradient(180deg, rgba(21,21,21,0.98), rgba(21,21,21,0.98));
   box-shadow: none;
 }
 
@@ -355,7 +355,7 @@ html, body, #root {
   height: 36px; border-radius: 10px; display: grid; place-items: center;
   background: rgba(107,70,193,0.06); color: var(--text-base);
 }
-.homepage.dark .calendar-day { background: #231E40; }
+.homepage.dark .calendar-day { background: #1f1f22; }
 .calendar-day.today { outline: 2px solid var(--primary); background: rgba(107,70,193,0.12); }
 
 /* Lista Online */

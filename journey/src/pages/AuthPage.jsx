@@ -143,28 +143,34 @@ export default function AuthPage() {
         {screen === "login" && (
           <>
             <div style={{width:'100%',maxWidth:460,marginBottom:10,display:'flex',justifyContent:'flex-start'}}>
-              <img src={logo} alt="Logo" style={{height:70,objectFit:'contain'}} />
+              <img src={logo} alt="Logo Journey" style={{height:70,objectFit:'contain'}} />
             </div>
-            <h2>Bem Vindo ao Journey!</h2>
+            <h2>Bem-vindo ao Journey</h2>
+            <p style={{marginTop:6, marginBottom:16, color:'#6b6f76'}}>Conecte-se, aprenda e evolua com sua comunidade.</p>
+
+            {/* login direto com e-mail/senha */}
+
             <form onSubmit={handleLogin}>
               <input
                 type="email"
-                placeholder="email"
+                placeholder="Seu e-mail"
+                aria-label="E-mail"
                 value={emailLogin}
                 onChange={(e) => setEmailLogin(e.target.value)}
               />
               <input
                 type="password"
-                placeholder="senha"
+                placeholder="Sua senha"
+                aria-label="Senha"
                 value={senhaLogin}
                 onChange={(e) => setSenhaLogin(e.target.value)}
               />
               <div className="helper-row">
                 <label>
                   <input type="checkbox" style={{accentColor:'#6C4AE2'}} />
-                  Remember
+                  Lembrar de mim
                 </label>
-                <button type="button" className="forgot" onClick={()=>setScreen('recover')}>Forgot Password?</button>
+                <button type="button" className="forgot" onClick={()=>setScreen('recover')}>Esqueci minha senha</button>
               </div>
               <button type="submit">Entrar</button>
             </form>
@@ -178,27 +184,25 @@ export default function AuthPage() {
         {screen === "register" && (
           <>
             <h2>Crie sua conta</h2>
-            <p>
-              Já possui conta?{" "}
-              <button onClick={() => setScreen("login")}>Login</button>
-            </p>
+            <p style={{marginTop:6, marginBottom:16, color:'#6b6f76'}}>Comece sua jornada em poucos passos.</p>
+            <p>Já possui conta? <button onClick={() => setScreen("login")}>Login</button></p>
             <form onSubmit={submitRegister}>
               <input
-                placeholder="nome completo"
+                placeholder="Nome completo"
                 name="nome_completo"
                 value={form.nome_completo}
                 onChange={changeRegister}
               />
               <input
                 type="email"
-                placeholder="email"
+                placeholder="E-mail"
                 name="email"
                 value={form.email}
                 onChange={changeRegister}
               />
               <input
                 type="password"
-                placeholder="senha"
+                placeholder="Senha"
                 name="senha"
                 value={form.senha}
                 onChange={changeRegister}
@@ -219,7 +223,7 @@ export default function AuthPage() {
               </select>
               {form.tipo_usuario === "Profissional" && (
                 <input
-                  placeholder="LinkedIn URL"
+                  placeholder="LinkedIn (URL)"
                   name="linkedin"
                   value={form.linkedin}
                   onChange={changeRegister}

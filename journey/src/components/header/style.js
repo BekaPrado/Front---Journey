@@ -26,7 +26,7 @@ export const SidebarToggle = styled.button`
   z-index: 1001;
 
   .homepage.dark & {
-    background: #5c46b5;
+    background: #3f3f46;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
   }
 `;
@@ -50,7 +50,7 @@ export const SidebarContainer = styled.aside`
   z-index: 1000;
 
   .homepage.dark & {
-    background-color: #1a0f5a;
+    background-color: #151515;
   }
 
   /* Garante que o avatar desapareça suavemente quando colapsado */
@@ -90,7 +90,7 @@ export const Menu = styled.div`
   margin-bottom: auto; /* Garante que o espaço seja ocupado até o topo do toggle */
 
   .homepage.dark & {
-    background: linear-gradient(180deg, #2a2040 0%, #1a0f5a 100%);
+    background: linear-gradient(180deg, #1f1f22 0%, #151515 100%);
   }
 
   ${({ isCollapsed }) =>

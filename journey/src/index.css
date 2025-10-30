@@ -12,9 +12,11 @@
   
 body {
   font-family: 'Poppins', sans-serif;
-  background: #F4F6FF; /* fundo claro como no mock para telas públicas */
+  background: linear-gradient(135deg, #eef2ff, #f8fafc);
   color: #1a1a1a;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
 /* Quando o layout for de tela cheia (telas internas com sidebar) */
@@ -28,6 +30,31 @@ body.fullscreen-layout {
   color: var(--text-base);
 }
 
+/* Fundo decorativo sutil nas telas públicas (login/registro) */
+body:not(.fullscreen-layout)::before,
+body:not(.fullscreen-layout)::after {
+  content: "";
+  position: absolute;
+  inset: auto;
+  filter: blur(60px);
+  transform: translateZ(0);
+  z-index: -1;
+}
+body:not(.fullscreen-layout)::before {
+  top: -120px;
+  left: -80px;
+  width: 380px;
+  height: 380px;
+  background: radial-gradient(closest-side, rgba(108,74,226,0.35), transparent 70%);
+}
+body:not(.fullscreen-layout)::after {
+  right: -100px;
+  bottom: -120px;
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(closest-side, rgba(167,139,250,0.28), transparent 70%);
+}
+
   
   /* ==========================
      Container principal
@@ -36,9 +63,12 @@ body.fullscreen-layout {
     width: 100%;
     max-width: 1040px; /* proporção mais elegante no desktop */
     min-height: 640px;
-    background: #ffffff; /* card branco como no mock */
+    background: rgba(255, 255, 255, 0.65);
     border-radius: 28px;
-    box-shadow: 0 40px 80px rgba(17,17,26,0.10);
+    backdrop-filter: saturate(140%) blur(14px);
+    -webkit-backdrop-filter: saturate(140%) blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: 0 30px 80px rgba(17,17,26,0.12);
     display: grid;
     grid-template-columns: 58% 42%; /* destaque ao formulário */
     overflow: hidden;
@@ -56,7 +86,7 @@ body.fullscreen-layout {
     align-items: center;       /* Centraliza os itens (form, h2) horizontalmente */
     padding: 3rem 3rem 2.4rem;           /* respiro do formulário */
     text-align: center;        /* Centraliza textos (h2, p) */
-    background: #fff;          /* fundo branco no lado esquerdo */
+    background: rgba(255,255,255,0.8);
     color: #222;
   }
 
@@ -141,7 +171,8 @@ body.fullscreen-layout {
 .container .form-area textarea:focus {
   outline: none;
   background: #fff;
-  box-shadow: 0 0 0 3px rgba(108,74,226,0.15);
+  border-color: rgba(108,74,226,0.35);
+  box-shadow: 0 10px 30px rgba(17,17,26,0.10), 0 0 0 4px rgba(108,74,226,0.18);
 }
 
   /* ==========================
@@ -154,19 +185,21 @@ body.fullscreen-layout {
   padding: 0.9rem; /* altura confortável */
   border-radius: 999px; /* pill */
   border: none;
-  background: linear-gradient(135deg, #6C4AE2, #8B6EF2);
+  background: linear-gradient(135deg, #6C4AE2, #A78BFA);
   color: #fff;
   font-size: 0.95rem;
   font-weight: 600;
   font-family: 'Poppins', sans-serif;
   cursor: pointer;
-  transition: all 0.2s ease;
+  letter-spacing: 0.2px;
+  transition: transform 0.15s ease, filter 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 12px 24px rgba(108,74,226,0.30);
 }
 
 .container .form-area form button[type="submit"]:hover {
   filter: brightness(1.05);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(108,74,226,0.30);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(108,74,226,0.35);
 }
 
 .form-area p button, .form-area .link-btn {
@@ -181,6 +214,31 @@ body.fullscreen-layout {
     cursor: pointer;
     font-size: 0.9rem;
 }
+
+/* Botões sociais e divisor */
+.social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; width: 100%; max-width: 460px; margin: 6px auto 14px; }
+.social { 
+  border: 1px solid rgba(20,24,39,0.10); 
+  background: #fff; 
+  color: #1f2937; 
+  padding: 10px 12px; 
+  border-radius: 12px; 
+  cursor: pointer; 
+  font-weight: 600; 
+  transition: transform .12s ease, box-shadow .2s ease, background .2s ease; 
+}
+.social:hover { transform: translateY(-1px); box-shadow: 0 10px 20px rgba(17,17,26,0.10); }
+.social.google { background: #ffffff; }
+.social.github { background: #0f172a; color: #ffffff; }
+
+.divider { position: relative; width: 100%; max-width: 460px; margin: 8px auto 16px; text-align: center; }
+.divider::before, .divider::after { content: ""; position: absolute; top: 50%; width: 40%; height: 1px; background: rgba(20,24,39,0.12); }
+.divider::before { left: 0; }
+.divider::after { right: 0; }
+.divider span { font-size: 12px; color: #6b7280; background: rgba(255,255,255,0.8); padding: 0 8px; border-radius: 999px; }
+
+/* Mensagens */
+.form-area .msg{ margin-top:12px; text-align:center; color:#d33; font-size:0.9rem; }
 
 .form-area p button:hover {
     color: #ccc;
@@ -215,7 +273,9 @@ button[type="submit"]:active {
     align-items: center;
     justify-content: center;
     padding: 1rem 1.5rem;
-    background: linear-gradient(135deg, #7b5af0, #5a2fd3); /* roxo liso, sem faixa branca */
+    background: radial-gradient(1200px 600px at 20% 10%, rgba(167,139,250,0.35), transparent 40%),
+                radial-gradient(800px 600px at 80% 80%, rgba(108,74,226,0.35), transparent 45%),
+                linear-gradient(135deg, #7b5af0, #5a2fd3);
   }
   
   .container .illustration img {
@@ -223,6 +283,8 @@ button[type="submit"]:active {
     height: auto;
     max-height: 440px; /* reduz um pouco para não dominar a tela */
     object-fit: contain;
+    transform: translateZ(0);
+    animation: floatY 6s ease-in-out infinite;
   }
   
   /* ==========================
@@ -231,6 +293,11 @@ button[type="submit"]:active {
   @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
   }
   
 
