@@ -1,191 +1,290 @@
-// src/pages/home/home.jsx
 import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layouts/DashboardLayout.jsx";
 import "./home.css";
-import { FaPlus, FaMoon, FaSun, FaUserCircle } from "react-icons/fa";
+import {
+  FaPlus,
+  FaMoon,
+  FaSun,
+  FaUserCircle,
+  FaAngleLeft,
+  FaAngleRight,
+  FaCircle,
+} from "react-icons/fa";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth(); // usa o contexto (se estiver populado)
-  const [grupos, setGrupos] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const { user } = useAuth();
   const { theme, toggle: toggleTheme } = useTheme();
 
-  const BASE_URL = "http://localhost:3030/v1/journey";
-  const placeholder = "https://cdn-icons-png.flaticon.com/512/2965/2965879.png";
+  const [grupos, setGrupos] = useState([]);
+  const [eventos, setEventos] = useState([]);
+  const [activeDay, setActiveDay] = useState(new Date().getDate());
+  const [month, setMonth] = useState(new Date().getMonth());
+  const [year, setYear] = useState(new Date().getFullYear());
 
-  // Pegamos o usuário também do localStorage (fallback quando o context não estiver pronto)
+  const BASE_URL = "http://localhost:3030/v1/journey";
   const usuarioLocal =
     user ?? JSON.parse(localStorage.getItem("journey_user") || "null");
 
-  // persistência do tema já é feita no ThemeProvider
-
-  const fetchGrupos = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+  // ===============================
+  // FETCH GRUPOS E EVENTOS
+  // ===============================
+  const fetchData = useCallback(async () => {
     try {
-      const resp = await fetch(`${BASE_URL}/group`);
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      const data = await resp.json();
-      const lista = data.grupos || [];
-
-      // busca participantes para cada grupo (paralelo)
-      const withParticipants = await Promise.all(
-        lista.map(async (g) => {
-          try {
-            const r = await fetch(
-              `${BASE_URL}/group/${g.id_grupo}/participantes`
-            );
-            if (!r.ok) return { ...g, participantes: 0 };
-            const d = await r.json();
-            return { ...g, participantes: d.total ?? 0 };
-          } catch {
-            return { ...g, participantes: 0 };
-          }
-        })
-      );
-
-      setGrupos(withParticipants);
+      const [gruposRes, eventosRes] = await Promise.all([
+        fetch(`${BASE_URL}/group`),
+        fetch(`${BASE_URL}/calendario`),
+      ]);
+      const gruposData = await gruposRes.json();
+      const eventosData = await eventosRes.json();
+      setGrupos(gruposData.grupos || []);
+      setEventos(eventosData.Calendario || []);
     } catch (err) {
-      console.error("Erro ao buscar grupos:", err);
-      setError(err.message || "Erro desconhecido");
-      setGrupos([]);
-    } finally {
-      setLoading(false);
+      console.error("Erro ao buscar dados:", err);
     }
   }, []);
 
   useEffect(() => {
-    fetchGrupos();
-  }, [fetchGrupos]);
+    fetchData();
+  }, [fetchData]);
 
-  // Recarrega quando houver alteração (join/leave)
-  useEffect(() => {
-    const handler = () => fetchGrupos();
-    window.addEventListener("groupsUpdated", handler);
-    return () => window.removeEventListener("groupsUpdated", handler);
-  }, [fetchGrupos]);
+  // ===============================
+  // FUNÇÕES DO CALENDÁRIO
+  // ===============================
+  const months = [
+    "Janeiro",
+    "Fevereiro",
+    "Março",
+    "Abril",
+    "Maio",
+    "Junho",
+    "Julho",
+    "Agosto",
+    "Setembro",
+    "Outubro",
+    "Novembro",
+    "Dezembro",
+  ];
+  const weekdays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
-  // navegação
-  const handleCreateGroup = () => navigate("/criarGrupo");
-  const goToProfile = () => navigate("/perfil");
+  const getDaysInMonth = (m, y) => new Date(y, m + 1, 0).getDate();
+  const getFirstDayOfMonth = (m, y) => new Date(y, m, 1).getDay();
+
+  const nextMonth = () =>
+    month === 11
+      ? (setMonth(0), setYear((prev) => prev + 1))
+      : setMonth((prev) => prev + 1);
+  const prevMonth = () =>
+    month === 0
+      ? (setMonth(11), setYear((prev) => prev - 1))
+      : setMonth((prev) => prev - 1);
+
+  const today = new Date();
+  const daysInMonth = getDaysInMonth(month, year);
+  const firstDay = getFirstDayOfMonth(month, year);
+
+  const daysArray = [];
+  for (let i = firstDay; i > 0; i--) daysArray.push(null);
+  for (let i = 1; i <= daysInMonth; i++) daysArray.push(i);
+
+  const eventsForActiveDay = eventos.filter((ev) => {
+    const d = new Date(ev.data_evento);
+    return (
+      d.getDate() === activeDay &&
+      d.getMonth() === month &&
+      d.getFullYear() === year
+    );
+  });
+
+  const deleteEvent = async (eventToDelete) => {
+    const id = Number(eventToDelete.id_calendario);
+    if (!id) return alert("ID inválido!");
+    try {
+      await fetch(`${BASE_URL}/calendario/${id}`, { method: "DELETE" });
+      setEventos((prev) => prev.filter((e) => e.id_calendario !== id));
+    } catch (err) {
+      console.error("Erro ao deletar:", err);
+    }
+  };
+
+  // ===============================
+  // PERFIL / CABEÇALHO
+  // ===============================
   const toggleDarkMode = () => toggleTheme();
-
-  // pega a imagem do usuário (fallback da sessão)
+  const goToProfile = () => navigate("/perfil");
+  const handleCreateGroup = () => navigate("/criarGrupo");
   const userImage = usuarioLocal?.foto_perfil || null;
 
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const startWeekDay = firstDay.getDay();
-  const daysInMonth = lastDay.getDate();
-  const daysGrid = Array.from({ length: startWeekDay }, () => null).concat(
-    Array.from({ length: daysInMonth }, (_, i) => i + 1)
-  );
-  const monthNames = [
-    "Jan",
-    "Fev",
-    "Mar",
-    "Abr",
-    "Mai",
-    "Jun",
-    "Jul",
-    "Ago",
-    "Set",
-    "Out",
-    "Nov",
-    "Dez",
-  ];
+  // ===============================
+  // CONTEÚDO DO CALENDÁRIO FUNCIONAL (para o painel da direita)
+  // ===============================
+  const calendarioFuncional = (
+    <div className="calendar">
+      <div className="calendar-header">
+        <h2>Calendário</h2>
+        <div className="navs">
+          <FaAngleLeft onClick={prevMonth} />
+          <FaAngleRight onClick={nextMonth} />
+        </div>
+      </div>
 
-  return (
-    <DashboardLayout showRight>
-          <header className="page-header">
-            <h1 className="home-title">Bem Vindo!logo</h1>
+      <div className="month-display">
+        {months[month]} {year}
+      </div>
 
-            <div className="header-right">
-              <button
-                className="profile-avatar-circle"
-                onClick={goToProfile}
-                title="Ir para perfil"
-                aria-label="Ir para perfil"
-                style={{ width: 52, height: 52 }}
-              >
-                {userImage ? (
-                  <img
-                    src={userImage}
-                    alt="Perfil"
-                    className="profile-avatar-img"
-                  />
-                ) : (
-                  <FaUserCircle size={26} />
-                )}
-              </button>
+      <div className="calendar-grid">
+        {weekdays.map((d, i) => (
+          <div key={i} className="calendar-weekday">
+            {d}
+          </div>
+        ))}
 
-              <button
-                className="theme-btn"
-                onClick={toggleDarkMode}
-                aria-label="Alternar tema"
-              >
-                {theme === "dark" ? <FaSun /> : <FaMoon />}
+        {daysArray.map((day, idx) =>
+          day ? (
+            <div
+              key={idx}
+              className={`calendar-day ${
+                day === today.getDate() &&
+                month === today.getMonth() &&
+                year === today.getFullYear()
+                  ? "today"
+                  : ""
+              } ${activeDay === day ? "active" : ""}`}
+              onClick={() => setActiveDay(day)}
+            >
+              {day}
+              {eventos.some((ev) => {
+                const d = new Date(ev.data_evento);
+                return (
+                  d.getDate() === day &&
+                  d.getMonth() === month &&
+                  d.getFullYear() === year
+                );
+              }) && <FaCircle size={6} style={{ color: "var(--primary)" }} />}
+            </div>
+          ) : (
+            <div key={idx}></div>
+          )
+        )}
+      </div>
+
+      <div className="today-events">
+        <h4>Eventos do dia</h4>
+        {eventsForActiveDay.length > 0 ? (
+          eventsForActiveDay.map((ev) => (
+            <div key={ev.id_calendario} className="event">
+              <div className="event-title">
+                <FaCircle size={8} /> {ev.nome_evento}
+              </div>
+              <div className="event-time">
+                {new Date(ev.data_evento).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </div>
+              <button className="delete" onClick={() => deleteEvent(ev)}>
+                Excluir
               </button>
             </div>
-          </header>
+          ))
+        ) : (
+          <p className="no-event">Sem eventos para este dia.</p>
+        )}
+      </div>
+    </div>
+  );
 
-          <div className="content-two-col">
-            <section className="left-col">
-              <div className="filters-bar">
-                <div className="filter-chip">Área ▾</div>
-              </div>
+  // ===============================
+  // JSX PRINCIPAL
+  // ===============================
+  return (
+    <DashboardLayout showRight rightContent={calendarioFuncional}>
+      <header className="page-header">
+        <h1 className="home-title">Bem-vindo!</h1>
+        <div className="header-right">
+          <button className="profile-avatar-circle" onClick={goToProfile}>
+            {userImage ? (
+              <img
+                src={userImage}
+                alt="Perfil"
+                className="profile-avatar-img"
+              />
+            ) : (
+              <FaUserCircle size={26} />
+            )}
+          </button>
+          <button className="theme-btn" onClick={toggleDarkMode}>
+            {theme === "dark" ? <FaSun /> : <FaMoon />}
+          </button>
+        </div>
+      </header>
 
-              <section className="big-card">
-                <div className="big-card-top">
-                  <h2>Explorar Grupos</h2>
-                  <div className="big-card-actions">
-                    <button className="btn btn-primary" onClick={handleCreateGroup}>
-                      <FaPlus /> Criar Grupo
-                    </button>
-                  </div>
-                </div>
-
-                <div className="big-card-body">
-                  {!loading && !error && grupos.length > 0 && (
-                    <div className="groups-grid modern">
-                      {grupos.map((g, idx) => (
-                        <div
-                          key={g.id_grupo}
-                          className={`group-card modern variant-${(idx % 3) + 1}`}
-                          onClick={() => navigate("/grupo", { state: g })}
-                        >
-                          <div className="illustration">
-                            <div className="bubble" />
-                            <img src={g.imagem || placeholder} alt={g.nome} />
-                          </div>
-                          <div className="group-info">
-                            <div className="group-title">{g.nome}</div>
-                            <div className="group-desc">{g.descricao || "Explore conteúdo, eventos e conversas deste grupo."}</div>
-                            <div className="group-meta">Criado por <span>{g.criador || g.nome_criador }</span></div>
-                          </div>
-                          <button className="group-card-cta" aria-label="Abrir grupo" onClick={(e)=>{e.stopPropagation();navigate('/grupo',{state:g});}}>→</button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {loading && <div className="state-msg">Carregando grupos...</div>}
-                  {error && <div className="state-msg error">Erro: {error}</div>}
-                  {!loading && !error && grupos.length === 0 && (
-                    <div className="state-msg">Nenhum grupo encontrado.</div>
-                  )}
-                </div>
-              </section>
-            </section>
+      <div className="content-two-col">
+        <section className="left-col">
+          <div className="filters-bar">
+            <div className="filter-chip">Área ▾</div>
           </div>
+
+          <section className="big-card">
+            <div className="big-card-top">
+              <h2>Explorar Grupos</h2>
+              <div className="big-card-actions">
+                <button className="btn btn-primary" onClick={handleCreateGroup}>
+                  <FaPlus /> Criar Grupo
+                </button>
+              </div>
+            </div>
+
+            <div className="big-card-body">
+              {grupos.length > 0 ? (
+                <div className="groups-grid modern">
+                  {grupos.map((g, idx) => (
+                    <div
+                      key={g.id_grupo}
+                      className={`group-card modern variant-${(idx % 3) + 1}`}
+                      onClick={() => navigate("/grupo", { state: g })}
+                    >
+                      <div className="illustration">
+                        <img
+                          src={
+                            g.imagem ||
+                            "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
+                          }
+                          alt={g.nome}
+                        />
+                      </div>
+                      <div className="group-info">
+                        <div className="group-title">{g.nome}</div>
+                        <div className="group-desc">
+                          {g.descricao ||
+                            "Explore conteúdo, eventos e conversas deste grupo."}
+                        </div>
+                        <div className="group-meta">
+                          Criado por <span>{g.criador || g.nome_criador}</span>
+                        </div>
+                      </div>
+                      <button
+                        className="group-card-cta"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          navigate("/grupo", { state: g });
+                        }}
+                      >
+                        →
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="state-msg">Nenhum grupo encontrado.</div>
+              )}
+            </div>
+          </section>
+        </section>
+      </div>
     </DashboardLayout>
   );
 }

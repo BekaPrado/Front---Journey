@@ -7,7 +7,12 @@ import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import "../../style/dashboard.css";
 
-export default function DashboardLayout({ children, showRight = false }) {
+export default function DashboardLayout({
+  children,
+  showRight = false,
+  rightContent = null, // conteúdo opcional para o painel direito
+  noPadding = false,   // remove padding externo (ex.: páginas fullscreen)
+}) {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { theme } = useTheme();
@@ -21,26 +26,39 @@ export default function DashboardLayout({ children, showRight = false }) {
   const goToProfile = () => navigate("/perfil");
 
   const userImage = usuarioLocal?.foto_perfil || null;
-  const userName = usuarioLocal?.nome || usuarioLocal?.nome_completo || "Usuário";
+  const userName =
+    usuarioLocal?.nome || usuarioLocal?.nome_completo || "Usuário";
   const userId = usuarioLocal?.id_usuario || usuarioLocal?.email || "";
 
   return (
     <div className={`homepage ${theme === "dark" ? "dark" : ""}`}>
-      <Sidebar isCollapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+      {/* Sidebar esquerda */}
+      <Sidebar
+        isCollapsed={sidebarCollapsed}
+        setCollapsed={setSidebarCollapsed}
+      />
 
-      <div className={`dashboard-wrap ${sidebarCollapsed ? "collapsed" : ""}`}>
+      <div className={`dashboard-wrap ${sidebarCollapsed ? "collapsed" : ""} ${!showRight ? "no-right" : ""} ${noPadding ? "no-pad" : ""}`}>
+        {/* Conteúdo principal */}
         <main className={`main-content no-extra-margin`}>
           <div className="container-home">{children}</div>
         </main>
 
+        {/* Painel da direita */}
         {showRight && (
           <aside className="dashboard-right">
-            <SidebarRight
-              userImage={userImage}
-              userName={userName}
-              userId={userId}
-              goToProfile={goToProfile}
-            />
+            {rightContent ? (
+              // Se passar um conteúdo, exibe ele (ex: calendário funcional)
+              rightContent
+            ) : (
+              // Caso contrário, mantém o padrão (SidebarRight original)
+              <SidebarRight
+                userImage={userImage}
+                userName={userName}
+                userId={userId}
+                goToProfile={goToProfile}
+              />
+            )}
           </aside>
         )}
       </div>

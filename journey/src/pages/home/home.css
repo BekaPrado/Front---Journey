@@ -56,7 +56,7 @@ html, body, #root {
 .main-content {
   flex: 1;
   padding: 40px 60px;
-  margin-left: 220px; /* Largura padrão da sidebar aberta */
+  margin-left: 0; /* Sidebar offset já é tratado pelo dashboard-wrap */
   transition: margin-left 0.3s ease;
 }
 
@@ -65,8 +65,9 @@ html, body, #root {
 }
 
 .container-home {
-  max-width: 1820px;
-  margin: 0 auto;
+  max-width: 1280px; /* largura confortável para desktop */
+  width: 100%;
+  margin: 0 auto; /* centraliza o conteúdo da home */
 }
 
 /* Layout duas colunas (principal + painel direito) */

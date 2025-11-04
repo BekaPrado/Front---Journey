@@ -2,13 +2,7 @@
 import React from "react";
 import { FaAngleRight, FaAngleLeft, FaUserCircle } from "react-icons/fa";
 
-// Dados Mock (simulando a sidebar direita do exemplo)
-const mockOnlineUsers = [
-    { name: "Maren Maureen", id: "1094882001", avatar: "https://i.pravatar.cc/150?img=1" },
-    { name: "Jennifer Jane", id: "1094672000", avatar: "https://i.pravatar.cc/150?img=2" },
-    { name: "Ryan Herwinds", id: "1094342003", avatar: "https://i.pravatar.cc/150?img=3" },
-    { name: "Kierra Culhane", id: "1094662002", avatar: "https://i.pravatar.cc/150?img=4" },
-];
+// Lista de usuários online removida (não renderiza mocks)
 
 const renderCalendar = () => {
     const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
@@ -78,26 +72,7 @@ export default function SidebarRight({ userImage, userName, userId, goToProfile 
                 {renderCalendar()}
             </div>
             
-            {/* ONLINE USERS */}
-            <div className="online-users-section">
-                <div className="header">
-                    <h4>Online Users</h4>
-                    <span className="see-all">See all</span>
-                </div>
-                
-                {mockOnlineUsers.map(u => (
-                    <div className="online-user-item" key={u.id}>
-                        <div className="info">
-                            <img src={u.avatar} alt={u.name} className="avatar-right-user" />
-                            <div>
-                                <div className="name">{u.name}</div>
-                                <div className="id">{u.id}</div>
-                            </div>
-                        </div>
-                        <div className="status-dot" />
-                    </div>
-                ))}
-            </div>
+            {/* Seção de usuários online estáticos removida */}
         </div>
     );
 }

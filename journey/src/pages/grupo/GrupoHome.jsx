@@ -47,6 +47,17 @@ export default function GrupoHome() {
               <button className="btn btn-primary" onClick={() => navigate("/grupo/chat")}>
                 💬 Ir para o Chat
               </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  try {
+                    localStorage.setItem("group_id", JSON.stringify({ id_grupo: grupo.id_grupo }));
+                  } catch {}
+                  navigate("/calendary");
+                }}
+              >
+                📅 Calendário do Grupo
+              </button>
             </div>
           </div>
 

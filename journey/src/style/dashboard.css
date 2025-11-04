@@ -10,6 +10,23 @@
   margin-left: 220px; /* acompanha largura da sidebar aberta */
 }
 
+/* fullscreen pages (ex.: chat) podem remover o padding do container */
+.dashboard-wrap.no-pad {
+  padding: 0;
+}
+
+/* quando não houver barra direita, expandir para 1 coluna */
+.dashboard-wrap.no-right {
+  grid-template-columns: 1fr;
+}
+
+/* remover limites do wrapper interno em páginas fullscreen */
+.dashboard-wrap.no-pad .container-home {
+  max-width: none;
+  margin: 0;
+  width: 100%;
+}
+
 .dashboard-wrap.collapsed {
   width: calc(100% - 80px);
   margin-left: 80px; /* sidebar recolhida */

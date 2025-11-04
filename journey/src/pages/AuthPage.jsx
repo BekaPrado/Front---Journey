@@ -147,6 +147,11 @@ export default function AuthPage() {
             </div>
             <h2>Bem-vindo ao Journey</h2>
             <p style={{marginTop:6, marginBottom:16, color:'#6b6f76'}}>Conecte-se, aprenda e evolua com sua comunidade.</p>
+            <div className="social-btns">
+              <button type="button" className="social google">Entrar com Google</button>
+              <button type="button" className="social github">Entrar com GitHub</button>
+            </div>
+            <div className="divider"><span>ou continue com e-mail</span></div>
 
             {/* login direto com e-mail/senha */}
 
@@ -185,7 +190,7 @@ export default function AuthPage() {
           <>
             <h2>Crie sua conta</h2>
             <p style={{marginTop:6, marginBottom:16, color:'#6b6f76'}}>Comece sua jornada em poucos passos.</p>
-            <p>Já possui conta? <button onClick={() => setScreen("login")}>Login</button></p>
+            <p>Já possui conta? <button className="link-btn" onClick={() => setScreen("login")}>Login</button></p>
             <form onSubmit={submitRegister}>
               <input
                 placeholder="Nome completo"
@@ -195,14 +200,14 @@ export default function AuthPage() {
               />
               <input
                 type="email"
-                placeholder="E-mail"
+                placeholder="Seu e-mail"
                 name="email"
                 value={form.email}
                 onChange={changeRegister}
               />
               <input
                 type="password"
-                placeholder="Senha"
+                placeholder="Crie uma senha"
                 name="senha"
                 value={form.senha}
                 onChange={changeRegister}
@@ -237,17 +242,18 @@ export default function AuthPage() {
         {screen === "recover" && (
           <>
             <h2>Recupere sua senha</h2>
+            <p style={{marginTop:6, marginBottom:16, color:'#6b6f76'}}>Enviaremos um código para seu e-mail cadastrado.</p>
             <form onSubmit={handleRecover}>
               <input
                 type="email"
-                placeholder="Digite seu e-mail"
+                placeholder="Seu e-mail"
                 value={emailRec}
                 onChange={(e) => setEmailRec(e.target.value)}
               />
               <button type="submit">Recuperar</button>
             </form>
             <p>
-              <button onClick={() => setScreen("login")}>Voltar</button>
+              <button className="link-btn" onClick={() => setScreen("login")}>Voltar</button>
             </p>
           </>
         )}
@@ -257,12 +263,12 @@ export default function AuthPage() {
             <h2>Verifique seu e-mail</h2>
             <form onSubmit={handleValidate}>
               <input
-                placeholder="email"
+                placeholder="Seu e-mail"
                 value={emailVal}
                 onChange={(e) => setEmailVal(e.target.value)}
               />
               <input
-                placeholder="código"
+                placeholder="Código recebido"
                 value={codigo}
                 onChange={(e) => setCodigo(e.target.value)}
               />
@@ -277,13 +283,13 @@ export default function AuthPage() {
             <form onSubmit={handleReset}>
               <input
                 type="password"
-                placeholder="nova senha"
+                placeholder="Nova senha"
                 value={senha}
                 onChange={(e) => setSenha(e.target.value)}
               />
               <input
                 type="password"
-                placeholder="confirme a nova senha"
+                placeholder="Confirme a nova senha"
                 value={conf}
                 onChange={(e) => setConf(e.target.value)}
               />
@@ -296,7 +302,7 @@ export default function AuthPage() {
       </div>
 
       <div className="illustration">
-        <img src="/journey.png" alt="ilustração cadastro" />
+        <img src={logo} alt="ilustração cadastro" />
       </div>
     </div>
   );
