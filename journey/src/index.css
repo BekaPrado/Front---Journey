@@ -1,6 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
 
 
+:root {
+  --primary: #6C4AE2;
+  --primary-600: #5a39d7;
+  --primary-700: #4b2fc4;
+  --primary-100: rgba(108,74,226,0.10);
+  --bg-body: #f5f7fb;
+  --bg-card: #ffffff;
+  --text: #1f2937;
+  --text-base: #1f2937;
+  --text-muted: #6b7280;
+  --border: rgba(0,0,0,0.08);
+  --border-color: rgba(0,0,0,0.08);
+  --shadow-subtle: 0 10px 24px rgba(17,17,26,0.08);
+  --radius: 16px;
+  --radius-lg: 20px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+}
+
+
 /* ==========================
    Reset geral
    ========================== */

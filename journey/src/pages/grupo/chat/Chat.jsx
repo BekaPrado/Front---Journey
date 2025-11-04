@@ -211,7 +211,16 @@ export default function Chat() {
                 <img className="avatar" src={m.avatar || DEFAULT_AVATAR} alt={m.autor} />
                 <div className="mensagem-bubble">
                   <div className="mensagem-topo">
-                    <strong>{m.autor}</strong>
+                    <strong
+                      className="autor-link"
+                      onClick={() => {
+                        const targetId = m.id_usuario;
+                        if (targetId) navigate(`/perfil/${targetId}`);
+                      }}
+                      style={{ cursor: 'pointer' }}
+                    >
+                      {m.autor}
+                    </strong>
                     <span className="hora">{m.hora}</span>
                   </div>
                   <p>{m.conteudo}</p>

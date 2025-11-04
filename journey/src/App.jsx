@@ -7,6 +7,7 @@ import Home from "./pages/home/home.jsx";
 import CriarGrupo from "./pages/criarGrupo/criarGrupo.jsx";
 import Calendar from "./pages/calendary/calendary.jsx";
 import Perfil from "./pages/perfil/perfil.jsx";
+import PublicProfile from "./pages/perfil/PublicProfile.jsx";
 import Grupo from "./pages/grupo/grupo.jsx";
 import MeusGrupos from "./pages/meusGrupos/MeusGrupos.jsx";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -15,6 +16,7 @@ import { SidebarProvider } from "./context/SidebarContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import GrupoHome from "./pages/grupo/GrupoHome.jsx";
 import Chat from "./pages/grupo/chat/Chat.jsx";
+import PrivateChat from "./pages/chat/PrivateChat.jsx";
 
 import "./index.css";
 
@@ -84,6 +86,16 @@ export default function App() {
             }
           />
           <Route
+            path="/perfil/:id_usuario"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <PublicProfile />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/grupo"
             element={
               <ProtectedRoute>
@@ -109,6 +121,16 @@ export default function App() {
               <ProtectedRoute>
                 <SidebarProvider>
                   <Chat />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat/privado/:id_usuario"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <PrivateChat />
                 </SidebarProvider>
               </ProtectedRoute>
             }
