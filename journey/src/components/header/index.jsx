@@ -55,7 +55,7 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <span>Criar Grupo</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/grupo/chat")}>
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/chat")}>
           <FaComments />
           <span>Chats</span>
         </MenuItem>

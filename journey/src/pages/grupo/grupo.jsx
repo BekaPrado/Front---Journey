@@ -75,7 +75,6 @@ export default function Grupo() {
           <div className="grupo-header">
             <div className="header-info">
               <h1>{grupo.nome}</h1>
-              <p className="descricao">{grupo.descricao}</p>
             </div>
             <button className="btn-voltar" onClick={() => navigate("/home")}>
               ← Voltar
@@ -89,6 +88,7 @@ export default function Grupo() {
 
             <div className="grupo-info">
               <h3>Sobre o grupo</h3>
+              <p>{grupo.descricao || "Sem descrição."}</p>
 
               <div className="info-stats">
                 <div><strong>Criador:</strong> {grupo.nome_criador}</div>

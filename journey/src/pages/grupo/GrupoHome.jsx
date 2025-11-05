@@ -1,5 +1,5 @@
 // src/pages/grupo/GrupoHome.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layouts/DashboardLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
@@ -16,6 +16,11 @@ export default function GrupoHome() {
   const navigate = useNavigate();
   const { theme } = useTheme();
   // layout via DashboardLayout
+
+  const isCreator = useMemo(() => {
+    if (!grupo || !user) return false;
+    return String(user.id_usuario) === String(grupo?.id_criador || grupo?.id_usuario_criador || grupo?.criador_id || "");
+  }, [grupo, user]);
 
   useEffect(() => {
     const grupoSalvo = JSON.parse(localStorage.getItem(STORAGE_KEY));
@@ -38,7 +43,6 @@ export default function GrupoHome() {
           <div className="grupo-header">
             <div className="header-info">
               <h1>{grupo.nome}</h1>
-              <p className="descricao">{grupo.descricao}</p>
             </div>
             <div className="header-buttons">
               <button className="btn-voltar" onClick={() => navigate("/home")}>
@@ -58,6 +62,20 @@ export default function GrupoHome() {
               >
                 📅 Calendário do Grupo
               </button>
+              <button
+                className="btn"
+                onClick={() => navigate("/grupo/participantes")}
+              >
+                👥 Participantes
+              </button>
+              {isCreator && (
+                <button
+                  className="btn"
+                  onClick={() => navigate("/grupo/editar")}
+                >
+                  ✏️ Editar Grupo
+                </button>
+              )}
             </div>
           </div>
 
@@ -72,14 +90,11 @@ export default function GrupoHome() {
 
             <div className="grupo-info">
               <h3>Sobre o grupo</h3>
-              <p>
-                Este grupo foi criado para promover o aprendizado colaborativo entre os membros.
-                Aqui você pode participar de conversas, trocar materiais e acompanhar eventos.
-              </p>
+              <p>{grupo.descricao || "Sem descrição."}</p>
 
               <div className="info-stats">
                 <div>
-                  <strong>Criador:</strong> {user?.nome_completo || "Admin"}
+<strong>Criador:</strong> {grupo.usuario?.nome_completo || "Desconhecido"}
                 </div>
                 <div>
                   <strong>ID do Grupo:</strong> {grupo.id_grupo}

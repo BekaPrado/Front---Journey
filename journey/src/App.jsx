@@ -17,6 +17,9 @@ import { ThemeProvider } from "./context/ThemeContext";
 import GrupoHome from "./pages/grupo/GrupoHome.jsx";
 import Chat from "./pages/grupo/chat/Chat.jsx";
 import PrivateChat from "./pages/chat/PrivateChat.jsx";
+import ChatHome from "./pages/chat/ChatHome.jsx";
+import Participantes from "./pages/grupo/Participantes.jsx";
+import EditarGrupo from "./pages/grupo/EditarGrupo.jsx";
 
 import "./index.css";
 
@@ -96,6 +99,16 @@ export default function App() {
             }
           />
           <Route
+            path="/chat"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <ChatHome />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/grupo"
             element={
               <ProtectedRoute>
@@ -111,6 +124,26 @@ export default function App() {
               <ProtectedRoute>
                 <SidebarProvider>
                   <GrupoHome />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/grupo/participantes"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <Participantes />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/grupo/editar"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <EditarGrupo />
                 </SidebarProvider>
               </ProtectedRoute>
             }
