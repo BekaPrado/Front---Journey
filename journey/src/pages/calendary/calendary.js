@@ -3,40 +3,43 @@ import styled from "styled-components";
 // ===== Container principal =====
 export const Container = styled.div`
   position: relative;
-  width: 1200px;
-  min-height: 850px;
-  margin: 30px auto;
+  width: 100%;
+  max-width: 1100px;
+  min-height: 720px;
+  margin: 24px auto;
   display: flex;
+  gap: 20px;
   border-radius: 20px;
-  background: linear-gradient(145deg, #2c2f48, #3e4160);
-  color: #fff;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+  background: var(--bg-card);
+  color: var(--text-base);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
 `;
 
 // ===== Colunas =====
 export const Left = styled.div`
   width: 60%;
-  padding: 30px;
+  padding: 22px;
 `;
 
 export const Right = styled.div`
   width: 40%;
   min-height: 100%;
-  padding: 30px;
-  background: #2e314d;
+  padding: 22px;
+  background: var(--bg-body);
+  border-left: 1px solid var(--border-color);
   border-radius: 0 20px 20px 0;
-  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.3);
 `;
 
 // ===== Calendário =====
 export const CalendarWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background: #3b3f5c;
-  border-radius: 15px;
-  padding: 25px;
-  color: #dcdce6;
+  background: var(--bg-body);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  padding: 18px;
+  color: var(--text-base);
 `;
 
 // ===== Mês =====
@@ -45,24 +48,24 @@ export const Month = styled.div`
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  font-size: 1.5rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   text-transform: capitalize;
 
   .prev,
   .next {
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: transform .2s ease, color .2s ease;
     &:hover {
-      transform: scale(1.2);
-      color: #765cdd;
+      transform: scale(1.12);
+      color: var(--primary);
     }
   }
 
   .date {
-    font-size: 1.8rem;
+    font-size: 1.35rem;
     text-align: center;
-    color: #fff;
+    color: var(--text-base);
   }
 `;
 
@@ -89,30 +92,31 @@ export const Days = styled.div`
   .day {
     position: relative;
     width: 100%;
-    height: 75px;
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 15px;
+    border-radius: 12px;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
+    font-weight: 700;
+    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
 
     &:hover {
-      background: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-subtle);
     }
 
     &.today {
-      background: hsl(252, 65.5%, 61.4%);
-      color: #fff;
-      font-weight: 700;
-      box-shadow: 0 0 10px hsl(252, 65.5%, 61.4%);
+      outline: 2px solid rgba(107,114,128,0.45);
+      background: rgba(107,114,128,0.10);
     }
 
     &.active {
-      border: 2px solid #fff;
-      color: #fff;
+      background: rgba(107,114,128,0.18);
+      color: inherit;
+      border-color: rgba(107,114,128,0.35);
     }
 
     .event-indicator {
@@ -121,12 +125,12 @@ export const Days = styled.div`
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: #765cdd;
+      background: rgba(107,114,128,0.85);
     }
 
     &.prev-date,
     &.next-date {
-      color: #8a8a9f;
+      color: var(--text-muted);
       font-weight: 400;
     }
   }
@@ -139,20 +143,17 @@ export const GotoToday = styled.div`
   margin-top: 20px;
 
   .today-btn {
-    padding: 8px 18px;
-    border: none;
-    border-radius: 10px;
-    background: #765cdd;
+    padding: 10px 16px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, var(--primary), #A78BFA);
     color: #fff;
-    font-weight: 700;
+    font-weight: 800;
+    border: none;
     cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #fff;
-      color: #765cdd;
-    }
+    box-shadow: 0 10px 24px rgba(108,74,226,.25);
+    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
   }
+  .today-btn:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 14px 30px rgba(108,74,226,.35); }
 `;
 
 // ===== Data do dia =====
@@ -161,21 +162,21 @@ export const TodayDate = styled.div`
   text-transform: capitalize;
 
   .event-day {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 5px;
-    color: rgb(149, 129, 226);
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin-bottom: 4px;
+    color: var(--primary);
   }
 
   .event-date {
-    font-size: 1.2rem;
-    color: #c2c2d0;
+    font-size: 0.95rem;
+    color: var(--text-muted);
   }
 `;
 
 // ===== Eventos =====
 export const Events = styled.div`
-  max-height: 550px;
+  max-height: 540px;
   overflow: hidden;
   padding-right: 10px;
   display: flex;
@@ -183,17 +184,19 @@ export const Events = styled.div`
   gap: 15px;
 
   .event {
-    background: linear-gradient(120deg, #5a5e7f, #3b3f5c);
-    padding: 15px 20px;
-    border-radius: 15px;
-    transition: all 0.3s ease;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 14px 16px;
+    border-radius: 14px;
+    transition: transform .2s ease, box-shadow .2s ease;
+    box-shadow: var(--shadow-subtle);
     display: flex;
     flex-direction: column;
     gap: 5px;
 
     &:hover {
-      transform: translateX(5px);
-      box-shadow: 0 5px 20px rgba(255, 148, 194, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 24px rgba(17,17,26,0.10);
     }
 
     .title {
@@ -203,64 +206,60 @@ export const Events = styled.div`
     }
 
     .event-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: #fff;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text-base);
     }
 
     .event-time {
-      font-size: 0.95rem;
-      color: #dcdce6;
+      font-size: 0.9rem;
+      color: var(--text-muted);
     }
 
     .delete {
       align-self: flex-end;
-      padding: 5px 12px;
+      padding: 8px 12px;
       border: none;
       border-radius: 10px;
-      background: #765cdd;
+      background: linear-gradient(135deg, #ef4444, #f87171);
       color: #fff;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.3s ease;
-
-      &:hover {
-        background: #341e9b; //botao excluir
-      }
+      transition: filter .15s ease, transform .15s ease;
     }
+    .delete:hover { filter: brightness(1.05); transform: translateY(-1px); }
 
     .event-user {
       font-size: 0.85rem;
-      color: #666;
+      color: var(--text-muted);
       margin-top: 4px;
-      font-style: italic;
     }
   }
 
   .no-event {
     text-align: center;
-    font-style: italic;
-    color: #8a8a9f;
+    color: var(--text-muted);
   }
 `;
 
 // ===== Modal de adicionar evento =====
 export const AddEventWrapper = styled.div`
   position: absolute;
-  bottom: 100px;
+  bottom: 80px;
   left: 50%;
   width: 90%;
   max-height: 0;
   overflow: auto;
-  background: #3b3f5c;
-  border-radius: 20px;
-  color: #fff;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 16px;
+  color: var(--text-base);
   transform: translateX(-50%);
   transition: all 0.5s ease;
 
   &.active {
     max-height: 380px;
-    padding: 20px;
+    padding: 16px;
   }
 `;
 
@@ -288,23 +287,23 @@ export const AddEventBody = styled.div`
   margin-top: 15px;
 
   input {
-    padding: 12px 15px;
+    padding: 12px 14px;
     border-radius: 12px;
-    border: none;
+    border: 1px solid var(--border-color);
     outline: none;
-    font-size: 1rem;
-    background: #2e314d;
-    color: #fff;
-    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    background: var(--bg-body);
+    color: var(--text-base);
+    transition: border .2s ease, box-shadow .2s ease, background .2s ease;
 
     &::placeholder {
-      color: #a5a5c2;
+      color: var(--text-muted);
     }
 
     &:focus {
-      background: #765cdd;
-      border: 2px solid #765cdd;
-      color: #fff;
+      background: var(--bg-card);
+      border-color: rgba(108,74,226,0.35);
+      box-shadow: 0 0 0 4px rgba(108,74,226,0.18);
     }
   }
 `;
@@ -315,20 +314,17 @@ export const AddEventFooter = styled.div`
   margin-top: 20px;
 
   .add-event-btn {
-    padding: 12px 25px;
+    padding: 12px 18px;
     border: none;
     border-radius: 12px;
-    background: rgb(228, 228, 228);
-    color: #765cdd;
-    font-weight: 700;
+    background: linear-gradient(135deg, var(--primary), #A78BFA);
+    color: #fff;
+    font-weight: 800;
     cursor: pointer;
-    transition: all 0.3s ease;
-
-    &:hover {
-      background: #fff;
-      color: #4228af;
-    }
+    box-shadow: 0 10px 24px rgba(108,74,226,.25);
+    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
   }
+  .add-event-btn:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 14px 30px rgba(108,74,226,.35); }
 `;
 
 // ===== Botão flutuante de adicionar evento =====
@@ -340,14 +336,14 @@ export const AddEventCardButton = styled.button`
   color: #fff;
   border: none;
   border-radius: 50%;
-  background: #765cdd;
+  background: var(--primary);
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
+  box-shadow: 0 12px 26px rgba(108,74,226,.35);
 
   &:hover {
-    transform: scale(0.8);
-    background: #765cdd;
-    color: #fff;
+    transform: translateY(-1px) scale(0.98);
+    filter: brightness(1.05);
   }
 
   svg {

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext.jsx";
 import { useParams } from "react-router-dom";
+import DashboardLayout from "../../components/layouts/DashboardLayout.jsx";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3030/v1/journey";
 
@@ -64,40 +65,48 @@ export default function EditarGrupo() {
 }
 
 
-  if (loading) return <p>Carregando participantes...</p>;
+  if (loading) return (
+    <DashboardLayout>
+      <div className="page-card"><p>Carregando participantes...</p></div>
+    </DashboardLayout>
+  );
 
   return (
-    <section className="editar-grupo">
-      <h2>Participantes do Grupo</h2>
+    <DashboardLayout>
+      <div className="page-card">
+        <div style={{display:'flex', alignItems:'center', justifyContent:'space-between', gap:12, marginBottom:12}}>
+          <h2 style={{margin:0}}>Participantes do Grupo</h2>
+        </div>
 
-      {participantes.length === 0 && <p>Nenhum participante encontrado.</p>}
+        {participantes.length === 0 && <p>Nenhum participante encontrado.</p>}
 
-      <ul className="lista-participantes">
-        {participantes.map((p) => (
-          <li key={p.id_usuario} className="participante-item">
-            <img
-              src={p.foto_perfil || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
-              alt={p.nome_completo}
-              className="foto-perfil"
-            />
-            <div className="info">
-              <span className="nome">{p.nome_completo}</span>
-              {p.id_usuario === criadorId && (
-                <span className="tag-criador">Criador</span>
+        <ul className="lista-participantes">
+          {participantes.map((p) => (
+            <li key={p.id_usuario} className="participante-item">
+              <img
+                src={p.foto_perfil || "https://cdn-icons-png.flaticon.com/512/149/149071.png"}
+                alt={p.nome_completo}
+                className="foto-perfil"
+              />
+              <div className="info">
+                <span className="nome">{p.nome_completo}</span>
+                {p.id_usuario === criadorId && (
+                  <span className="tag-criador">Criador</span>
+                )}
+              </div>
+
+              {me?.id_usuario === criadorId && p.id_usuario !== criadorId && (
+                <button
+                  onClick={() => removerParticipante(p.id_usuario)}
+                  className="btn btn-danger"
+                >
+                  Remover
+                </button>
               )}
-            </div>
-
-            {me?.id_usuario === criadorId && p.id_usuario !== criadorId && (
-              <button
-                onClick={() => removerParticipante(p.id_usuario)}
-                className="btn-remover"
-              >
-                Remover
-              </button>
-            )}
-          </li>
-        ))}
-      </ul>
-    </section>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </DashboardLayout>
   );
 }

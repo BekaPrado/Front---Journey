@@ -11,26 +11,16 @@
 }
 
 /* Área principal */
-.main-area {
-  flex: 1;
-  padding: 40px 60px;
-  margin-left: 240px;
-  transition: margin-left 0.3s ease;
-}
-
-.main-area.collapsed {
-  margin-left: 90px;
-}
+/* Offset do Sidebar (para páginas que usam Sidebar direto) */
+.main-area { flex: 1; padding: 24px; margin-left: 240px; transition: margin-left .25s ease; }
+.main-area.collapsed { margin-left: 90px; }
 
 .page-card {
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 16px;
   box-shadow: var(--shadow-subtle);
-  padding: 32px;
-  width: 100%;
-  max-width: 1100px;
-  margin: 0 auto;
+  padding: 18px;
   transition: background 0.3s ease;
 }
 
@@ -39,7 +29,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 
 .page-header h1 {
@@ -77,7 +67,7 @@
   background: var(--card-bg);
   color: var(--text-base);
   border: 1px solid var(--border-color);
-  padding: 10px 16px;
+  padding: 10px 14px;
   border-radius: 10px;
   margin-bottom: 20px;
 }
@@ -88,19 +78,34 @@
 
 /* Responsivo */
 @media (max-width: 768px) {
-  .main-area {
-    margin-left: 0 !important;
-    padding: 20px;
-  }
+  .main-area { margin-left: 0 !important; padding: 16px; }
 
-  .page-card {
-    padding: 20px;
-  }
+  .page-card { padding: 14px; }
 
   .page-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
+}
+
+/* ==========================
+   Listas compartilhadas (Participantes, etc.)
+   ========================== */
+.lista-participantes { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.participante-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border: 1px solid var(--border-color);
+  border-radius: 12px; background: var(--bg-card);
+}
+.participante-item .foto-perfil { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+.participante-item .info { flex: 1; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.participante-item .info .nome { font-weight: 700; }
+.participante-item .tag-criador { font-size: 12px; padding: 4px 8px; border-radius: 999px; background: rgba(107,114,128,0.18); color: var(--text-base); border: 1px solid var(--border-color); }
+.participante-item .btn { margin-left: auto; }
+
+@media (max-width: 600px) {
+  .participante-item { padding: 8px 10px; }
+  .participante-item .foto-perfil { width: 36px; height: 36px; }
 }
 

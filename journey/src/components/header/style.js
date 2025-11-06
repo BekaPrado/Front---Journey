@@ -9,6 +9,7 @@ export const SidebarToggle = styled.button`
   left: 50%;
   transform: translateX(-50%);
 
+  /* Light mode (como antes) */
   background: #5c46b5;
   color: white;
   border: none;
@@ -34,6 +35,7 @@ export const SidebarToggle = styled.button`
 // 2. SidebarContainer (Fixo)
 export const SidebarContainer = styled.aside`
   width: ${({ isCollapsed }) => (isCollapsed ? "80px" : "220px")};
+  /* Light mode (como antes) */
   background-color: #2c1e92;
   color: #fff;
   display: flex;
@@ -50,7 +52,7 @@ export const SidebarContainer = styled.aside`
   z-index: 1000;
 
   .homepage.dark & {
-    background-color: #151515;
+    background-color: #151719;
   }
 
   /* Garante que o avatar desapareça suavemente quando colapsado */
@@ -82,6 +84,7 @@ export const UserAvatar = styled.div`
 
 // 3. Menu (Com flex-grow para empurrar o toggle)
 export const Menu = styled.div`
+  /* Light mode (como antes) */
   background: linear-gradient(180deg, #3b2cb0 0%, #2c1e92 100%);
   width: 100%;
   border-radius: 12px;
@@ -90,7 +93,8 @@ export const Menu = styled.div`
   margin-bottom: auto; /* Garante que o espaço seja ocupado até o topo do toggle */
 
   .homepage.dark & {
-    background: linear-gradient(180deg, #1f1f22 0%, #151515 100%);
+    /* Dark neutro (mantém o cinza) */
+    background: linear-gradient(180deg, #1b1d20 0%, #151719 100%);
   }
 
   ${({ isCollapsed }) =>

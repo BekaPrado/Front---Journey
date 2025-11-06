@@ -9,22 +9,16 @@ html, body, #root {
   margin: 0;
 }
 
-.homepage.dark {
-  background: #0f172a;
-  color: #f1f5f9;
-}
+/* Segue tokens globais; não força fundo aqui */
+.homepage.dark { color: var(--text-base); }
 
 /* ======== WRAPPER ======== */
 .perfil-wrapper {
   flex: 1;
   padding: 50px 60px;
   min-height: 100vh;
-  background: #f5f7ff;
-  transition: background 0.3s ease;
-}
-
-.homepage.dark .perfil-wrapper {
-  background: #1e1e2f;
+  background: var(--bg-body);
+  transition: background 0.3s ease, color .3s ease;
 }
 
 /* ======== HEADER ======== */
@@ -35,15 +29,7 @@ html, body, #root {
   margin-bottom: 40px;
 }
 
-.perfil-header h1 {
-  font-size: 32px;
-  font-weight: 800;
-  color: #3a1376;
-}
-
-.homepage.dark .perfil-header h1 {
-  color: #fff;
-}
+.perfil-header h1 { font-size: 32px; font-weight: 800; color: var(--text-base); }
 
 .header-right {
   display: flex;
@@ -162,17 +148,14 @@ html, body, #root {
 
 /* ======== COLUNA ESQUERDA ======== */
 .perfil-left {
-  background: #3b2da0;
-  color: #fff;
+  background: var(--bg-card);
+  color: var(--text-base);
   border-radius: 16px;
   padding: 40px 30px;
   text-align: center;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  box-shadow: var(--shadow-subtle);
+  border: 1px solid var(--border-color);
   transition: all 0.3s ease;
-}
-
-.homepage.dark .perfil-left {
-  background: #2a2a40;
 }
 
 /* Foto */
@@ -254,51 +237,23 @@ input[type="file"] {
   transition: all 0.3s;
 }
 
-.btn-save {
-  background: #fff;
-  color: #3a1376;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.2);
-}
+.btn-save { background: var(--bg-card); color: var(--text-base); box-shadow: var(--shadow-subtle); border: 1px solid var(--border-color); }
 
 .btn-save:hover {
   background: #f5f5ff;
   transform: translateY(-2px);
 }
 
-.btn-cancel {
-  background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
-}
+.btn-cancel { background: transparent; border: 1px solid var(--border-color); color: var(--text-base); }
 
 .btn-cancel:hover {
   background: rgba(255,255,255,0.15);
 }
 
 /* ======== COLUNA DIREITA ======== */
-.perfil-right {
-  background: #fff;
-  border-radius: 16px;
-  padding: 40px 35px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  color: #1e1e2f;
-}
+.perfil-right { background: var(--bg-card); border-radius: 16px; padding: 40px 35px; box-shadow: var(--shadow-subtle); color: var(--text-base); border: 1px solid var(--border-color); }
 
-.homepage.dark .perfil-right {
-  background: #334155;
-  color: #f1f5f9;
-}
-
-.perfil-right h3 {
-  margin-top: 0;
-  color: #3a1376;
-  font-weight: 700;
-  margin-bottom: 15px;
-}
-
-.homepage.dark .perfil-right h3 {
-  color: #dcdcff;
-}
+.perfil-right h3 { margin-top: 0; color: var(--text-base); font-weight: 700; margin-bottom: 15px; }
 
 /* ======== CAMPOS ======== */
 .perfil-fields {
@@ -308,12 +263,7 @@ input[type="file"] {
   margin-bottom: 30px;
 }
 
-.perfil-fields label {
-  display: flex;
-  flex-direction: column;
-  font-weight: 600;
-  color: #1e1e2f; /* sempre legível no modo claro */
-}
+.perfil-fields label { display: flex; flex-direction: column; font-weight: 600; color: var(--text-base); }
 
 .perfil-fields input,
 .perfil-fields select,
@@ -321,33 +271,23 @@ input[type="file"] {
   margin-top: 6px;
   padding: 12px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background: #ffffff; /* <- fundo sempre branco */
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
   font-size: 15px;
   outline: none;
-  color: #1e1e2f;
-  transition: all 0.2s ease;
+  color: var(--text-base);
+  transition: border .2s ease, box-shadow .2s ease, background .2s ease;
 }
 
 .perfil-fields input:focus,
 .perfil-fields select:focus,
 .perfil-fields textarea:focus {
-  border-color: #6c3aff;
-  box-shadow: 0 0 0 2px rgba(108, 58, 255, 0.15);
+  border-color: rgba(107,114,128,0.45);
+  box-shadow: 0 0 0 3px rgba(107,114,128,0.20);
 }
 
 /* modo escuro */
-.homepage.dark .perfil-fields label {
-  color: #f1f5f9;
-}
-
-.homepage.dark .perfil-fields input,
-.homepage.dark .perfil-fields select,
-.homepage.dark .perfil-fields textarea {
-  background: #1f2937;
-  border-color: #475569;
-  color: #f1f5f9;
-}
+/* Em dark, os tokens já mudam as variáveis acima */
 
 
 /* ======== EXTRA ======== */

@@ -76,17 +76,17 @@ export default function Grupo() {
             <div className="header-info">
               <h1>{grupo.nome}</h1>
             </div>
-            <button className="btn-voltar" onClick={() => navigate("/home")}>
+            <button className="btn btn-voltar" onClick={() => navigate("/home")}>
               ← Voltar
             </button>
           </div>
 
           <div className="grupo-content">
-            <div className="grupo-image">
+            <div className="grupo-image page-card">
               <img src={grupo.imagem || placeholder} alt={grupo.nome} />
             </div>
 
-            <div className="grupo-info">
+            <div className="grupo-info page-card">
               <h3>Sobre o grupo</h3>
               <p>{grupo.descricao || "Sem descrição."}</p>
 

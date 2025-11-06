@@ -45,14 +45,14 @@ export default function GrupoHome() {
               <h1>{grupo.nome}</h1>
             </div>
             <div className="header-buttons">
-              <button className="btn-voltar" onClick={() => navigate("/home")}>
+              <button className="btn btn-voltar" onClick={() => navigate("/home")}>
                 ← Voltar
               </button>
               <button className="btn btn-primary" onClick={() => navigate("/grupo/chat")}>
                 💬 Ir para o Chat
               </button>
               <button
-                className="btn btn-primary"
+                className="btn"
                 onClick={() => {
                   try {
                     localStorage.setItem("group_id", JSON.stringify({ id_grupo: grupo.id_grupo }));
@@ -81,14 +81,14 @@ export default function GrupoHome() {
 
           {/* Conteúdo principal */}
           <div className="grupo-content">
-            <div className="grupo-image">
+            <div className="grupo-image page-card">
               <img
                 src={grupo.imagem || "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"}
                 alt={grupo.nome}
               />
             </div>
 
-            <div className="grupo-info">
+            <div className="grupo-info page-card">
               <h3>Sobre o grupo</h3>
               <p>{grupo.descricao || "Sem descrição."}</p>
 

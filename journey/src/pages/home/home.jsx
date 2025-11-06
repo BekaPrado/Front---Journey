@@ -228,7 +228,7 @@ export default function Home() {
             <div className="filter-chip">Área ▾</div>
           </div>
 
-          <section className="big-card">
+          <section className="page-card">
             <div className="big-card-top">
               <h2>Explorar Grupos</h2>
               <div className="big-card-actions">
@@ -267,7 +267,7 @@ export default function Home() {
                         </div>
                       </div>
                       <button
-                        className="group-card-cta"
+                        className="group-card-cta btn"
                         onClick={(e) => {
                           e.stopPropagation();
                           navigate("/grupo", { state: g });

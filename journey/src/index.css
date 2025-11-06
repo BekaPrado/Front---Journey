@@ -22,13 +22,92 @@
   --space-4: 16px;
   --space-5: 20px;
   --space-6: 24px;
+  --success: #22c55e;
+  --warning: #f59e0b;
+  --danger: #ef4444;
 }
 
 
 /* ==========================
+   Botões base reutilizáveis
+   ========================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-base);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s ease, filter .2s ease, box-shadow .2s ease, background .2s ease;
+  box-shadow: var(--shadow-subtle);
+}
+.btn:hover { filter: brightness(1.05); transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 3px solid rgba(108,74,226,.35); outline-offset: 2px; }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), #A78BFA);
+  color: #fff;
+  border: none;
+  box-shadow: 0 10px 24px rgba(108,74,226,.35);
+}
+.btn-primary:hover { filter: brightness(1.05); box-shadow: 0 14px 30px rgba(108,74,226,.45); }
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger), #f87171);
+  color: #fff;
+  border: none;
+  box-shadow: 0 10px 24px rgba(239,68,68,.35);
+}
+
+/* Links/voltar em estilo sutil */
+.btn-voltar {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-base);
+}
+
+/* ==========================
+   Cards e containers padronizados
+   ========================== */
+.page-card,
+.card {
+  background: var(--bg-card);
+  color: var(--text-base);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  box-shadow: var(--shadow-subtle);
+  padding: 18px;
+}
+
+/* ==========================
+   Títulos e texto
+   ========================== */
+h1,h2,h3 { letter-spacing: .2px; }
+.header-info h1 { font-weight: 800; }
+.descricao { color: var(--text-muted); }
+
+/* ==========================
+   Utilidades de layout
+   ========================== */
+.header-buttons { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.info-stats { display: grid; gap: 8px; }
+
+/* ==========================
+   Scrollbar discreta
+   ========================== */
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: rgba(107,114,128,0.45); border-radius: 999px; }
+*::-webkit-scrollbar-track { background: transparent; }
+/* ==========================
    Reset geral
    ========================== */
-   * {
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -36,7 +115,7 @@
   
 body {
   font-family: 'Poppins', sans-serif;
-  background: linear-gradient(135deg, #eef2ff, #f8fafc);
+  background: linear-gradient(135deg, #f3f4f6, #f9fafb); /* cinzas neutros */
   color: #1a1a1a;
   min-height: 100vh;
   position: relative;
@@ -51,6 +130,26 @@ body.fullscreen-layout {
   padding: 0;
   /* Usa a paleta do tema para as telas internas com sidebar */
   background: var(--bg-body);
+  color: var(--text-base);
+}
+
+/* Garante o fundo do container principal das páginas internas */
+.homepage { background: var(--bg-body) !important; }
+
+/* ==========================
+   Tema Escuro (aplicado no container .homepage)
+   ========================== */
+.homepage.dark {
+  --bg-body: #151719; /* cinza escuro neutro */
+  --bg-card: #151719; /* cartões grafite escuro */
+  --text-base: #e5e7eb; /* texto claro */
+  --text-muted: #9ca3af; /* cinza médio para secundário */
+  --border-color: rgba(255,255,255,0.08);
+  --shadow-subtle: 0 10px 24px rgba(0,0,0,0.40);
+}
+
+/* Ajuste de fundo para páginas internas em dark */
+.homepage.dark .container-home {
   color: var(--text-base);
 }
 
@@ -69,14 +168,14 @@ body:not(.fullscreen-layout)::before {
   left: -80px;
   width: 380px;
   height: 380px;
-  background: radial-gradient(closest-side, rgba(108,74,226,0.35), transparent 70%);
+  background: radial-gradient(closest-side, rgba(107,114,128,0.25), transparent 70%);
 }
 body:not(.fullscreen-layout)::after {
   right: -100px;
   bottom: -120px;
   width: 460px;
   height: 460px;
-  background: radial-gradient(closest-side, rgba(167,139,250,0.28), transparent 70%);
+  background: radial-gradient(closest-side, rgba(156,163,175,0.22), transparent 70%);
 }
 
   
@@ -185,6 +284,14 @@ body:not(.fullscreen-layout)::after {
   transition: all 0.2s ease;
 }
 
+.homepage.dark input,
+.homepage.dark select,
+.homepage.dark textarea {
+  background: #0f142a;
+  color: var(--text-base);
+  border-color: var(--border-color);
+}
+
 .container .form-area input::placeholder,
 .container .form-area textarea::placeholder {
   color: #9aa2b1;
@@ -195,8 +302,15 @@ body:not(.fullscreen-layout)::after {
 .container .form-area textarea:focus {
   outline: none;
   background: #fff;
-  border-color: rgba(108,74,226,0.35);
-  box-shadow: 0 10px 30px rgba(17,17,26,0.10), 0 0 0 4px rgba(108,74,226,0.18);
+  border-color: rgba(107,114,128,0.45); /* cinza */
+  box-shadow: 0 10px 30px rgba(17,17,26,0.08), 0 0 0 4px rgba(107,114,128,0.20);
+}
+
+.homepage.dark input:focus,
+.homepage.dark select:focus,
+.homepage.dark textarea:focus {
+  background: #101215;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35), 0 0 0 4px rgba(107,114,128,0.35);
 }
 
   /* ==========================

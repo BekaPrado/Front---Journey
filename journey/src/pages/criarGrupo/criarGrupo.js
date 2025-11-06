@@ -4,9 +4,9 @@ import styled, { css } from "styled-components";
 
 // Estilo base para os inputs
 export const FormElementStyle = css`
-  background-color: #fff;
-  color: #1e1e2f;
-  border: 1px solid #ccc;
+  background-color: var(--bg-card);
+  color: var(--text-base);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 12px;
   font-size: 14px;
@@ -15,21 +15,9 @@ export const FormElementStyle = css`
   transition: border-color 0.2s ease, background-color 0.2s ease;
 
   &:focus {
-    border-color: #ccc; /* mantém igual ao padrão */
-    box-shadow: none; /* remove o brilho roxo */
-    background-color: #fff; /* não muda o fundo */
-  }
-
-  .homepage.dark & {
-    background-color: #2a2a3b;
-    color: #f5f5f7;
-    border-color: #444;
-
-    &:focus {
-      border-color: #444; /* não muda no dark também */
-      box-shadow: none;
-      background-color: #2a2a3b;
-    }
+    border-color: rgba(107,114,128,0.45);
+    box-shadow: 0 0 0 3px rgba(107,114,128,0.20);
+    background-color: var(--bg-card);
   }
 `;
 
@@ -39,20 +27,17 @@ export const FormElementStyle = css`
 export const Container = styled.div`
   flex: 1;
   padding: 40px 30px; 
-  background-color: #f0f2ff;
+  background-color: var(--bg-body);
   min-height: 100vh;
   margin-left: ${({ isCollapsed }) => (isCollapsed ? '80px' : '220px')};
   transition: margin-left 0.3s ease;
-
-  .homepage.dark & {
-    background-color: #1e1e2f;
-  }
 
   @media (max-width: 768px) {
     margin-left: 0;
     padding: 20px 15px;
   }
 `;
+
 
 export const Header = styled.div`
   max-width: 1100px;
@@ -69,16 +54,13 @@ export const Header = styled.div`
 export const Title = styled.h1`
   font-size: 32px; 
   font-weight: 700;
-  color: #3a1376; 
-
-  .homepage.dark & {
-    color: #ffffff;
-  }
+  color: var(--text-base); 
 
   @media (max-width: 600px) {
     font-size: 24px;
   }
 `;
+
 
 export const CardWrapper = styled.div`
   display: flex;
@@ -86,25 +68,23 @@ export const CardWrapper = styled.div`
   max-width: 100%;
 `;
 
+
 export const Card = styled.div`
   width: 100%;
   max-width: 1230px; 
   padding: 40px; 
-  background-color: #3b2da0;
+  background-color: var(--bg-card);
   border-radius: 16px; 
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+  box-shadow: var(--shadow-subtle); 
   transition: all 0.3s;
-  color: #ffffff; 
-
-  .homepage.dark & {
-    background-color: #2a2a40; 
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  }
+  color: var(--text-base);
+  border: 1px solid var(--border-color);
 
   @media (max-width: 600px) {
     padding: 25px 20px;
   }
 `;
+
 
 export const CardContent = styled.div`
   display: flex;
@@ -117,9 +97,11 @@ export const CardContent = styled.div`
   }
 `;
 
+
 export const InputColumn = styled.div`
   flex: 1;
 `;
+
 
 export const InputGroup = styled.div`
   display: grid;
@@ -132,30 +114,25 @@ export const InputGroup = styled.div`
   }
 `;
 
+
 // --- Elementos do Formulário ---
 
 export const Label = styled.label`
   display: block;
   font-weight: 600;
   font-size: 14px;
-  color: #ffffff; 
+  color: var(--text-base); 
   margin-bottom: 8px;
-
-  .homepage.dark & {
-    color: #d1d5db;
-  }
 `;
 
+
 export const Input = styled.input`${FormElementStyle}`;
+
 
 export const Select = styled.select`
   ${FormElementStyle}
   appearance: auto; /* usa o ícone padrão do sistema */
   background-image: none; /* remove o SVG que causa bug */
-  
-  .homepage.dark & {
-    background-image: none;
-  }
 `;
 
 
@@ -176,16 +153,11 @@ export const ImagePreviewContainer = styled.div`
   align-items: center;
   gap: 15px;
   padding: 30px 20px; 
-  border: 2px dashed #8c73d9;
+  border: 2px dashed var(--border-color);
   border-radius: 12px;
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: var(--bg-card);
   transition: all 0.3s;
   height: fit-content;
-
-  .homepage.dark & {
-    border-color: #8c73d9;
-    background-color: rgba(255, 255, 255, 0.08);
-  }
 
   @media (max-width: 992px) {
     flex-basis: auto; 
@@ -193,25 +165,23 @@ export const ImagePreviewContainer = styled.div`
   }
 `;
 
+
 export const PreviewImage = styled.img`
   width: 150px; 
   height: 150px;
   border-radius: 50%; 
   object-fit: cover;
-  border: 5px solid #f0f2ff;
+  border: 5px solid var(--bg-card);
   box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
   transition: all 0.3s;
-
-  .homepage.dark & {
-    border-color: #2a2a40;
-  }
 `;
+
 
 export const UploadPlaceholder = styled.div`
   width: 150px;
   height: 150px;
   border-radius: 50%;
-  background: #5c46b5;
+  background: var(--primary);
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -223,15 +193,13 @@ export const UploadPlaceholder = styled.div`
   padding: 15px;
   opacity: 0.9;
   flex-shrink: 0;
-
-  .homepage.dark & {
-    background: #8c73d9;
-  }
 `;
+
 
 export const FileInput = styled.input`
   display: none;
 `;
+
 
 export const FileInputButton = styled.label`
   padding: 10px 25px;
@@ -240,25 +208,19 @@ export const FileInputButton = styled.label`
   border: none;
   cursor: pointer;
   transition: all 0.3s;
-  background: #ffffff; 
-  color: #3a1376;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  background: var(--bg-card); 
+  color: var(--text-base);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-subtle);
   display: inline-flex;
   align-items: center;
   gap: 8px;
   text-transform: uppercase;
   font-size: 14px;
 
-  &:hover {
-    background: #f0f2ff;
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-  }
-
-  .homepage.dark & {
-    background: #e4e4e7;
-    color: #1e1e2f;
-  }
+  &:hover { filter: brightness(1.03); }
 `;
+
 
 // --- Botão de Voltar (Largura Mínima) ---
 
