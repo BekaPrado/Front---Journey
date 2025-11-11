@@ -20,6 +20,9 @@ import PrivateChat from "./pages/chat/PrivateChat.jsx";
 import ChatHome from "./pages/chat/ChatHome.jsx";
 import Participantes from "./pages/grupo/Participantes.jsx";
 import EditarGrupo from "./pages/grupo/EditarGrupo.jsx";
+import Libary from "./pages/ebook/ebook.jsx";
+import CadastrarEbook from "./pages/ebook/CadastrarEbook.jsx";
+import DetalheEbook from "./pages/ebook/areaEbook.jsx";
 
 import "./index.css";
 
@@ -174,6 +177,36 @@ export default function App() {
               <ProtectedRoute>
                 <SidebarProvider>
                   <MeusGrupos />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ebook"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <Libary />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cadastrar-ebook"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <CadastrarEbook />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/ebook/:id_ebooks"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <DetalheEbook />
                 </SidebarProvider>
               </ProtectedRoute>
             }

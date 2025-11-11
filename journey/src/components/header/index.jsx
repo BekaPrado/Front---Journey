@@ -40,17 +40,26 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <span>Home</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/meus-grupos")}>
+        <MenuItem
+          isCollapsed={isCollapsed}
+          onClick={() => navigate("/meus-grupos")}
+        >
           <FaUsers />
           <span>Meus Grupos</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/calendary")}>
+        <MenuItem
+          isCollapsed={isCollapsed}
+          onClick={() => navigate("/calendary")}
+        >
           <FaCalendar />
           <span>Calendario</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/criarGrupo")}>
+        <MenuItem
+          isCollapsed={isCollapsed}
+          onClick={() => navigate("/criarGrupo")}
+        >
           <FaPlus />
           <span>Criar Grupo</span>
         </MenuItem>
@@ -60,7 +69,7 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <span>Chats</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/home")}>
+        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/ebook")}>
           <FaBook />
           <span>E-Books</span>
         </MenuItem>
@@ -69,8 +78,6 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
           <span>Seu Carrinho</span>
         </MenuItem>
       </Menu>
-
-      
 
       <SidebarToggle
         isCollapsed={isCollapsed}

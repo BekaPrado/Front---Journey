@@ -3,8 +3,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../../components/layouts/DashboardLayout.jsx";
 import { useAuth } from "../../context/AuthContext.jsx";
-import "./grupoBase.css";
-import "./grupoHome.css";
 import { useTheme } from "../../context/ThemeContext";
 
 const STORAGE_KEY = "journey_grupo_atual";
@@ -19,7 +17,15 @@ export default function GrupoHome() {
 
   const isCreator = useMemo(() => {
     if (!grupo || !user) return false;
-    return String(user.id_usuario) === String(grupo?.id_criador || grupo?.id_usuario_criador || grupo?.criador_id || "");
+    return (
+      String(user.id_usuario) ===
+      String(
+        grupo?.id_criador ||
+          grupo?.id_usuario_criador ||
+          grupo?.criador_id ||
+          ""
+      )
+    );
   }, [grupo, user]);
 
   useEffect(() => {
@@ -45,17 +51,26 @@ export default function GrupoHome() {
               <h1>{grupo.nome}</h1>
             </div>
             <div className="header-buttons">
-              <button className="btn btn-voltar" onClick={() => navigate("/home")}>
+              <button
+                className="btn btn-voltar"
+                onClick={() => navigate("/home")}
+              >
                 ← Voltar
               </button>
-              <button className="btn btn-primary" onClick={() => navigate("/grupo/chat")}>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/grupo/chat")}
+              >
                 💬 Ir para o Chat
               </button>
               <button
                 className="btn"
                 onClick={() => {
                   try {
-                    localStorage.setItem("group_id", JSON.stringify({ id_grupo: grupo.id_grupo }));
+                    localStorage.setItem(
+                      "group_id",
+                      JSON.stringify({ id_grupo: grupo.id_grupo })
+                    );
                   } catch {}
                   navigate("/calendary");
                 }}
@@ -83,7 +98,10 @@ export default function GrupoHome() {
           <div className="grupo-content">
             <div className="grupo-image page-card">
               <img
-                src={grupo.imagem || "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"}
+                src={
+                  grupo.imagem ||
+                  "https://cdn-icons-png.flaticon.com/512/2965/2965879.png"
+                }
                 alt={grupo.nome}
               />
             </div>
@@ -94,7 +112,8 @@ export default function GrupoHome() {
 
               <div className="info-stats">
                 <div>
-<strong>Criador:</strong> {grupo.usuario?.nome_completo || "Desconhecido"}
+                  <strong>Criador:</strong>{" "}
+                  {grupo.usuario?.nome_completo || "Desconhecido"}
                 </div>
                 <div>
                   <strong>ID do Grupo:</strong> {grupo.id_grupo}
