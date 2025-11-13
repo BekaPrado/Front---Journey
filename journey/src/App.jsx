@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import AuthPage from "./pages/AuthPage";
 import Landing from "./pages/Landing.jsx";
 import Home from "./pages/home/home.jsx";
@@ -23,6 +23,7 @@ import EditarGrupo from "./pages/grupo/EditarGrupo.jsx";
 import Libary from "./pages/ebook/ebook.jsx";
 import CadastrarEbook from "./pages/ebook/CadastrarEbook.jsx";
 import DetalheEbook from "./pages/ebook/areaEbook.jsx";
+import Sucesso from "./pages/ebook/Sucesso"; // nova página de sucesso
 
 import "./index.css";
 
@@ -207,6 +208,56 @@ export default function App() {
               <ProtectedRoute>
                 <SidebarProvider>
                   <DetalheEbook />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* ✅ ROTAS DE PAGAMENTO */}
+          <Route
+            path="/sucesso"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <Sucesso />
+                </SidebarProvider>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cancelado"
+            element={
+              <ProtectedRoute>
+                <SidebarProvider>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      height: "100vh",
+                      background: "linear-gradient(135deg, #f8d7da, #f5c6cb)",
+                      color: "#721c24",
+                      fontFamily: "Poppins, sans-serif",
+                    }}
+                  >
+                    <h1>❌ Pagamento cancelado</h1>
+                    <p>Você cancelou o processo de pagamento.</p>
+                    <button
+                      onClick={() => (window.location.href = "/ebook")}
+                      style={{
+                        marginTop: "1rem",
+                        padding: "10px 20px",
+                        borderRadius: "8px",
+                        backgroundColor: "#721c24",
+                        color: "white",
+                        border: "none",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Voltar para os e-books
+                    </button>
+                  </div>
                 </SidebarProvider>
               </ProtectedRoute>
             }

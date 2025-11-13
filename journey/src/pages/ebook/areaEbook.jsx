@@ -19,6 +19,8 @@ import {
   BackButton,
   GradientBackground,
 } from "./areaEbook.js";
+import axios from "axios";
+
 
 export default function DetalheEbook() {
   const location = useLocation();
@@ -46,13 +48,19 @@ export default function DetalheEbook() {
       currency: "BRL",
     }).format(Number(valor));
 
-  const handleComprar = () => {
-    alert(
-      `Compra iniciada para "${ebook.titulo}" por ${formatarPreco(
-        ebook.preco
-      )}.`
-    );
-  };
+    const handleComprar = async () => {
+      try {
+        const res = await axios.post("http://localhost:3030/v1/journey/ebook/pagamento", {
+          titulo: ebook.titulo,
+          preco: ebook.preco,
+        });
+    
+        window.location.href = res.data.url; // redireciona para o checkout Stripe
+      } catch (error) {
+        console.error("Erro ao criar pagamento:", error);
+        alert("Falha ao iniciar pagamento");
+      }
+    };
 
   return (
     <Container className={theme === "dark" ? "dark" : ""}>
