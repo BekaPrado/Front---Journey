@@ -25,7 +25,7 @@ import {
   FaCartPlus,
 } from "react-icons/fa";
 
-const Sidebar = ({ isCollapsed, setCollapsed }) => {
+const Sidebar = ({ isCollapsed, setCollapsed, onItemClick }) => {
   const navigate = useNavigate();
 
   return (
@@ -35,14 +35,25 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
       </UserAvatar>
 
       <Menu isCollapsed={isCollapsed}>
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/home")}>
+        <MenuItem 
+          isCollapsed={isCollapsed} 
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/home");
+            onItemClick && onItemClick();
+          }}
+        >
           <FaHome />
           <span>Home</span>
         </MenuItem>
 
         <MenuItem
           isCollapsed={isCollapsed}
-          onClick={() => navigate("/meus-grupos")}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/meus-grupos");
+            onItemClick && onItemClick();
+          }}
         >
           <FaUsers />
           <span>Meus Grupos</span>
@@ -50,7 +61,11 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
 
         <MenuItem
           isCollapsed={isCollapsed}
-          onClick={() => navigate("/calendary")}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/calendary");
+            onItemClick && onItemClick();
+          }}
         >
           <FaCalendar />
           <span>Calendario</span>
@@ -58,22 +73,41 @@ const Sidebar = ({ isCollapsed, setCollapsed }) => {
 
         <MenuItem
           isCollapsed={isCollapsed}
-          onClick={() => navigate("/criarGrupo")}
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/criarGrupo");
+            onItemClick && onItemClick();
+          }}
         >
           <FaPlus />
           <span>Criar Grupo</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/chat")}>
+        <MenuItem isCollapsed={isCollapsed} onClick={(e) => {
+          e.stopPropagation();
+          navigate("/chat");
+          onItemClick && onItemClick();
+        }}>
           <FaComments />
           <span>Chats</span>
         </MenuItem>
 
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/ebook")}>
+        <MenuItem isCollapsed={isCollapsed} onClick={(e) => {
+          e.stopPropagation();
+          navigate("/ebook");
+          onItemClick && onItemClick();
+        }}>
           <FaBook />
           <span>E-Books</span>
         </MenuItem>
-        <MenuItem isCollapsed={isCollapsed} onClick={() => navigate("/home")}>
+        <MenuItem 
+          isCollapsed={isCollapsed} 
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate("/home");
+            onItemClick && onItemClick();
+          }}
+        >
           <FaCartPlus />
           <span>Seu Carrinho</span>
         </MenuItem>

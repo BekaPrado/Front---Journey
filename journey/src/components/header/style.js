@@ -7,6 +7,10 @@ export const SidebarToggle = styled.button`
   position: relative;
   bottom: 25px;
   left: 50%;
+  
+  @media (max-width: 768px) {
+    display: none; /* Esconde o toggle em telas pequenas */
+  }
   transform: translateX(-50%);
 
   /* Light mode (como antes) */
@@ -35,7 +39,6 @@ export const SidebarToggle = styled.button`
 // 2. SidebarContainer (Fixo)
 export const SidebarContainer = styled.aside`
   width: ${({ isCollapsed }) => (isCollapsed ? "80px" : "220px")};
-  /* Light mode (como antes) */
   background-color: #2c1e92;
   color: #fff;
   display: flex;
@@ -43,13 +46,25 @@ export const SidebarContainer = styled.aside`
   align-items: center;
   padding: 25px 15px;
   height: 100vh;
-  position: fixed; /* CRUCIAL: Fixa a sidebar */
+  position: fixed;
   top: 0;
   left: 0;
   box-sizing: border-box;
   flex-shrink: 0;
-  transition: width 0.3s ease;
+  transition: transform 0.3s ease, width 0.3s ease;
   z-index: 1000;
+  
+  @media (max-width: 768px) {
+    transform: ${({ isCollapsed }) => 
+      isCollapsed ? 'translateX(-100%)' : 'translateX(0)'};
+    width: 260px;
+    z-index: 999;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    
+    &.open {
+      transform: translateX(0);
+    }
+  }
 
   .homepage.dark & {
     background-color: #151719;

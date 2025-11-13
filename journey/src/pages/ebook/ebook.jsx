@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/header/index.jsx";
 import { useTheme } from "../../context/ThemeContext";
+import bannerImage from "../../assets/livro.png";
 import {
   Container,
   Header,
@@ -88,7 +89,7 @@ export default function Ebook() {
     </div>
   );
 
-  // 🔹 Ir para cadastro
+  //  Ir para cadastro
   const handleCadastrarEbook = () => navigate("/cadastrar-ebook");
 
   // 🔹 Ir para detalhes
@@ -130,10 +131,7 @@ export default function Ebook() {
             </p>
             <button onClick={handleCadastrarEbook}>Cadastrar E-book</button>
           </BannerText>
-          <BannerImage
-            src="https://cdn-icons-png.flaticon.com/512/3081/3081903.png"
-            alt="Books Illustration"
-          />
+          <BannerImage src={bannerImage} alt="Books Illustration" />
         </Banner>
 
         <div style={{ display: "flex", gap: "30px", marginTop: "40px" }}>
@@ -231,12 +229,21 @@ export default function Ebook() {
             </AchievementCard>
 
             <SalesList>
-              <h4>Mais Vendidos</h4>
+              <h4>Ultimos Lancamentos</h4>
               {ebooks.slice(0, 3).map((book, i) => (
                 <SalesItem key={i}>
                   <div>
-                    <p>{book.titulo}</p>
-                    <small>{formatarPreco(book.preco)}</small>
+                    <img
+                      src={
+                        book.link_imagem ||
+                        "https://cdn-icons-png.flaticon.com/512/2232/2232688.png"
+                      }
+                      alt={book.titulo}
+                    />
+                    <div>
+                      <p>{book.titulo}</p>
+                      <small>{formatarPreco(book.preco)}</small>
+                    </div>
                   </div>
                   <button
                     onClick={() => window.open(book.link_arquivo_pdf, "_blank")}

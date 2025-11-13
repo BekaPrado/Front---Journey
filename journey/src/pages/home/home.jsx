@@ -266,15 +266,6 @@ export default function Home() {
                           Criado por <span>{g.criador || g.nome_criador}</span>
                         </div>
                       </div>
-                      <button
-                        className="group-card-cta btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          navigate("/grupo", { state: g });
-                        }}
-                      >
-                        →
-                      </button>
                     </div>
                   ))}
                 </div>

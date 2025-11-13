@@ -166,42 +166,77 @@ export const AchievementCard = styled.div`
 
 export const SalesList = styled.div`
   background: var(--bg-card);
-  border-radius: 16px;
-  padding: 20px;
+  border-radius: 20px;
+  padding: 24px;
   box-shadow: var(--shadow-subtle);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: all 0.3s ease;
 
   h4 {
-    font-size: 16px;
-    margin-bottom: 16px;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: var(--text-color);
   }
 `;
 
 export const SalesItem = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 10px;
+  justify-content: space-between;
+  background: var(--bg-body);
+  border-radius: 14px;
+  padding: 12px 14px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
 
-  p {
-    font-weight: 600;
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
   }
 
-  small {
-    color: var(--text-muted);
+  div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    img {
+      width: 44px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #f4f3ff;
+    }
+
+    p {
+      font-weight: 600;
+      font-size: 14px;
+      color: var(--text-color);
+      margin-bottom: 2px;
+    }
+
+    small {
+      color: var(--text-muted);
+      font-size: 12px;
+    }
   }
 
   button {
-    background: #6f42f7;
+    background: linear-gradient(120deg, #6f42f7, #9b79ff);
     color: #fff;
     border: none;
-    padding: 6px 12px;
-    border-radius: 6px;
+    padding: 8px 14px;
+    border-radius: 8px;
     font-size: 13px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: all 0.25s ease;
 
     &:hover {
-      background: #5930d3;
+      filter: brightness(1.1);
+      transform: scale(1.05);
     }
   }
 `;
