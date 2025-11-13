@@ -83,16 +83,6 @@ export const Textarea = styled.textarea`
   min-height: 100px;
 `;
 
-export const Select = styled.select`
-  padding: 10px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  background: var(--input-background);
-  color: var(--text-color);
-  height: 100px;
-  font-size: 1rem;
-`;
-
 export const ImagePreviewContainer = styled.div`
   flex: 1;
   text-align: center;
@@ -145,5 +135,31 @@ export const CreateButton = styled.button`
   transition: background 0.3s;
   &:hover {
     background: #5a32c5;
+  }
+`;
+
+// ======== NOVO BLOCO DE BOTÕES DE CATEGORIA ========
+
+export const CategoriaContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+`;
+
+export const CategoriaButton = styled.button`
+  background: ${({ $selected }) => ($selected ? "#6f42f7" : "var(--card-background)")};
+  color: ${({ $selected }) => ($selected ? "#fff" : "var(--text-color)")};
+  border: 1px solid ${({ $selected }) => ($selected ? "#6f42f7" : "var(--border-color)")};
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+
+  &:hover {
+    background: ${({ $selected }) => ($selected ? "#5a32c5" : "rgba(111, 66, 247, 0.1)")};
+    border-color: #6f42f7;
   }
 `;

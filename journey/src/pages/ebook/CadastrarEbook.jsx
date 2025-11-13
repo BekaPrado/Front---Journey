@@ -22,7 +22,8 @@ import {
   Title,
   CardContent,
   InputColumn,
-  Select,
+  CategoriaContainer,
+  CategoriaButton,
 } from "./CadastrarEbook.js";
 import { uploadImageToAzure } from "../uploadImageToAzure";
 
@@ -48,12 +49,12 @@ const CadastrarEbook = () => {
   const [imagePreviewUrl, setImagePreviewUrl] = useState(null);
   const [isCreating, setIsCreating] = useState(false);
 
+  // Configurações do Azure
   const AZURE_STORAGE_ACCOUNT = "journey2025";
   const AZURE_CONTAINER_NAME = "journey";
   const AZURE_SAS_TOKEN =
     "sp=racwl&st=2025-10-07T12:06:43Z&se=2025-12-20T20:21:43Z&sv=2024-11-04&sr=c&sig=olO%2FAQVZv1dP2I68WhoQ3D%2BcUpAaq7H3CepabScHisg%3D";
 
-  // Carrega as categorias direto do endpoint /ebook-categoria
   useEffect(() => {
     fetchCategorias();
   }, []);
@@ -63,13 +64,13 @@ const CadastrarEbook = () => {
       const res = await fetch(`${BASE_URL}/ebook-categoria`);
       if (!res.ok) throw new Error(`Erro status ${res.status}`);
       const data = await res.json();
+      console.log("Resposta bruta de categorias:", data);
 
-      // Extrai categorias únicas do retorno da API
-      if (Array.isArray(data.ebookCategoria)) {
+      if (Array.isArray(data.ebooks_categorias)) {
         const categoriasUnicas = [];
         const nomes = new Set();
 
-        data.ebookCategoria.forEach((item) => {
+        data.ebooks_categorias.forEach((item) => {
           const cat = item?.categoria;
           if (cat && !nomes.has(cat.categoria)) {
             nomes.add(cat.categoria);
@@ -104,77 +105,92 @@ const CadastrarEbook = () => {
     if (file) setPdfFile(file);
   };
 
-  const handleCategoriaChange = (e) => {
-    const selectedOptions = Array.from(e.target.selectedOptions, (option) =>
-      Number(option.value)
-    );
-    setIdCategoriasSelecionadas(selectedOptions);
-  };
-
   const handleSubmit = async () => {
     if (!titulo || !descricao || !preco || !ebookImageFile || !pdfFile) {
       alert("Preencha todos os campos obrigatórios e selecione imagem e PDF.");
       return;
     }
-
+  
     if (!resolvedUserId) {
       alert("Usuário não identificado. Faça login novamente.");
       return;
     }
-
+  
     if (idCategoriasSelecionadas.length === 0) {
       alert("Selecione pelo menos uma categoria.");
       return;
     }
-
+  
     setIsCreating(true);
-    let imageUrl = "";
-    let pdfUrl = "";
-
+  
     try {
+      // Upload imagem
       const imageUploadParams = {
         file: ebookImageFile,
         storageAccount: AZURE_STORAGE_ACCOUNT,
         sasToken: AZURE_SAS_TOKEN,
         containerName: AZURE_CONTAINER_NAME,
       };
-      imageUrl = await uploadImageToAzure(imageUploadParams);
-
+      const imageUrl = await uploadImageToAzure(imageUploadParams);
+  
+      // Upload PDF
       const pdfUploadParams = {
         file: pdfFile,
         storageAccount: AZURE_STORAGE_ACCOUNT,
         sasToken: AZURE_SAS_TOKEN,
         containerName: AZURE_CONTAINER_NAME,
       };
-      pdfUrl = await uploadImageToAzure(pdfUploadParams);
-
-      const payload = {
+      const pdfUrl = await uploadImageToAzure(pdfUploadParams);
+  
+      // 1️⃣ Cria o e-book
+      const ebookPayload = {
         titulo,
         preco: parseFloat(preco),
         descricao,
         link_imagem: imageUrl,
         link_arquivo_pdf: pdfUrl,
         id_usuario: Number(resolvedUserId),
-        categorias: idCategoriasSelecionadas.map((id) => ({
-          id_categoria: id,
-        })),
       };
-
-      console.log("Payload final ->", payload);
-
-      const response = await fetch(`${BASE_URL}/ebook-categoria`, {
+  
+      const ebookRes = await fetch(`${BASE_URL}/ebook`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(ebookPayload),
       });
-
-      const data = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        console.error("Erro resposta criar ebook:", data);
-        throw new Error(data.message || `Erro ${response.status}`);
+  
+      const ebookData = await ebookRes.json();
+  
+      if (!ebookRes.ok) {
+        console.error("Erro ao criar e-book:", ebookData);
+        throw new Error(ebookData.message || `Erro ${ebookRes.status}`);
       }
-
+  
+      const idEbookCriado = ebookData.id_ebooks;
+      console.log("E-book criado com ID:", idEbookCriado);
+  
+      // 2️⃣ Associa as categorias
+      for (const idCategoria of idCategoriasSelecionadas) {
+        const catPayload = {
+          id_ebooks: idEbookCriado,
+          id_categoria: idCategoria,
+        };
+      
+        console.log("Relacionando categoria:", catPayload);
+      
+        const catRes = await fetch(`${BASE_URL}/ebook-categoria`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(catPayload),
+        });
+      
+        const catData = await catRes.json();
+        if (!catRes.ok) {
+          console.error("Erro ao vincular categoria:", catData);
+          throw new Error(catData.message || "Falha ao vincular categoria.");
+        }
+      }
+      
+  
       alert("E-book cadastrado com sucesso!");
       navigate("/ebook");
     } catch (error) {
@@ -184,6 +200,7 @@ const CadastrarEbook = () => {
       setIsCreating(false);
     }
   };
+  ;
 
   return (
     <div
@@ -270,17 +287,26 @@ const CadastrarEbook = () => {
                 />
 
                 <Label>Selecione as Categorias:</Label>
-                <Select
-                  multiple
-                  onChange={handleCategoriaChange}
-                  value={idCategoriasSelecionadas}
-                >
-                  {categorias.map((c) => (
-                    <option key={c.id_categoria} value={c.id_categoria}>
-                      {c.categoria}
-                    </option>
+                <CategoriaContainer>
+                  {categorias.map((cat) => (
+                    <CategoriaButton
+                      key={cat.id_categoria}
+                      type="button"
+                      $selected={idCategoriasSelecionadas.includes(
+                        cat.id_categoria
+                      )}
+                      onClick={() => {
+                        setIdCategoriasSelecionadas((prev) =>
+                          prev.includes(cat.id_categoria)
+                            ? prev.filter((id) => id !== cat.id_categoria)
+                            : [...prev, cat.id_categoria]
+                        );
+                      }}
+                    >
+                      {cat.categoria}
+                    </CategoriaButton>
                   ))}
-                </Select>
+                </CategoriaContainer>
               </InputColumn>
             </CardContent>
 
