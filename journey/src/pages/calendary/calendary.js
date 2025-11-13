@@ -55,7 +55,7 @@ export const Month = styled.div`
   .prev,
   .next {
     cursor: pointer;
-    transition: transform .2s ease, color .2s ease;
+    transition: transform 0.2s ease, color 0.2s ease;
     &:hover {
       transform: scale(1.12);
       color: var(--primary);
@@ -99,7 +99,7 @@ export const Days = styled.div`
     border-radius: 12px;
     cursor: pointer;
     font-weight: 700;
-    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
 
@@ -109,14 +109,14 @@ export const Days = styled.div`
     }
 
     &.today {
-      outline: 2px solid rgba(107,114,128,0.45);
-      background: rgba(107,114,128,0.10);
+      outline: 2px solid rgba(107, 114, 128, 0.45);
+      background: rgba(107, 114, 128, 0.1);
     }
 
     &.active {
-      background: rgba(107,114,128,0.18);
+      background: rgba(107, 114, 128, 0.18);
       color: inherit;
-      border-color: rgba(107,114,128,0.35);
+      border-color: rgba(107, 114, 128, 0.35);
     }
 
     .event-indicator {
@@ -125,7 +125,7 @@ export const Days = styled.div`
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      background: rgba(107,114,128,0.85);
+      background: rgba(107, 114, 128, 0.85);
     }
 
     &.prev-date,
@@ -145,15 +145,19 @@ export const GotoToday = styled.div`
   .today-btn {
     padding: 10px 16px;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary), #A78BFA);
+    background: linear-gradient(135deg, var(--primary), #a78bfa);
     color: #fff;
     font-weight: 800;
     border: none;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(108,74,226,.25);
-    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+    box-shadow: 0 10px 24px rgba(108, 74, 226, 0.25);
+    transition: transform 0.15s ease, filter 0.2s ease, box-shadow 0.2s ease;
   }
-  .today-btn:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 14px 30px rgba(108,74,226,.35); }
+  .today-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(108, 74, 226, 0.35);
+  }
 `;
 
 // ===== Data do dia =====
@@ -188,7 +192,7 @@ export const Events = styled.div`
     border: 1px solid var(--border-color);
     padding: 14px 16px;
     border-radius: 14px;
-    transition: transform .2s ease, box-shadow .2s ease;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
     box-shadow: var(--shadow-subtle);
     display: flex;
     flex-direction: column;
@@ -196,7 +200,7 @@ export const Events = styled.div`
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 24px rgba(17,17,26,0.10);
+      box-shadow: 0 12px 24px rgba(17, 17, 26, 0.1);
     }
 
     .title {
@@ -225,9 +229,12 @@ export const Events = styled.div`
       color: #fff;
       font-weight: 700;
       cursor: pointer;
-      transition: filter .15s ease, transform .15s ease;
+      transition: filter 0.15s ease, transform 0.15s ease;
     }
-    .delete:hover { filter: brightness(1.05); transform: translateY(-1px); }
+    .delete:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
 
     .event-user {
       font-size: 0.85rem;
@@ -294,7 +301,7 @@ export const AddEventBody = styled.div`
     font-size: 0.95rem;
     background: var(--bg-body);
     color: var(--text-base);
-    transition: border .2s ease, box-shadow .2s ease, background .2s ease;
+    transition: border 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 
     &::placeholder {
       color: var(--text-muted);
@@ -302,8 +309,8 @@ export const AddEventBody = styled.div`
 
     &:focus {
       background: var(--bg-card);
-      border-color: rgba(108,74,226,0.35);
-      box-shadow: 0 0 0 4px rgba(108,74,226,0.18);
+      border-color: rgba(108, 74, 226, 0.35);
+      box-shadow: 0 0 0 4px rgba(108, 74, 226, 0.18);
     }
   }
 `;
@@ -317,30 +324,31 @@ export const AddEventFooter = styled.div`
     padding: 12px 18px;
     border: none;
     border-radius: 12px;
-    background: linear-gradient(135deg, var(--primary), #A78BFA);
+    background: linear-gradient(135deg, var(--primary), #a78bfa);
     color: #fff;
     font-weight: 800;
     cursor: pointer;
-    box-shadow: 0 10px 24px rgba(108,74,226,.25);
-    transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+    box-shadow: 0 10px 24px rgba(108, 74, 226, 0.25);
+    transition: transform 0.15s ease, filter 0.2s ease, box-shadow 0.2s ease;
   }
-  .add-event-btn:hover { filter: brightness(1.05); transform: translateY(-1px); box-shadow: 0 14px 30px rgba(108,74,226,.35); }
+  .add-event-btn:hover {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+    box-shadow: 0 14px 30px rgba(108, 74, 226, 0.35);
+  }
 `;
 
 // ===== Botão flutuante de adicionar evento =====
 export const AddEventCardButton = styled.button`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.3rem;
-  color: #fff;
+  padding: 2px 5px;
   border: none;
-  border-radius: 50%;
-  background: var(--primary);
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), #a78bfa);
+  color: #fff;
+  font-weight: 800;
   cursor: pointer;
-  transition: transform .2s ease, filter .2s ease, box-shadow .2s ease;
-  box-shadow: 0 12px 26px rgba(108,74,226,.35);
-
+  box-shadow: 0 10px 24px rgba(108, 74, 226, 0.25);
+  transition: transform 0.15s ease, filter 0.2s ease, box-shadow 0.2s ease;
   &:hover {
     transform: translateY(-1px) scale(0.98);
     filter: brightness(1.05);

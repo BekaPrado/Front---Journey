@@ -185,9 +185,6 @@ export default function Home() {
                   minute: "2-digit",
                 })}
               </div>
-              <button className="delete" onClick={() => deleteEvent(ev)}>
-                Excluir
-              </button>
             </div>
           ))
         ) : (

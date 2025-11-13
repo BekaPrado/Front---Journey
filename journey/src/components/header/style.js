@@ -7,7 +7,7 @@ export const SidebarToggle = styled.button`
   position: relative;
   bottom: 25px;
   left: 50%;
-  
+
   @media (max-width: 768px) {
     display: none; /* Esconde o toggle em telas pequenas */
   }
@@ -18,8 +18,8 @@ export const SidebarToggle = styled.button`
   color: white;
   border: none;
   border-radius: 8px;
-  width: 20px;
-  height: 10px;
+  width: 50px;
+  height: 20px;
 
   display: flex;
   align-items: center;
@@ -53,14 +53,14 @@ export const SidebarContainer = styled.aside`
   flex-shrink: 0;
   transition: transform 0.3s ease, width 0.3s ease;
   z-index: 1000;
-  
+
   @media (max-width: 768px) {
-    transform: ${({ isCollapsed }) => 
-      isCollapsed ? 'translateX(-100%)' : 'translateX(0)'};
+    transform: ${({ isCollapsed }) =>
+      isCollapsed ? "translateX(-100%)" : "translateX(0)"};
     width: 260px;
     z-index: 999;
     box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
-    
+
     &.open {
       transform: translateX(0);
     }
