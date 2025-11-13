@@ -1,6 +1,6 @@
 // src/pages/AuthPage.jsx
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { registerUser, updatePassword } from "../api/user";
 import { requestRecoveryCode, validateCode } from "../api/recovery";
@@ -10,7 +10,8 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [screen, setScreen] = useState("login");
+  const location = useLocation();
+  const [screen, setScreen] = useState(location.state?.initialTab || "login");
   const [msg, setMsg] = useState(null);
 
   // ====== estados login
@@ -87,9 +88,17 @@ export default function AuthPage() {
     };
     try {
       const res = await registerUser(payload);
-      setMsg(res?.message || "Usuário cadastrado com sucesso!");
-    } catch {
-      setMsg("Erro ao registrar");
+      setMsg("Cadastro realizado com sucesso! Redirecionando para o login...");
+      
+      // Redireciona para o login após 2 segundos
+      setTimeout(() => {
+        setScreen("login");
+        // Preenche o email automaticamente
+        setEmailLogin(form.email);
+      }, 2000);
+      
+    } catch (error) {
+      setMsg(error.response?.data?.message || "Erro ao realizar cadastro");
     }
   }
 

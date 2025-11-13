@@ -19,10 +19,10 @@ export default function Landing() {
           <h1>Conecte-se à sua jornada de aprendizado</h1>
           <p>Encontre grupos, compartilhe conhecimento e evolua com uma comunidade que vibra junto com você.</p>
           <div className="cta-row">
-            <button className="cta btn btn-primary" onClick={() => navigate("/auth")}>
+            <button className="cta btn btn-primary" onClick={() => navigate("/auth", { state: { initialTab: 'register' } })}>
               Começar agora
             </button>
-            <button className="secondary btn" onClick={() => navigate("/auth")}>
+            <button className="secondary btn" onClick={() => navigate("/auth", { state: { initialTab: 'login' } })}>
               Já tenho conta
             </button>
           </div>
