@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Sidebar from "../../components/header/index.jsx";
 import { useTheme } from "../../context/ThemeContext";
+import { useAuth } from "../../context/AuthContext"; // <-- IMPORTANTE
 import {
   Container,
   Content,
@@ -21,11 +22,11 @@ import {
 } from "./areaEbook.js";
 import axios from "axios";
 
-
 export default function DetalheEbook() {
   const location = useLocation();
   const navigate = useNavigate();
   const { theme } = useTheme();
+  const { user } = useAuth(); // <-- PEGA USUÁRIO LOGADO
   const ebook = location.state;
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
 
@@ -48,19 +49,24 @@ export default function DetalheEbook() {
       currency: "BRL",
     }).format(Number(valor));
 
-    const handleComprar = async () => {
-      try {
-        const res = await axios.post("http://localhost:3030/v1/journey/ebook/pagamento", {
+  const handleComprar = async () => {
+    try {
+      const res = await axios.post(
+        "http://localhost:3030/v1/journey/ebook/pagamento",
+        {
           titulo: ebook.titulo,
-          preco: ebook.preco,
-        });
-    
-        window.location.href = res.data.url; // redireciona para o checkout Stripe
-      } catch (error) {
-        console.error("Erro ao criar pagamento:", error);
-        alert("Falha ao iniciar pagamento");
-      }
-    };
+          preco: Number(ebook.preco), // garante número
+          id_usuario: user?.id_usuario, // <-- Envia usuário logado
+          id_ebooks: ebook.id_ebooks,   // <-- Envia ID do e-book
+        }
+      );
+
+      window.location.href = res.data.url; // redireciona para o checkout Stripe
+    } catch (error) {
+      console.error("Erro ao criar pagamento:", error);
+      alert("Falha ao iniciar pagamento");
+    }
+  };
 
   return (
     <Container className={theme === "dark" ? "dark" : ""}>
